@@ -18,8 +18,8 @@
 	</style>
 	<script>
 		// Map Related
-		var m_iMapWidth = 100;
-		var m_iMapHeight = 50;
+		var m_iMapWidth = 50;
+		var m_iMapHeight = 25;
 		var m_iTileWidth;
 		var m_iTileHeight;
 		var m_iTileColors = new Array(m_iMapWidth);
@@ -120,13 +120,13 @@
 			for (var x = 0; x < m_iMapWidth; x++) 
 			    for (var y = 0; y < m_iMapHeight; y++) {
 			        paintTile(x, y, getRandomColor(1, 255), 0);
-			        /*paintTile(x, y, m_cDefaultColor, m_iBorderLength);*/paintTile(x, y, getRandomColor(1, 255), m_iBorderLength);
+			        paintTile(x, y, m_cDefaultColor, m_iBorderLength);//paintTile(x, y, getRandomColor(1, 255), m_iBorderLength);
 			    }
 
 			for (var index = 0; index < m_iSnakeX.length; index++)
-			    /*paintTile(m_iSnakeX[index], m_iSnakeY[index], getRandomColor(0, 255), m_iBorderLength);*/paintTile(m_iSnakeX[index], m_iSnakeY[index], m_cSnakeColor, m_iBorderLength);
+			    paintTile(m_iSnakeX[index], m_iSnakeY[index], getRandomColor(0, 255), m_iBorderLength);//paintTile(m_iSnakeX[index], m_iSnakeY[index], m_cSnakeColor, m_iBorderLength);
 
-		    /*paintTile(m_iFoodX, m_iFoodY, getRandomColor(0, 255), m_iBorderLength);*/paintTile(m_iFoodX, m_iFoodY, m_cFoodColor, m_iBorderLength);
+		    paintTile(m_iFoodX, m_iFoodY, getRandomColor(0, 255), m_iBorderLength);//paintTile(m_iFoodX, m_iFoodY, m_cFoodColor, m_iBorderLength);
 		}
 
 		// Paints a tile on the screen, handles converting pixel to tile.
