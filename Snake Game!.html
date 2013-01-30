@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Epileptic Snake Game!!!</title>
+	<style>
+		canvas {
+			padding-left: 0;
+			padding-right: 0;
+			margin-left: auto;
+			margin-right: auto;
+			display: block;
+			height: 100%;
+			width: 100%;
+            border:1px solid #000;
+		}
+	</style>
+	<script>
+		// Map Related
+		var m_iMapWidth = 60;
+		var m_iMapHeight = 30;
+		var m_iTileWidth;
+		var m_iTileHeight;
+		var m_iTileColors = new Array(m_iMapWidth);
+		var m_cColors = ['#FF0000', '#FF7700', '#FFFF00', '#00FF00', '#1500FF', '#C700FF'];
+		var m_cDefaultColor = "#000";
+		var m_CanvaContext;
+		var m_Canvas;
+		var m_iBorderLength = 2;
+
+		// Snake Related
+		var m_cSnakeColor = "#000";
+		var m_iSnakeLength = 7;
+		var m_iSnakeHead = { x: m_iSnakeLength - 2, y: 0 };
+		var m_iSnakeX = new Array(m_iSnakeLength);
+		var m_iSnakeY = new Array(m_iSnakeLength);
+		var m_iDirection = "right";
+
+		// Food Related
+		var m_cFoodColor = "#000";
+		var m_iFoodX = 0;
+		var m_iFoodY = 0;
+		var m_iAmountAte = 0;
+
+		// Map Color related
+		var iMin = 0;
+		var iMax = 255;
+
+		// GameSpeed
+		var m_iOriginalSpeed = 50;
+		var m_iGameSpeed = m_iOriginalSpeed;
+		var m_iGameDecrease = 6;
+		var m_iGameMinuim = m_iGameDecrease;
+
+		var m_IntervalID;
+		document.addEventListener("DOMContentLoaded", initialize, false);
+		document.documentElement.style.overflowX = 'hidden';	 // horizontal scrollbar will be hidden
+		document.documentElement.style.overflowY = 'hidden';
+
+		function initialize()
+		{
+			// Initialize gameloop.
+			if(m_IntervalID != null)
+				clearInterval(m_IntervalID);
+
+			m_IntervalID = window.setInterval("gameLoop();", m_iGameSpeed);
+			
+			// Get canvas context for drawing
+			m_CanvasContext = document.getElementById("myCanvas").getContext("2d");
+			setCanvasSize();
+			m_Canvas = document.getElementById("myCanvas");
+			window.addEventListener('keydown', doKeyDown, true);
+
+			// Initialize snake
+			for (var index = 0; index < m_iSnakeLength; index++)
+	        {
+			    m_iSnakeX[m_iSnakeLength - index - 1] = index - 1;
+			    m_iSnakeY[index] = m_iSnakeHead.y;
+			}
+
+			setFood();
+			drawMap();
+			gameLoop();
+		}
+
+		// Runs all the functions required for the game to work.
+		function gameLoop()
+		{
+			// If true, increase snake length, increase gamespeed.
+			if (gotFood()) {
+				m_iSnakeX.push(m_iSnakeX[m_iSnakeX.length - 1]);
+				m_iSnakeY.push(m_iSnakeY[m_iSnakeY.length - 1]);
+				m_iAmountAte++;
+				setFood();
+
+				if ((m_iGameSpeed - m_iGameDecrease) >= m_iGameMinuim) {
+					m_iGameSpeed = m_iGameSpeed - m_iGameDecrease;
+					//window.clearInterval(m_IntervalID);
+					//m_IntervalID = window.setInterval("gameLoop()", m_iGameSpeed, false);
+				}
+			}
+
+			setUpSnake();
+
+			// If true, reset the game.
+			if (checkCollision())
+			{
+				alert("You ate " + m_iAmountAte + " !!!");
+				resetGame();
+				initialize();
+			}
+
+			drawMap();
+		}
+
+		// Draws everything on the canvas.
+		function drawMap() {
+
+			for (var x = 0; x < m_iMapWidth; x++) 
+			    for (var y = 0; y < m_iMapHeight; y++) {
+			        paintTile(x, y, getRandomColor(0, 255), 0);
+			        /*paintTile(x, y, m_cDefaultColor, m_iBorderLength);*/paintTile(x, y, getRandomColor(0, 255), m_iBorderLength);
+			    }
+
+			for (var index = 0; index < m_iSnakeX.length; index++)
+			    /*paintTile(m_iSnakeX[index], m_iSnakeY[index], getRandomColor(0, 255), m_iBorderLength);*/paintTile(m_iSnakeX[index], m_iSnakeY[index], m_cSnakeColor, m_iBorderLength);
+
+		    /*paintTile(m_iFoodX, m_iFoodY, getRandomColor(0, 255), m_iBorderLength);*/paintTile(m_iFoodX, m_iFoodY, m_cFoodColor, m_iBorderLength);
+		}
+
+		// Paints a tile on the screen, handles converting pixel to tile.
+		function paintTile(x, y, color, borderThickness)
+		{
+			m_CanvasContext.fillStyle = color;
+			m_CanvasContext.fillRect((x * m_iTileWidth) + borderThickness, (y * m_iTileHeight) + borderThickness, m_iTileWidth - (borderThickness * 2), m_iTileHeight - (borderThickness * 2));
+		}
+
+		function getPosition(event) {
+			var x, y;
+
+			if (event.x && event.y) {
+				x = event.x;
+				y = event.y;
+			}
+
+			x -= m_Canvas.offsetLeft 
+			y -= m_Canvas.offsetTop;
+			
+			x = Math.floor(x / m_iTileWidth);
+			y = Math.floor(y / m_iTileHeight);
+		}
+
+		// Handles where the snake should be.
+		function setUpSnake()
+		{
+			m_iSnakeX.pop();
+			m_iSnakeY.pop();
+
+			if (m_iDirection == "right") {
+				m_iSnakeX.unshift(++m_iSnakeHead.x);
+				m_iSnakeY.unshift(m_iSnakeHead.y);
+			}
+
+			if (m_iDirection == "left") {
+				m_iSnakeX.unshift(--m_iSnakeHead.x);
+				m_iSnakeY.unshift(m_iSnakeHead.y);
+			}
+
+			if (m_iDirection == "down") {
+				m_iSnakeX.unshift(m_iSnakeHead.x);
+				m_iSnakeY.unshift(++m_iSnakeHead.y);
+			}
+
+			if (m_iDirection == "up") {
+				m_iSnakeX.unshift(m_iSnakeHead.x);
+				m_iSnakeY.unshift(--m_iSnakeHead.y);
+			}
+		}
+
+		// Checks if the snake hit the wall or itself.
+		function checkCollision() {
+
+			if (m_iSnakeHead.x >= m_iMapWidth)
+				return true;
+
+			if (m_iSnakeHead.x < 0)
+				return true;
+
+			if (m_iSnakeHead.y >= m_iMapHeight)
+				return true;
+
+			if (m_iSnakeHead.y < 0)
+				return true;
+
+			for(var index = 1; index < m_iSnakeX.length; index++)
+			    if (m_iSnakeHead.x == m_iSnakeX[index] && m_iSnakeHead.y == m_iSnakeY[index]) 
+			        return true;
+
+			return false;
+		}
+
+		// Handles the changing direction of the snake.
+		function doKeyDown(event) {
+			switch (event.keyCode)
+			{
+				case 38:  /* Up arrow was pressed */
+				{
+					if(m_iDirection != "down")
+						m_iDirection = "up";
+
+					break;
+				}
+
+				case 40:  /* Down arrow was pressed */
+				{
+					if (m_iDirection != "up")
+						m_iDirection = "down";
+
+					break;
+				}
+
+				case 37:  /* Left arrow was pressed */
+				{
+					if (m_iDirection != "right")
+						m_iDirection = "left";
+
+					break;
+				}
+
+				case 39:  /* Right arrow was pressed */
+				{
+					if(m_iDirection != "left")
+						m_iDirection = "right";
+
+					break;
+				}
+			}
+		}
+
+		// Chooses the next position for the food.
+		function setFood()
+		{
+			var bIsFoodOnSnake = true;
+
+			while (bIsFoodOnSnake) {
+
+				m_iFoodX = getRandomNumber(0, m_iMapWidth);
+				m_iFoodY = getRandomNumber(0, m_iMapHeight);
+
+				for (var index = 0; index < m_iSnakeX.length; index++) 
+					if (m_iFoodX == m_iSnakeX[index] && m_iFoodY == m_iSnakeY[index]) 
+						continue;
+
+				bIsFoodOnSnake = false;
+			}
+		}
+
+		// Checks if the snake got the food, so make it longer.
+		function gotFood() {
+		    return (m_iSnakeHead.x == m_iFoodX && m_iSnakeHead.y == m_iFoodY);
+		}
+
+		// Sets the canvas as big as the broswer size.
+		function setCanvasSize()
+		{
+			m_iTileWidth = Math.floor((window.innerWidth/m_iMapWidth));
+			m_iTileHeight = (Math.floor((window.innerHeight/m_iMapHeight)))-1;
+			m_CanvasContext.canvas.width = (m_iTileWidth * m_iMapWidth);//window.innerWidth;
+			m_CanvasContext.canvas.height = (m_iTileHeight * m_iMapHeight);//window.innerHeight;
+		}
+
+		// Resets all variabls so that the game can function properly.
+		function resetGame()
+		{
+			m_iGameSpeed = m_iOriginalSpeed;
+			m_iSnakeHead.x = m_iSnakeLength-2;
+			m_iSnakeHead.y = 0;
+			m_iSnakeX = new Array(m_iSnakeLength);
+			m_iSnakeY = new Array(m_iSnakeLength);
+			m_iDirection = "right";
+
+			// Food Related
+			m_iFoodX = 0;
+			m_iFoodY = 0;
+			m_iAmountAte = 0;
+		}
+
+		/*********************************************************************************************************/
+		                                        /*USEFULL FUNCTIONS*/
+
+		function writeMessage(message)
+		{
+		    //m_CanvasContext.clearRect(0, 0, message.length*10, 10);
+			m_CanvasContext.font = '16pt Calibri';
+			m_CanvasContext.fillStyle = 'black';
+			m_CanvasContext.fillText(message, 10, 10);
+		}
+		
+		function getRandomColor(iMin, iMax) {
+
+			//return m_cColors[getRandomNumber(0, m_cColors.length)];
+			// creating a random number between iMin and iMax
+			var r = getRandomNumber(iMin, iMax)
+			var g = getRandomNumber(iMin, iMax)
+			var b = getRandomNumber(iMin, iMax)
+
+			// going from decimal to hex
+			var hexR = r.toString(16);
+			var hexG = g.toString(16);
+			var hexB = b.toString(16);
+
+			// making sure single character values are prepended with a "0"
+			if (hexR.length == 1)
+				hexR = "0" + hexR;
+
+			if (hexG.length == 1)
+				hexG = "0" + hexG;
+
+			if (hexB.length == 1)
+				hexB = "0" + hexB;
+
+			// creating the hex value by concatenatening the string values
+			var hexColor = "#" + hexR + hexG + hexB;
+			return hexColor.toUpperCase();
+		}
+
+		function getRandomNumber(iMin, iMax)
+		{
+			return Math.floor((Math.random() * (iMax - iMin)) + iMin);
+		}
+	</script>
+</head>
+<body>
+    <canvas id="myCanvas">
+</canvas>
+</body>
+</html>
