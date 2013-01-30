@@ -18,8 +18,8 @@
 	</style>
 	<script>
 		// Map Related
-		var m_iMapWidth = 60;
-		var m_iMapHeight = 30;
+		var m_iMapWidth = 100;
+		var m_iMapHeight = 50;
 		var m_iTileWidth;
 		var m_iTileHeight;
 		var m_iTileColors = new Array(m_iMapWidth);
@@ -27,7 +27,7 @@
 		var m_cDefaultColor = "#000";
 		var m_CanvaContext;
 		var m_Canvas;
-		var m_iBorderLength = 2;
+		var m_iBorderLength = 1;
 
 		// Snake Related
 		var m_cSnakeColor = "#000";
@@ -50,7 +50,7 @@
 		// GameSpeed
 		var m_iOriginalSpeed = 50;
 		var m_iGameSpeed = m_iOriginalSpeed;
-		var m_iGameDecrease = 6;
+		var m_iGameDecrease = 5;
 		var m_iGameMinuim = m_iGameDecrease;
 
 		var m_IntervalID;
@@ -96,8 +96,8 @@
 
 				if ((m_iGameSpeed - m_iGameDecrease) >= m_iGameMinuim) {
 					m_iGameSpeed = m_iGameSpeed - m_iGameDecrease;
-					//window.clearInterval(m_IntervalID);
-					//m_IntervalID = window.setInterval("gameLoop()", m_iGameSpeed, false);
+					window.clearInterval(m_IntervalID);
+					m_IntervalID = window.setInterval("gameLoop()", m_iGameSpeed, false);
 				}
 			}
 
@@ -119,8 +119,8 @@
 
 			for (var x = 0; x < m_iMapWidth; x++) 
 			    for (var y = 0; y < m_iMapHeight; y++) {
-			        paintTile(x, y, getRandomColor(0, 255), 0);
-			        /*paintTile(x, y, m_cDefaultColor, m_iBorderLength);*/paintTile(x, y, getRandomColor(0, 255), m_iBorderLength);
+			        paintTile(x, y, getRandomColor(1, 255), 0);
+			        /*paintTile(x, y, m_cDefaultColor, m_iBorderLength);*/paintTile(x, y, getRandomColor(1, 255), m_iBorderLength);
 			    }
 
 			for (var index = 0; index < m_iSnakeX.length; index++)
