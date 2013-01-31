@@ -50,6 +50,12 @@
 		var m_iGameDecrease = 5;
 		var m_iGameMinuim = m_iGameDecrease;
 
+        // Messages related
+		var m_iLeft;
+		var m_iMiddle;
+		var m_iRight;
+
+		var m_bIsPaused = false;
 		var m_IntervalID;
 		document.addEventListener("DOMContentLoaded", initialize, false);
 		document.documentElement.style.overflowX = 'hidden';	 // horizontal scrollbar will be hidden
@@ -144,9 +150,9 @@
 		    paintTile(m_iFoodX, m_iFoodY, m_cFoodColor, m_iBorderLength);
 
 		    // Prints score on top of snake game
-		    writeMessage(1, "Score: " + m_iAmountAte);
-		    writeMessage(Math.floor((m_iMapWidth/2) - 7), "Previous Score: " + m_iPrevAmount);
-		    writeMessage(Math.floor((m_iMapWidth) - 10), "Highest Score: " + m_iHighestAmount);
+		    writeMessage(m_iLeft, "Score: " + m_iAmountAte);
+		    writeMessage(m_iMiddle, "Previous Score: " + m_iPrevAmount);
+		    writeMessage(m_iRight, "Highest Score: " + m_iHighestAmount);
 		}
 
 		// Updates all colors
@@ -267,17 +273,43 @@
 		        }
 
 		        default: /* A key besides arrow key was pressed, pause game */
-		            alert("Game Paused");
+		            m_bIsPaused ? unPauseGame() : pauseGame();
 		    }
 		}
 
 		// Sets the canvas as big as the broswer size.
 		function setCanvasSize()
 		{
-		    m_iTileWidth = (Math.floor((window.innerWidth / m_iMapWidth)));//-1;
-			m_iTileHeight = (Math.floor((window.innerHeight / m_iMapHeight)));//-1;
+		    m_iTileWidth = Math.floor((window.innerWidth / m_iMapWidth));
+		    m_iTileHeight = Math.floor((window.innerHeight / m_iMapHeight));
 			m_CanvasContext.canvas.width = (m_iTileWidth * m_iMapWidth);
 			m_CanvasContext.canvas.height = (m_iTileHeight * m_iMapHeight);
+			m_iLeft = 1;
+			m_iMiddle = Math.floor((m_iMapWidth / 2) - 6);
+			m_iRight = Math.floor((m_iMapWidth) - 10);
+		}
+
+        // Stops loop
+		function pauseGame()
+		{
+		    window.clearInterval(m_IntervalID);
+
+		    for (var x = 0; x < m_iMapWidth; x++)
+		        for (var y = 0; y < 1; y++)
+		            paintTile(x, y, "#FFF", 0);
+
+		    writeMessage(m_iLeft, "Score: " + m_iAmountAte);
+		    writeMessage(m_iMiddle, "PAUSED");
+		    writeMessage(m_iRight, "Highest Score: " + m_iHighestAmount);
+		    m_bIsPaused = true;
+		    
+		}
+
+        // Starts loop again
+		function unPauseGame()
+		{
+		    m_bIsPaused = false;
+		    m_IntervalID = window.setInterval("gameLoop();", m_iGameSpeed);
 		}
 
 		// Resets all variabls so that the game can function properly.
