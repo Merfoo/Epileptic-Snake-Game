@@ -23,18 +23,24 @@
 		var m_iTileWidth;
 		var m_iTileHeight;
 		var m_iBorderLength = 2;
+		
+
+	    // All colors
 		var m_cBackroundColor = "#000";
 		var m_cBorderColor = "#000";
+		var m_cSnakeColor = "#000";
+		var m_cFoodColor = "#000";
+		var m_cScoreColor = "#000";
+		var m_cPrevScoreColor = "#000";
+		var m_cHighestScoreColor = "#000";
 
 	    // Snake Related
-		var m_cSnakeColor = "#000";
 		var m_iSnakeStartingLength = 7;
 		var m_iSnakeHead = { x: m_iSnakeStartingLength - 2, y: 1 };
 		var m_iSnakeBody = new Array(m_iSnakeStartingLength);
 		var m_iDirection = "right";
 
 		// Food Related
-		var m_cFoodColor = "#000";
 		var m_iFoodX = 0;
 		var m_iFoodY = 0;
 		var m_iAmountAte = 0;
@@ -57,6 +63,7 @@
 
 		var m_bIsPaused = false;
 		var m_IntervalID;
+
 		document.addEventListener("DOMContentLoaded", initialize, false);
 		document.documentElement.style.overflowX = 'hidden';	 // horizontal scrollbar will be hidden
 		document.documentElement.style.overflowY = 'hidden';
@@ -150,17 +157,20 @@
 		    paintTile(m_iFoodX, m_iFoodY, m_cFoodColor, m_iBorderLength);
 
 		    // Prints score on top of snake game
-		    writeMessage(m_iLeft, "Score: " + m_iAmountAte);
-		    writeMessage(m_iMiddle, "Previous Score: " + m_iPrevAmount);
-		    writeMessage(m_iRight, "Highest Score: " + m_iHighestAmount);
+		    writeMessage(m_iLeft, m_cScoreColor, "Score: " + m_iAmountAte);
+		    writeMessage(m_iMiddle, m_cPrevScoreColor, "Previous Score: " + m_iPrevAmount);
+		    writeMessage(m_iRight, m_cHighestScoreColor, "Highest Score: " + m_iHighestAmount);
 		}
 
 		// Updates all colors
 		function updateColors() {
 		    m_cBorderColor = getRandomColor(1, 255);
-		    m_cBackroundColor = "#000";;
+		    m_cBackroundColor = "#000";
 		    m_cSnakeColor = getRandomColor(1, 255);
 		    m_cFoodColor = getRandomColor(1, 255);
+		    m_cScoreColor = getRandomColor(0, 255);
+		    m_cPrevScoreColor = getRandomColor(0, 255);
+		    m_cHighestScoreColor = getRandomColor(0, 255);
 		}
 
 		// Handles where the snake should be.
@@ -298,9 +308,9 @@
 		        for (var y = 0; y < 1; y++)
 		            paintTile(x, y, "#FFF", 0);
 
-		    writeMessage(m_iLeft, "Score: " + m_iAmountAte);
-		    writeMessage(m_iMiddle, "PAUSED");
-		    writeMessage(m_iRight, "Highest Score: " + m_iHighestAmount);
+		    writeMessage(m_iLeft, m_cScoreColor, "Score: " + m_iAmountAte);
+		    writeMessage(m_iMiddle, m_cPrevScoreColor, "PAUSED!");
+		    writeMessage(m_iRight, m_cHighestScoreColor, "Highest Score: " + m_iHighestAmount);
 		    m_bIsPaused = true;
 		    
 		}
@@ -343,16 +353,17 @@
 		/*********************************************************************************************************/
 		                                        /*USEFULL FUNCTIONS*/
 
-		function writeMessage(startTile,message)
+		function writeMessage(startTile, color, message)
 		{
+		    m_CanvasContext.fillStyle = 'white';
+		    m_CanvasContext.fillRect(startTile * m_iTileWidth, 0, message, m_iTileHeight);
 			m_CanvasContext.font = '16pt Calibri';
-			m_CanvasContext.fillStyle = 'blue';
+			m_CanvasContext.fillStyle = color;
 			m_CanvasContext.fillText(message, startTile*m_iTileWidth, 20);
 		}
 		
 		function getRandomColor(iMin, iMax) {
 
-			//return m_cColors[getRandomNumber(0, m_cColors.length)];
 			// creating a random number between iMin and iMax
 			var r = getRandomNumber(iMin, iMax)
 			var g = getRandomNumber(iMin, iMax)
