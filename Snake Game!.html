@@ -22,23 +22,22 @@
 	    var m_iMapHeight = 25;
 	    var m_iTileWidth;
 	    var m_iTileHeight;
-	    var m_iBorderLength = 0;
+	    var m_iBorderLength = 2;
 
 
 	    // All colors
 	    var m_cBackroundColor = "#000";
 	    var m_cBorderColor = "#000";
-	    var m_cSnakeColor = "#FFF";
-	    var m_cFoodColor = "green";
+	    var m_cSnakeColor = "#000";
+	    var m_cFoodColor = "#000";
 	    var m_cScoreColor = "#000";
 	    var m_cPrevScoreColor = "#000";
 	    var m_cHighestScoreColor = "#000";
 
 	    // Snake Related
-	    var m_iSnakeStartingLength = 1;
+	    var m_iSnakeStartingLength = 7;
 	    var m_iSnakeHead = { x: m_iSnakeStartingLength - 2, y: 1 };
 	    var m_iSnakeBody = new Array(m_iSnakeStartingLength);
-	    var m_cSnakeTailColor = new Array();
 	    var m_iDirection = "right";
 
 	    // Food Related
@@ -79,18 +78,14 @@
 	        // Get canvas context for drawing
 	        m_CanvasContext = document.getElementById("myCanvas").getContext("2d");
 	        setCanvasSize();
+
+	        // Get canvas for event listening
+	        //m_Canvas = document.getElementById("myCanvas");
 	        window.addEventListener('keydown', doKeyDown, true);
 
 	        // Initialize snake
 	        for (var index = 0; index < m_iSnakeStartingLength; index++)
 	            m_iSnakeBody[m_iSnakeStartingLength - index - 1] = { x: index - 1, y: m_iSnakeHead.y };
-
-	        m_cSnakeTailColor.push(m_cSnakeColor);
-
-	        // Background
-	        for (var x = 0; x < m_iMapWidth; x++)
-	            for (var y = 0; y < m_iMapHeight; y++)
-	                paintTile(x, y, m_cBackroundColor, m_iBorderLength);
 
 	        setFood();
 	        drawMap();
@@ -104,10 +99,8 @@
 
 	        // If true, increase snake length, increase gamespeed.
 	        if (gotFood()) {
-	            var tempData = { x: m_iSnakeBody[m_iSnakeBody.length - 1].x, y: m_iSnakeBody[m_iSnakeBody.length - 1].Y };
+	            var tempData = { x: m_iSnakeBody[m_iSnakeBody.length - 1].x, y: m_iSnakeBody[m_iSnakeBody.length - 1].y };
 	            m_iSnakeBody.push(tempData);
-	            m_cSnakeTailColor.push(m_cFoodColor);
-	            m_cFoodColor = getRandomColor(1, 255);
 	            m_iAmountAte++;
 	            setFood();
 
@@ -128,17 +121,32 @@
 	    // Draws everything on the canvas.
 	    function drawMap() {
 
+	        // Background
+	        for (var x = 0; x < m_iMapWidth; x++) {
+	            for (var y = 0; y < m_iMapHeight; y++) {
+	                if (y == 0)
+	                    paintTile(x, y, "#FFF", 0);
+
+	                else {
+	                    // Updates all colors
+	                    updateColors();
+	                    // Paints border
+	                    paintTile(x, y, m_cBorderColor, 0);
+	                    // Paints inside border
+	                    paintTile(x, y, m_cBackroundColor, m_iBorderLength);
+	                }
+	            }
+	        }
+
 	        // Snake 1
-	        for (var index = 0; index < m_iSnakeBody.length; index++)
-	            paintTile(m_iSnakeBody[index].x, m_iSnakeBody[index].y, m_cSnakeTailColor[index], m_iBorderLength);
+	        for (var index = 0; index < m_iSnakeBody.length; index++) {
+	            // Updates all colors
+	            updateColors();
+	            paintTile(m_iSnakeBody[index].x, m_iSnakeBody[index].y, m_cSnakeColor, m_iBorderLength);
+	        }
 
 	        // Food
 	        paintTile(m_iFoodX, m_iFoodY, m_cFoodColor, m_iBorderLength);
-
-	        // Paints white we can see text
-	        for (var x = 0; x < m_iMapWidth; x++)
-	            for (var y = 0; y < 1; y++)
-	                paintTile(x, y, "#FFF", 0);
 
 	        // Prints score on top of snake game
 	        writeMessage(m_iLeft, m_cScoreColor, "Score: " + m_iAmountAte);
@@ -146,11 +154,21 @@
 	        writeMessage(m_iRight, m_cHighestScoreColor, "Highest Score: " + m_iHighestAmount);
 	    }
 
+	    // Updates all colors
+	    function updateColors() {
+	        m_cBorderColor = getRandomColor(1, 255);
+	        m_cBackroundColor = "#000";
+	        m_cSnakeColor = getRandomColor(1, 255);
+	        m_cFoodColor = getRandomColor(1, 255);
+	        m_cScoreColor = getRandomColor(0, 255);
+	        m_cPrevScoreColor = getRandomColor(0, 255);
+	        m_cHighestScoreColor = getRandomColor(0, 255);
+	    }
+
 	    // Handles where the snake should be.
-	    function setUpSnake()
-	    {
-	        var tempSnakeData = m_iSnakeBody.pop();
-	        paintTile(tempSnakeData.x, tempSnakeData.y, m_cBackroundColor, m_iBorderLength);
+	    function setUpSnake() {
+	        var tempSnakeData;
+	        m_iSnakeBody.pop();
 
 	        if (m_iDirection == "right")
 	            tempSnakeData = { x: ++m_iSnakeHead.x, y: m_iSnakeHead.y };
@@ -298,7 +316,6 @@
 	        m_iSnakeHead.x = m_iSnakeStartingLength - 2;
 	        m_iSnakeHead.y = 1;
 	        m_iSnakeBody = new Array(m_iSnakeStartingLength);
-	        m_cSnakeTailColor = new Array();
 	        m_iDirection = "right";
 	        m_iPrevAmount = m_iAmountAte;
 
