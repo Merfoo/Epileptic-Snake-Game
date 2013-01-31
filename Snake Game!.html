@@ -22,39 +22,27 @@
 		var m_iMapHeight = 25;
 		var m_iTileWidth;
 		var m_iTileHeight;
-		var m_cColors = ['#FF0000', '#FF7700', '#FFFF00', '#00FF00', '#1500FF', '#C700FF'];
-		var m_cDefaultColor = "#000";
-		var m_CanvaContext;
-		var m_Canvas;
 		var m_iBorderLength = 2;
+		var m_cBackroundColor = "#000";
+		var m_cBorderColor = "#000";
 
-	    // Snake 1 Related
-		var m_iSnakeIDOne = 1;
-		var m_cSnakeColorOne = "#000";
-		var m_iSnakeLengthOne = 7;
-		var m_iSnakeHeadOne = { x: m_iSnakeLengthOne - 2, y: 0 };
-		var m_iSnakeBodyOne = new Array(m_iSnakeLengthOne);
-		var m_iDirectionOne = "right";
-		var m_iAmountAteOne = 0;
-
-	    // Snake 2 Related
-		var m_iSnakeIDTwo = 2;
-		var m_cSnakeColorTwo = "#FFF";
-		var m_iSnakeLengthTwo = 7;
-		var m_iSnakeHeadTwo = { x: m_iMapWidth - m_iSnakeLengthTwo, y: 0 };
-		var m_iSnakeXTwo = new Array(m_iSnakeLengthTwo);
-		var m_iSnakeYTwo = new Array(m_iSnakeLengthTwo);
-		var m_iDirectionTwo = "left";
-		var m_iAmountAteTwo = 0;
+	    // Snake Related
+		var m_cSnakeColor = "#000";
+		var m_iSnakeStartingLength = 7;
+		var m_iSnakeHead = { x: m_iSnakeStartingLength - 2, y: 1 };
+		var m_iSnakeBody = new Array(m_iSnakeStartingLength);
+		var m_iDirection = "right";
 
 		// Food Related
 		var m_cFoodColor = "#000";
 		var m_iFoodX = 0;
 		var m_iFoodY = 0;
+		var m_iAmountAte = 0;
+		var m_iPrevAmount = 0;
+		var m_iHighestAmount = 0;
 
-		// Map Color related
-		var iMin = 0;
-		var iMax = 255;
+	    // Canvas
+		var m_CanvasContext;
 
 		// GameSpeed
 		var m_iOriginalSpeed = 50;
@@ -80,16 +68,12 @@
 			setCanvasSize();
 
             // Get canvas for event listening
-			m_Canvas = document.getElementById("myCanvas");
+			//m_Canvas = document.getElementById("myCanvas");
 			window.addEventListener('keydown', doKeyDown, true);
 
 			// Initialize snake
-			for (var index = 0; index < m_iSnakeLengthOne; index++)
-			{
-			    m_iSnakeBodyOne[m_iSnakeLengthOne - index - 1] = {x: index - 1, y: m_iSnakeHeadOne.y};
-			    m_iSnakeXTwo[m_iSnakeLengthOne - index - 1] = m_iMapWidth - index - 1;
-			    m_iSnakeYTwo[index] = m_iSnakeHeadOne.y;
-			}
+			for (var index = 0; index < m_iSnakeStartingLength; index++)
+			    m_iSnakeBody[m_iSnakeStartingLength - index - 1] = {x: index - 1, y: m_iSnakeHead.y};
 
 			setFood();
 			drawMap();
@@ -99,40 +83,29 @@
 		// Runs all the functions required for the game to work.
 		function gameLoop()
 		{
-		    //writeMessage("Hellooo");
-		    setUpSnake(1);
-		    //setUpSnake(2);
+		    setUpSnake();
 		    drawMap();
 
 		    // If true, increase snake length, increase gamespeed.
-		    if (gotFood(m_iSnakeIDOne) || gotFood(2))
+		    if (gotFood())
 		    {
-		        if (gotFood(m_iSnakeIDOne)) {
-		            m_iSnakeBodyOne.push(m_iSnakeBodyOne[m_iSnakeBodyOne.length - 1].x, m_iSnakeBodyOne[m_iSnakeBodyOne.length - 1].y);
-		            m_iAmountAteOne++;
-		        }
-
-		        if (gotFood(2)) {
-		            m_iSnakeXTwo.push(m_iSnakeXTwo[m_iSnakeXTwo.length - 1]);
-		            m_iSnakeYTwo.push(m_iSnakeYTwo[m_iSnakeYTwo.length - 1]);
-		            m_iAmountAteTwo++;
-		        }
+		        m_iSnakeBody.push(m_iSnakeBody[m_iSnakeBody.length - 1].x, m_iSnakeBody[m_iSnakeBody.length - 1].y);
+		        m_iAmountAte++;
+		        setFood();
 
 				if ((m_iGameSpeed - m_iGameDecrease) >= m_iGameMinuim) {
 					m_iGameSpeed = m_iGameSpeed - m_iGameDecrease;
 					window.clearInterval(m_IntervalID);
 					m_IntervalID = window.setInterval("gameLoop()", m_iGameSpeed, false);
 				}
-
-				setFood();
 			}
 
 			// If true, reset the game.
-			if (checkCollision(1) || checkCollision(2))
+			if (checkCollision())
 			{
-			    alert("You ate " + m_iAmountAteOne +  "-" +  m_iAmountAteTwo + " !!!");
-				resetGame();
-				initialize();
+			    //alert("You ate " + m_iAmountAte + " !!!");
+			    resetGame();
+			    initialize();
 			}
 		}
 
@@ -140,212 +113,93 @@
 		function drawMap() {
 
             // Background
-			for (var x = 0; x < m_iMapWidth; x++) 
-			    for (var y = 0; y < m_iMapHeight; y++) {
-			        paintTile(x, y, getRandomColor(1, 255), 0);
-			        paintTile(x, y, m_cDefaultColor, m_iBorderLength);//paintTile(x, y, getRandomColor(1, 255), m_iBorderLength);
-			    }
+		    for (var x = 0; x < m_iMapWidth; x++)
+		    {
+		        for (var y = 0; y < m_iMapHeight; y++)
+		        {
+		            if (y == 0)
+		                paintTile(x, y, "#FFF", 0);
+
+		            else
+		            {
+		                // Updates all colors
+		                updateColors();
+		                // Paints border
+		                paintTile(x, y, m_cBorderColor, 0);
+		                // Paints inside border
+		                paintTile(x, y, m_cBackroundColor, m_iBorderLength);
+		            }
+		        }
+		    }
 
             // Snake 1
-			for (var index = 0; index < m_iSnakeBodyOne.length; index++) 
-			    paintTile(m_iSnakeBodyOne[index].x, m_iSnakeBodyOne[index].y, getRandomColor(0, 255), m_iBorderLength);//paintTile(m_iSnakeXOne[index], m_iSnakeYOne[index], m_cSnakeColorOne, m_iBorderLength);
-			
-            // Snake 2
-			for (var index = 0; index < m_iSnakeXTwo.length; index++)
-			    paintTile(m_iSnakeXTwo[index], m_iSnakeYTwo[index], getRandomColor(0, 255), m_iBorderLength);//paintTile(m_iSnakeXOne[index], m_iSnakeYOne[index], m_cSnakeColorOne, m_iBorderLength);
+		    for (var index = 0; index < m_iSnakeBody.length; index++)
+		    {
+		        // Updates all colors
+		        updateColors();
+		        paintTile(m_iSnakeBody[index].x, m_iSnakeBody[index].y, m_cSnakeColor, m_iBorderLength);
+		    }
 
             // Food
-			paintTile(m_iFoodX, m_iFoodY, getRandomColor(0, 255), m_iBorderLength);//paintTile(m_iFoodX, m_iFoodY, m_cFoodColor, m_iBorderLength);
+		    paintTile(m_iFoodX, m_iFoodY, m_cFoodColor, m_iBorderLength);
+
+		    // Prints score on top of snake game
+		    writeMessage(1, "Score: " + m_iAmountAte);
+		    writeMessage(Math.floor((m_iMapWidth/2) - 7), "Previous Score: " + m_iPrevAmount);
+		    writeMessage(Math.floor((m_iMapWidth) - 10), "Highest Score: " + m_iHighestAmount);
 		}
 
-		// Paints a tile on the screen, handles converting pixel to tile.
-		function paintTile(x, y, color, borderThickness)
-		{
-			m_CanvasContext.fillStyle = color;
-			m_CanvasContext.fillRect((x * m_iTileWidth) + borderThickness, (y * m_iTileHeight) + borderThickness, m_iTileWidth - (borderThickness * 2), m_iTileHeight - (borderThickness * 2));
+		// Updates all colors
+		function updateColors() {
+		    m_cBorderColor = getRandomColor(1, 255);
+		    m_cBackroundColor = "#000";;
+		    m_cSnakeColor = getRandomColor(1, 255);
+		    m_cFoodColor = getRandomColor(1, 255);
 		}
 
 		// Handles where the snake should be.
-		function setUpSnake(snakeID)
+		function setUpSnake()
 		{
-		    if (snakeID == 1)
-		    {
-		        m_iSnakeBodyOne.pop();
+		    var tempSnakeData;
+		    m_iSnakeBody.pop();
 
-		        if (m_iDirectionOne == "right") {
-		            var tempSnakeData = { x: ++m_iSnakeHeadOne.x, y: m_iSnakeHeadOne.y };
-		            m_iSnakeBodyOne.unshift(tempSnakeData);
-		        }
+		    if (m_iDirection == "right") 
+		        tempSnakeData = { x: ++m_iSnakeHead.x, y: m_iSnakeHead.y };
 
-		        if (m_iDirectionOne == "left") {
-		            var tempSnakeData = { x: --m_iSnakeHeadOne.x, y: m_iSnakeHeadOne.y };
-		            m_iSnakeBodyOne.unshift(tempSnakeData);
-		        }
+		    if (m_iDirection == "left") 
+		        var tempSnakeData = { x: --m_iSnakeHead.x, y: m_iSnakeHead.y };
 
-		        if (m_iDirectionOne == "down") {
-		            var tempSnakeData = { x: m_iSnakeHeadOne.x, y: ++m_iSnakeHeadOne.y };
-		            m_iSnakeBodyOne.unshift(tempSnakeData);
-		        }
+		    if (m_iDirection == "down") 
+		        var tempSnakeData = { x: m_iSnakeHead.x, y: ++m_iSnakeHead.y };
 
-		        if (m_iDirectionOne == "up") {
-		            var tempSnakeData = { x: m_iSnakeHeadOne.x, y: --m_iSnakeHeadOne.y };
-		            m_iSnakeBodyOne.unshift(tempSnakeData);
-		        }
-		    }
+		    if (m_iDirection == "up") 
+		        var tempSnakeData = { x: m_iSnakeHead.x, y: --m_iSnakeHead.y };
 
-		    if (snakeID == 2) {
-		        m_iSnakeXTwo.pop();
-		        m_iSnakeYTwo.pop();
-
-		        if (m_iDirectionTwo == "right") {
-		            m_iSnakeXTwo.unshift(++m_iSnakeHeadTwo.x);
-		            m_iSnakeYTwo.unshift(m_iSnakeHeadTwo.y);
-		        }
-
-		        if (m_iDirectionTwo == "left") {
-		            m_iSnakeXTwo.unshift(--m_iSnakeHeadTwo.x);
-		            m_iSnakeYTwo.unshift(m_iSnakeHeadTwo.y);
-		        }
-
-		        if (m_iDirectionTwo == "down") {
-		            m_iSnakeXTwo.unshift(m_iSnakeHeadTwo.x);
-		            m_iSnakeYTwo.unshift(++m_iSnakeHeadTwo.y);
-		        }
-
-		        if (m_iDirectionTwo == "up") {
-		            m_iSnakeXTwo.unshift(m_iSnakeHeadTwo.x);
-		            m_iSnakeYTwo.unshift(--m_iSnakeHeadTwo.y);
-		        }
-		    }
+		    m_iSnakeBody.unshift(tempSnakeData);
 		}
 
 		// Checks if the snake hit the wall or itself.
-		function checkCollision(snakeID) {
+		function checkCollision() {
 
-            // Checks if snake one or two hit the borders
-		    if (snakeID == m_iSnakeIDOne)
-		    {
-		        if (m_iSnakeHeadOne.x >= m_iMapWidth)
-		            return true;
+            // Checks if snake hit the borders
+		    if (m_iSnakeHead.x >= m_iMapWidth)
+		        return true;
 
-		        if (m_iSnakeHeadOne.x < 0)
-		            return true;
+		    if (m_iSnakeHead.x < 0)
+		        return true;
 
-		        if (m_iSnakeHeadOne.y >= m_iMapHeight)
-		            return true;
+		    if (m_iSnakeHead.y >= m_iMapHeight)
+		        return true;
 
-		        if (m_iSnakeHeadOne.y < 0)
-		            return true;
+		    if (m_iSnakeHead.y <= 0)
+		        return true;
 
 		        // Checks if the snakes hit themselves
-		        for (var index = 1; index < m_iSnakeBodyOne.length; index++)
-		            if (m_iSnakeHeadOne.x == m_iSnakeBodyOne[index].x && m_iSnakeHeadOne.y == m_iSnakeBodyOne[index].y)
+		        for (var index = 1; index < m_iSnakeBody.length; index++)
+		            if (m_iSnakeHead.x == m_iSnakeBody[index].x && m_iSnakeHead.y == m_iSnakeBody[index].y)
 		                return true;
-
-		        // Checks if the snakes hit the other snakes
-		        for (var index = 0; index < m_iSnakeBodyOne.length; index++)
-		            if (m_iSnakeHeadOne.x == m_iSnakeXTwo[index] && m_iSnakeHeadOne.y == m_iSnakeYTwo[index])
-		                return true;
-		    }
-
-		    else if (snakeID == m_iSnakeIDTwo)
-		    {
-		        if (m_iSnakeHeadTwo.x >= m_iMapWidth)
-		            return true;
-
-		        if (m_iSnakeHeadTwo.x < 0)
-		            return true;
-
-		        if (m_iSnakeHeadTwo.y >= m_iMapHeight)
-		            return true;
-
-		        if (m_iSnakeHeadTwo.y < 0)
-		            return true;
-
-                // Checks if the snake hit themselves
-		        for (var index = 1; index < m_iSnakeXTwo.length; index++)
-		            if (m_iSnakeHeadTwo.x == m_iSnakeXTwo[index] && m_iSnakeHeadTwo.y == m_iSnakeYTwo[index])
-		                return true;
-
-		        // Checks if the snakes hit the other snakes
-		        for (var index = 0; index < m_iSnakeBodyOne.length; index++)
-		            if (m_iSnakeHeadTwo.x == m_iSnakeBodyOne[index].x && m_iSnakeHeadTwo.y == m_iSnakeBodyOne[index].y)
-		                return true;
-		    }
 
 		    return false;
-		}
-
-		// Handles the changing direction of the snake.
-		function doKeyDown(event) {
-			switch (event.keyCode)
-		    {
-			    // Snake 1
-			    case 87: /* Up arrow was pressed */
-			    {
-			        if (m_iDirectionOne != "down")
-			            m_iDirectionOne = "up";
-
-			        break;
-			    }
-
-			    case 83: /* Down arrow was pressed */
-			    {
-			        if (m_iDirectionOne != "up")
-			            m_iDirectionOne = "down";
-
-			        break;
-			    }
-
-			    case 65: /* Left arrow was pressed */
-			    {
-			        if (m_iDirectionOne != "right")
-			            m_iDirectionOne = "left";
-
-			        break;
-			    }
-
-			    case 68: /* Right arrow was pressed */
-			    {
-			        if (m_iDirectionOne != "left")
-			            m_iDirectionOne = "right";
-
-			        break;
-			    }
-
-                // Snake 2
-				case 38:  /* Up arrow was pressed */
-				{
-				    if (m_iDirectionTwo != "down")
-				        m_iDirectionTwo = "up";
-
-					break;
-				}
-
-				case 40:  /* Down arrow was pressed */
-				{
-				    if (m_iDirectionTwo != "up")
-				        m_iDirectionTwo = "down";
-
-					break;
-				}
-
-				case 37:  /* Left arrow was pressed */
-				{
-				    if (m_iDirectionTwo != "right")
-				        m_iDirectionTwo = "left";
-
-					break;
-				}
-
-				case 39:  /* Right arrow was pressed */
-				{
-				    if (m_iDirectionTwo != "left")
-				        m_iDirectionTwo = "right";
-
-				    break;
-				}
-			}
 		}
 
 		// Chooses the next position for the food.
@@ -353,17 +207,13 @@
 		{
 			var bIsFoodOnSnake = true;
 
-			while (bIsFoodOnSnake) {
+			while (bIsFoodOnSnake)
+			{
+				m_iFoodX = getRandomNumber(0, m_iMapWidth-1);
+				m_iFoodY = getRandomNumber(1, m_iMapHeight-1);
 
-				m_iFoodX = getRandomNumber(0, m_iMapWidth);
-				m_iFoodY = getRandomNumber(0, m_iMapHeight);
-
-				for (var index = 0; index < m_iSnakeLengthOne.length; index++)
-				    if (m_iFoodX == m_iSnakeBodyOne[index].x && m_iFoodY == m_iSnakeBodyOne[index].y)
-						continue;
-
-				for (var index = 0; index < m_iSnakeXTwo.length; index++)
-				    if (m_iFoodX == m_iSnakeXTwo[index] && m_iFoodY == m_iSnakeYTwo[index])
+				for (var index = 0; index < m_iSnakeBody.length; index++)
+				    if (m_iFoodX == m_iSnakeBody[index].x && m_iFoodY == m_iSnakeBody[index].y)
 				        continue;
 
 				bIsFoodOnSnake = false;
@@ -371,24 +221,61 @@
 		}
 
 		// Checks if the snake got the food, so make it longer.
-		function gotFood(snakeID) {
+		function gotFood() {
 		    
-		    if (snakeID == 1)
-		        if (m_iSnakeHeadOne.x == m_iFoodX && m_iSnakeHeadOne.y == m_iFoodY)
-		            return true;
-
-		    else if (snakeID == 2)
-		        if (m_iSnakeHeadTwo.x == m_iFoodX && m_iSnakeHeadTwo.y == m_iFoodY)
-		            return true;
+		    if (m_iSnakeHead.x == m_iFoodX && m_iSnakeHead.y == m_iFoodY)
+		        return true;
 
             return false;
+		}
+
+		// Handles the changing direction of the snake.
+		function doKeyDown(event) {
+		    switch (event.keyCode) {
+
+		        // Snake 1
+		        case 38:  /* Up arrow was pressed */
+		        {
+		            if (m_iDirection != "down")
+		                m_iDirection = "up";
+
+		            break;
+		        }
+
+		        case 40:  /* Down arrow was pressed */
+		        {
+		            if (m_iDirection != "up")
+		                m_iDirection = "down";
+
+		            break;
+		        }
+
+		        case 37:  /* Left arrow was pressed */
+		        {
+		            if (m_iDirection != "right")
+		                m_iDirection = "left";
+
+		            break;
+		        }
+
+		        case 39:  /* Right arrow was pressed */
+		        {
+		            if (m_iDirection != "left")
+		                m_iDirection = "right";
+
+		            break;
+		        }
+
+		        default: /* A key besides arrow key was pressed, pause game */
+		            alert("Game Paused");
+		    }
 		}
 
 		// Sets the canvas as big as the broswer size.
 		function setCanvasSize()
 		{
-			m_iTileWidth = Math.floor((window.innerWidth/m_iMapWidth));
-			m_iTileHeight = (Math.floor((window.innerHeight/m_iMapHeight)))-1;
+		    m_iTileWidth = (Math.floor((window.innerWidth / m_iMapWidth)));//-1;
+			m_iTileHeight = (Math.floor((window.innerHeight / m_iMapHeight)));//-1;
 			m_CanvasContext.canvas.width = (m_iTileWidth * m_iMapWidth);
 			m_CanvasContext.canvas.height = (m_iTileHeight * m_iMapHeight);
 		}
@@ -398,35 +285,37 @@
 		{
 		    m_iGameSpeed = m_iOriginalSpeed;
 
-            // Snake 1
-			m_iSnakeHeadOne.x = m_iSnakeLengthOne-2;
-			m_iSnakeHeadOne.y = 0;
-			m_iSnakeBodyOne = new Array(m_iSnakeLengthOne);
-			m_iDirectionOne = "right";
-			m_iAmountAteOne = 0;
+            // Snake 
+		    m_iSnakeHead.x = m_iSnakeStartingLength - 2;
+			m_iSnakeHead.y = 1;
+			m_iSnakeBody = new Array(m_iSnakeStartingLength);
+			m_iDirection = "right";
+			m_iPrevAmount = m_iAmountAte;
 
-		    // Snake 2
-			m_iSnakeHeadTwo.x = m_iMapWidth - m_iSnakeLengthTwo;
-			m_iSnakeHeadTwo.y = 0;
-			m_iSnakeXTwo = new Array(m_iSnakeLengthOne);
-			m_iSnakeYTwo = new Array(m_iSnakeLengthOne);
-			m_iDirectionTwo = "left";
-			m_iAmountAteTwo = 0;
+			if (m_iPrevAmount > m_iHighestAmount)
+			    m_iHighestAmount = m_iPrevAmount;
+
+			m_iAmountAte = 0;
 
 			// Food Related
 			m_iFoodX = 0;
 			m_iFoodY = 0;
 		}
 
+		// Paints a tile on the screen, handles converting pixel to tile.
+		function paintTile(x, y, color, borderThickness) {
+		    m_CanvasContext.fillStyle = color;
+		    m_CanvasContext.fillRect((x * m_iTileWidth) + borderThickness, (y * m_iTileHeight) + borderThickness, m_iTileWidth - (borderThickness * 2), m_iTileHeight - (borderThickness * 2));
+		}
+
 		/*********************************************************************************************************/
 		                                        /*USEFULL FUNCTIONS*/
 
-		function writeMessage(message)
+		function writeMessage(startTile,message)
 		{
-		    //m_CanvasContext.clearRect(0, 0, message.length*10, 10);
 			m_CanvasContext.font = '16pt Calibri';
-			m_CanvasContext.fillStyle = 'white';
-			m_CanvasContext.fillText(message, 10, 10);
+			m_CanvasContext.fillStyle = 'blue';
+			m_CanvasContext.fillText(message, startTile*m_iTileWidth, 20);
 		}
 		
 		function getRandomColor(iMin, iMax) {
