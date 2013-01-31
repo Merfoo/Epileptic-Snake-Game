@@ -104,7 +104,6 @@
 
 	        // If true, increase snake length, increase gamespeed.
 	        if (gotFood()) {
-	            alert("You ate something");
 	            var tempData = { x: m_iSnakeBody[m_iSnakeBody.length - 1].x, y: m_iSnakeBody[m_iSnakeBody.length - 1].Y };
 	            m_iSnakeBody.push(tempData);
 	            m_cSnakeTailColor.push(m_cFoodColor);
@@ -130,8 +129,6 @@
 	    function drawMap() {
 
 	        // Snake 1
-	        //paintTile(m_iSnakeHead.x, m_iSnakeHead.y, m_cSnakeColor, m_iBorderLength);
-
 	        for (var index = 0; index < m_iSnakeBody.length; index++)
 	            paintTile(m_iSnakeBody[index].x, m_iSnakeBody[index].y, m_cSnakeTailColor[index], m_iBorderLength);
 
@@ -150,7 +147,8 @@
 	    }
 
 	    // Handles where the snake should be.
-	    function setUpSnake() {
+	    function setUpSnake()
+	    {
 	        var tempSnakeData = m_iSnakeBody.pop();
 	        paintTile(tempSnakeData.x, tempSnakeData.y, m_cBackroundColor, m_iBorderLength);
 
@@ -282,7 +280,6 @@
 	        writeMessage(m_iLeft, m_cScoreColor, "Score: " + m_iAmountAte);
 	        writeMessage(m_iMiddle, m_cPrevScoreColor, "PAUSED!");
 	        writeMessage(m_iRight, m_cHighestScoreColor, "Highest Score: " + m_iHighestAmount);
-	        paintTile(m_iSnakeHead.x, m_iSnakeHead.y, "red", m_iBorderLength);
 	        m_bIsPaused = true;
 
 	    }
@@ -301,6 +298,7 @@
 	        m_iSnakeHead.x = m_iSnakeStartingLength - 2;
 	        m_iSnakeHead.y = 1;
 	        m_iSnakeBody = new Array(m_iSnakeStartingLength);
+	        m_cSnakeTailColor = new Array();
 	        m_iDirection = "right";
 	        m_iPrevAmount = m_iAmountAte;
 
