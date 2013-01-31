@@ -61,6 +61,7 @@
 	    var m_iMiddle;
 	    var m_iRight;
 
+	    var m_Music = new Audio("ateFood.wav");
 	    var m_bIsPaused = false;
 	    var m_IntervalID;
 
@@ -80,7 +81,6 @@
 	        setCanvasSize();
 
 	        // Get canvas for event listening
-	        //m_Canvas = document.getElementById("myCanvas");
 	        window.addEventListener('keydown', doKeyDown, true);
 
 	        // Initialize snake
@@ -99,6 +99,8 @@
 
 	        // If true, increase snake length, increase gamespeed.
 	        if (gotFood()) {
+	            m_Music.currentTime = 0;
+	            m_Music.play();
 	            var tempData = { x: m_iSnakeBody[m_iSnakeBody.length - 1].x, y: m_iSnakeBody[m_iSnakeBody.length - 1].y };
 	            m_iSnakeBody.push(tempData);
 	            m_iAmountAte++;
