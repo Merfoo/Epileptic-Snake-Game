@@ -18,14 +18,16 @@
 	</style>
 	<script>
 	    // Map Related
-	    var m_iMapWidth = 50;
-	    var m_iMapHeight = 25;
+	    var m_iMapWidth = 60;
+	    var m_iMapHeight = 30;
 	    var m_iTileWidth;
 	    var m_iTileHeight;
-	    var m_iBorderLength = 2;
 
-
-	    // All colors
+	    // All colors/ borders
+	    var m_iBackgroundBorderWidth = 0;
+	    var m_iSnakeBodyBorderWidth = 1;
+	    var m_iSnakeHeadBorderWidth = 1;
+	    var m_iFoodBorderWidth = 0;
 	    var m_cBackroundColor = "#000";
 	    var m_cBorderColor = "#000";
 	    var m_cSnakeColor = "#000";
@@ -38,6 +40,7 @@
 	    var m_iSnakeStartingLength = 7;
 	    var m_iSnakeHead = { x: m_iSnakeStartingLength - 2, y: 1 };
 	    var m_iSnakeBody = new Array(m_iSnakeStartingLength);
+	    var m_bIsSnakeUpdated = false;
 	    var m_iDirection = "right";
 
 	    // Food Related
@@ -51,7 +54,7 @@
 	    var m_CanvasContext;
 
 	    // GameSpeed
-	    var m_iOriginalSpeed = 50;
+	    var m_iOriginalSpeed = 80;
 	    var m_iGameSpeed = m_iOriginalSpeed;
 	    var m_iGameDecrease = 5;
 	    var m_iGameMinuim = m_iGameDecrease;
@@ -61,52 +64,79 @@
 	    var m_iMiddle;
 	    var m_iRight;
 
+<<<<<<< HEAD
 	    var m_Music = new Audio("ateFood.wav");
+=======
+		var m_FoodMusic = new Audio("food.mp3");
+		var m_BackgroundMusic = new Audio("backgroundMusic.mp3");
+>>>>>>> origin/Epileptic-Dev
 	    var m_bIsPaused = false;
 	    var m_IntervalID;
 
 	    document.addEventListener("DOMContentLoaded", initialize, false);
+	    window.addEventListener('keydown', doKeyDown, true);
+
 	    document.documentElement.style.overflowX = 'hidden';	 // horizontal scrollbar will be hidden
 	    document.documentElement.style.overflowY = 'hidden';
 
-	    function initialize() {
+	    function initialize() 
+	    {
+			// Initialize background music
+			m_BackgroundMusic.play();
+
+	        // Get canvas context for drawing, add events
+	        m_CanvasContext = document.getElementById("myCanvas").getContext("2d");
+	        setCanvasSize();
+
+<<<<<<< HEAD
+	        // Get canvas for event listening
+	        window.addEventListener('keydown', doKeyDown, true);
+
+=======
+>>>>>>> origin/Epileptic-Dev
+	        // Initialize snake
+	        for (var index = 0; index < m_iSnakeStartingLength; index++)
+	            m_iSnakeBody[m_iSnakeStartingLength - index - 1] = { x: index - 1, y: m_iSnakeHead.y };
+
+	        for (var x = 0; x < m_iMapWidth; x++) 
+	            for (var y = 0; y < m_iMapHeight; y++)
+	                y == 0 ? paintTile(x, y, "#FFF", 0) : paintTile(x, y, m_cBackroundColor, 0);
+
+	        setFood();
+	        drawMap();
+	        gameLoop();
+
 	        // Initialize gameloop.
 	        if (m_IntervalID != null)
 	            clearInterval(m_IntervalID);
 
 	        m_IntervalID = window.setInterval("gameLoop();", m_iGameSpeed);
-
-	        // Get canvas context for drawing
-	        m_CanvasContext = document.getElementById("myCanvas").getContext("2d");
-	        setCanvasSize();
-
-	        // Get canvas for event listening
-	        window.addEventListener('keydown', doKeyDown, true);
-
-	        // Initialize snake
-	        for (var index = 0; index < m_iSnakeStartingLength; index++)
-	            m_iSnakeBody[m_iSnakeStartingLength - index - 1] = { x: index - 1, y: m_iSnakeHead.y };
-
-	        setFood();
-	        drawMap();
-	        gameLoop();
 	    }
 
 	    // Runs all the functions required for the game to work.
-	    function gameLoop() {
+	    function gameLoop() 
+	    {
 	        setUpSnake();
 	        drawMap();
 
 	        // If true, increase snake length, increase gamespeed.
+<<<<<<< HEAD
 	        if (gotFood()) {
 	            m_Music.currentTime = 0;
 	            m_Music.play();
+=======
+	        if (gotFood()) 
+	        {
+				m_FoodMusic.currentTime = 0;
+				m_FoodMusic.play();
+>>>>>>> origin/Epileptic-Dev
 	            var tempData = { x: m_iSnakeBody[m_iSnakeBody.length - 1].x, y: m_iSnakeBody[m_iSnakeBody.length - 1].y };
 	            m_iSnakeBody.push(tempData);
 	            m_iAmountAte++;
 	            setFood();
 
-	            if ((m_iGameSpeed - m_iGameDecrease) >= m_iGameMinuim) {
+	            if ((m_iGameSpeed - m_iGameDecrease) >= m_iGameMinuim) 
+	            {
 	                m_iGameSpeed = m_iGameSpeed - m_iGameDecrease;
 	                window.clearInterval(m_IntervalID);
 	                m_IntervalID = window.setInterval("gameLoop()", m_iGameSpeed, false);
@@ -114,41 +144,29 @@
 	        }
 
 	        // If true, reset the game.
-	        if (checkCollision()) {
+	        if (checkCollision()) 
+	        {
 	            resetGame();
 	            initialize();
 	        }
+			
+			// Plays music. 
+			m_BackgroundMusic.play();
 	    }
 
 	    // Draws everything on the canvas.
-	    function drawMap() {
+	    function drawMap() 
+	    {
+	        m_cFoodColor = getRandomColor(1, 255);
 
-	        // Background
-	        for (var x = 0; x < m_iMapWidth; x++) {
-	            for (var y = 0; y < m_iMapHeight; y++) {
-	                if (y == 0)
-	                    paintTile(x, y, "#FFF", 0);
+	        // Snake head
+	        paintTile(m_iSnakeHead.x, m_iSnakeHead.y, "#FFF", m_iSnakeHeadBorderWidth);
 
-	                else {
-	                    // Updates all colors
-	                    updateColors();
-	                    // Paints border
-	                    paintTile(x, y, m_cBorderColor, 0);
-	                    // Paints inside border
-	                    paintTile(x, y, m_cBackroundColor, m_iBorderLength);
-	                }
-	            }
-	        }
-
-	        // Snake 1
-	        for (var index = 0; index < m_iSnakeBody.length; index++) {
-	            // Updates all colors
-	            updateColors();
-	            paintTile(m_iSnakeBody[index].x, m_iSnakeBody[index].y, m_cSnakeColor, m_iBorderLength);
-	        }
+	        for (var index = 1; index < m_iSnakeBody.length; index++) 
+	            paintTile(m_iSnakeBody[index].x, m_iSnakeBody[index].y, getRandomColor(1, 255), m_iSnakeBodyBorderWidth);
 
 	        // Food
-	        paintTile(m_iFoodX, m_iFoodY, m_cFoodColor, m_iBorderLength);
+	        paintTile(m_iFoodX, m_iFoodY, m_cFoodColor, m_iFoodBorderWidth);
 
 	        // Prints score on top of snake game
 	        writeMessage(m_iLeft, m_cScoreColor, "Score: " + m_iAmountAte);
@@ -156,21 +174,11 @@
 	        writeMessage(m_iRight, m_cHighestScoreColor, "Highest Score: " + m_iHighestAmount);
 	    }
 
-	    // Updates all colors
-	    function updateColors() {
-	        m_cBorderColor = getRandomColor(1, 255);
-	        m_cBackroundColor = "#000";
-	        m_cSnakeColor = getRandomColor(1, 255);
-	        m_cFoodColor = getRandomColor(1, 255);
-	        m_cScoreColor = getRandomColor(0, 255);
-	        m_cPrevScoreColor = getRandomColor(0, 255);
-	        m_cHighestScoreColor = getRandomColor(0, 255);
-	    }
-
 	    // Handles where the snake should be.
-	    function setUpSnake() {
-	        var tempSnakeData;
-	        m_iSnakeBody.pop();
+	    function setUpSnake() 
+	    {
+	        var tempSnakeData = m_iSnakeBody.pop();
+	        paintTile(tempSnakeData.x, tempSnakeData.y, m_cBackroundColor, 0);
 
 	        if (m_iDirection == "right")
 	            tempSnakeData = { x: ++m_iSnakeHead.x, y: m_iSnakeHead.y };
@@ -185,11 +193,12 @@
 	            var tempSnakeData = { x: m_iSnakeHead.x, y: --m_iSnakeHead.y };
 
 	        m_iSnakeBody.unshift(tempSnakeData);
+	        m_bIsSnakeUpdated = true;
 	    }
 
 	    // Checks if the snake hit the wall or itself.
-	    function checkCollision() {
-
+	    function checkCollision() 
+	    {
 	        // Checks if snake hit the borders
 	        if (m_iSnakeHead.x >= m_iMapWidth)
 	            return true;
@@ -212,10 +221,12 @@
 	    }
 
 	    // Chooses the next position for the food.
-	    function setFood() {
+	    function setFood() 
+	    {
 	        var bIsFoodOnSnake = true;
 
-	        while (bIsFoodOnSnake) {
+	        while (bIsFoodOnSnake) 
+	        {
 	            m_iFoodX = getRandomNumber(0, m_iMapWidth - 1);
 	            m_iFoodY = getRandomNumber(1, m_iMapHeight - 1);
 
@@ -228,8 +239,8 @@
 	    }
 
 	    // Checks if the snake got the food, so make it longer.
-	    function gotFood() {
-
+	    function gotFood() 
+	    {
 	        if (m_iSnakeHead.x == m_iFoodX && m_iSnakeHead.y == m_iFoodY)
 	            return true;
 
@@ -237,51 +248,58 @@
 	    }
 
 	    // Handles the changing direction of the snake.
-	    function doKeyDown(event) {
-	        switch (event.keyCode) {
+	    function doKeyDown(event)
+	    {            
+	        if (!m_bIsSnakeUpdated)
+	            gameLoop();
 
+	        switch (event.keyCode)
+	        {
 	            // Snake 1
 	            case 38:  /* Up arrow was pressed */
-	                {
-	                    if (m_iDirection != "down")
-	                        m_iDirection = "up";
+	            {
+	                if (m_iDirection != "down")
+	                    m_iDirection = "up";
 
-	                    break;
-	                }
+	                break;
+	            }
 
 	            case 40:  /* Down arrow was pressed */
-	                {
-	                    if (m_iDirection != "up")
-	                        m_iDirection = "down";
+	            {
+	                if (m_iDirection != "up")
+	                    m_iDirection = "down";
 
-	                    break;
-	                }
+	                break;
+	            }
 
 	            case 37:  /* Left arrow was pressed */
-	                {
-	                    if (m_iDirection != "right")
-	                        m_iDirection = "left";
+	            {
+	                if (m_iDirection != "right")
+	                    m_iDirection = "left";
 
-	                    break;
-	                }
+	                break;
+	            }
 
 	            case 39:  /* Right arrow was pressed */
-	                {
-	                    if (m_iDirection != "left")
-	                        m_iDirection = "right";
+	            {
+	                if (m_iDirection != "left")
+	                    m_iDirection = "right";
 
-	                    break;
-	                }
+	                break;
+	            }
 
 	            default: /* A key besides arrow key was pressed, pause game */
 	                m_bIsPaused ? unPauseGame() : pauseGame();
 	        }
+
+	        m_bIsSnakeUpdated = false;
 	    }
 
 	    // Sets the canvas as big as the broswer size.
-	    function setCanvasSize() {
+	    function setCanvasSize()
+	    {
 	        m_iTileWidth = Math.floor((window.innerWidth / m_iMapWidth));
-	        m_iTileHeight = Math.floor((window.innerHeight / m_iMapHeight));
+	        m_iTileHeight = Math.floor((window.innerHeight / m_iMapHeight)) - 1;
 	        m_CanvasContext.canvas.width = (m_iTileWidth * m_iMapWidth);
 	        m_CanvasContext.canvas.height = (m_iTileHeight * m_iMapHeight);
 	        m_iLeft = 1;
@@ -290,28 +308,32 @@
 	    }
 
 	    // Stops loop
-	    function pauseGame() {
+	    function pauseGame() 
+	    {
+	        m_BackgroundMusic.pause();
+
+            // For pause pic to show up
+			document.getElementById("pic").style.zIndex = 1;
+			document.getElementById("myCanvas").style.zIndex = -1;
+
 	        window.clearInterval(m_IntervalID);
-
-	        for (var x = 0; x < m_iMapWidth; x++)
-	            for (var y = 0; y < 1; y++)
-	                paintTile(x, y, "#FFF", 0);
-
-	        writeMessage(m_iLeft, m_cScoreColor, "Score: " + m_iAmountAte);
-	        writeMessage(m_iMiddle, m_cPrevScoreColor, "PAUSED!");
-	        writeMessage(m_iRight, m_cHighestScoreColor, "Highest Score: " + m_iHighestAmount);
 	        m_bIsPaused = true;
 
 	    }
 
 	    // Starts loop again
-	    function unPauseGame() {
+	    function unPauseGame()
+	    {
+			m_BackgroundMusic.play();
 	        m_bIsPaused = false;
-	        m_IntervalID = window.setInterval("gameLoop();", m_iGameSpeed);
+	        m_IntervalID = window.setInterval("gameLoop();", m_iGameSpeed);	
+			document.getElementById("pic").style.zIndex = -1;
+			document.getElementById("myCanvas").style.zIndex = 1;
 	    }
 
 	    // Resets all variabls so that the game can function properly.
-	    function resetGame() {
+	    function resetGame() 
+	    {
 	        m_iGameSpeed = m_iOriginalSpeed;
 
 	        // Snake 
@@ -332,7 +354,8 @@
 	    }
 
 	    // Paints a tile on the screen, handles converting pixel to tile.
-	    function paintTile(x, y, color, borderThickness) {
+	    function paintTile(x, y, color, borderThickness)
+	    {
 	        m_CanvasContext.fillStyle = color;
 	        m_CanvasContext.fillRect((x * m_iTileWidth) + borderThickness, (y * m_iTileHeight) + borderThickness, m_iTileWidth - (borderThickness * 2), m_iTileHeight - (borderThickness * 2));
 	    }
@@ -340,9 +363,10 @@
 	    /*********************************************************************************************************/
 	    /*USEFULL FUNCTIONS*/
 
-	    function writeMessage(startTile, color, message) {
+	    function writeMessage(startTile, color, message) 
+	    {
 	        m_CanvasContext.fillStyle = 'white';
-	        m_CanvasContext.fillRect(startTile * m_iTileWidth, 0, message, m_iTileHeight);
+	        m_CanvasContext.fillRect(startTile * m_iTileWidth, 0, message.length*9, m_iTileHeight);
 	        m_CanvasContext.font = '16pt Calibri';
 	        m_CanvasContext.fillStyle = color;
 	        m_CanvasContext.fillText(message, startTile * m_iTileWidth, 20);
@@ -375,13 +399,15 @@
 	        return hexColor.toUpperCase();
 	    }
 
-	    function getRandomNumber(iMin, iMax) {
+	    function getRandomNumber(iMin, iMax) 
+	    {
 	        return Math.floor((Math.random() * (iMax - iMin)) + iMin);
 	    }
 	</script>
 </head>
 <body>
     <canvas id="myCanvas">
-</canvas>
+	</canvas>
+	<img id="pic" src="pause.png" style="z-index:-1; height: 60%; width: 60%; position:absolute; top: 20%; left:20%;"/>
 </body>
 </html>
