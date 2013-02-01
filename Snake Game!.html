@@ -25,13 +25,8 @@
 
 	    // All colors/ borders
 	    var m_iBackgroundBorderWidth = 0;
-<<<<<<< HEAD
-	    var m_iSnakeBodyBorderWidth = 1;
-	    var m_iSnakeHeadBorderWidth = 1;
-=======
-	    var m_iSnakeBodyBorderWidth = 2;
+        var m_iSnakeBodyBorderWidth = 2;
 	    var m_iSnakeHeadBorderWidth = 2;
->>>>>>> origin/Epileptic-Dev
 	    var m_iFoodBorderWidth = 0;
 	    var m_cBackroundColor = "#000";
 	    var m_cBorderColor = "#000";
@@ -69,8 +64,8 @@
 	    var m_iMiddle;
 	    var m_iRight;
 
-		var m_FoodMusic = new Audio("food.mp3");
-		var m_BackgroundMusic = new Audio("backgroundMusic.mp3");
+	    var m_FoodMusic = new Audio("food.mp3");
+	    var m_BackgroundMusic = new Audio("backgroundMusic.mp3");
 	    var m_bIsPaused = false;
 	    var m_IntervalID;
 
@@ -82,8 +77,8 @@
 
 	    function initialize() 
 	    {
-			// Initialize background music
-			m_BackgroundMusic.play();
+	        // Initialize background music
+	        m_BackgroundMusic.play();
 
 	        // Get canvas context for drawing, add events
 	        m_CanvasContext = document.getElementById("myCanvas").getContext("2d");
@@ -117,8 +112,8 @@
 	        // If true, increase snake length, increase gamespeed.
 	        if (gotFood()) 
 	        {
-				m_FoodMusic.currentTime = 0;
-				m_FoodMusic.play();
+	            m_FoodMusic.currentTime = 0;
+	            m_FoodMusic.play();
 	            var tempData = { x: m_iSnakeBody[m_iSnakeBody.length - 1].x, y: m_iSnakeBody[m_iSnakeBody.length - 1].y };
 	            m_iSnakeBody.push(tempData);
 	            m_iAmountAte++;
@@ -139,8 +134,8 @@
 	            initialize();
 	        }
 			
-			// Plays music. 
-			m_BackgroundMusic.play();
+	        // Plays music. 
+	        m_BackgroundMusic.play();
 	    }
 
 	    // Draws everything on the canvas.
@@ -238,54 +233,8 @@
 
 	    // Handles the changing direction of the snake.
 	    function doKeyDown(event)
-<<<<<<< HEAD
-	    {            
-	        if (!m_bIsSnakeUpdated)
-	            gameLoop();
-
-	        switch (event.keyCode)
-	        {
-	            // Snake 1
-	            case 38:  /* Up arrow was pressed */
-	            {
-	                if (m_iDirection != "down")
-	                    m_iDirection = "up";
-
-	                break;
-	            }
-
-	            case 40:  /* Down arrow was pressed */
-	            {
-	                if (m_iDirection != "up")
-	                    m_iDirection = "down";
-
-	                break;
-	            }
-
-	            case 37:  /* Left arrow was pressed */
-	            {
-	                if (m_iDirection != "right")
-	                    m_iDirection = "left";
-
-	                break;
-	            }
-
-	            case 39:  /* Right arrow was pressed */
-	            {
-	                if (m_iDirection != "left")
-	                    m_iDirection = "right";
-
-	                break;
-	            }
-
-	            default: /* A key besides arrow key was pressed, pause game */
-	                m_bIsPaused ? unPauseGame() : pauseGame();
-	        }
-
-	        m_bIsSnakeUpdated = false;
-=======
 	    {
-	        if (!m_bIsPaused)
+            if (!m_bIsPaused)
 	        {
 	            if (!m_bIsSnakeUpdated)
 	                gameLoop();
@@ -307,7 +256,6 @@
 
 	        if (event.keyCode != 38 && event.keyCode != 40 && event.keyCode != 37 && event.keyCode != 39)
 	            m_bIsPaused ? unPauseGame() : pauseGame();
->>>>>>> origin/Epileptic-Dev
 	    }
 
 	    // Sets the canvas as big as the broswer size.
@@ -327,9 +275,9 @@
 	    {
 	        m_BackgroundMusic.pause();
 
-            // For pause pic to show up
-			document.getElementById("pic").style.zIndex = 1;
-			document.getElementById("myCanvas").style.zIndex = -1;
+	        // For pause pic to show up
+	        document.getElementById("pic").style.zIndex = 1;
+	        document.getElementById("myCanvas").style.zIndex = -1;
 
 	        window.clearInterval(m_IntervalID);
 	        m_bIsPaused = true;
@@ -339,11 +287,11 @@
 	    // Starts loop again
 	    function unPauseGame()
 	    {
-			m_BackgroundMusic.play();
+	        m_BackgroundMusic.play();
 	        m_bIsPaused = false;
 	        m_IntervalID = window.setInterval("gameLoop();", m_iGameSpeed);	
-			document.getElementById("pic").style.zIndex = -1;
-			document.getElementById("myCanvas").style.zIndex = 1;
+	        document.getElementById("pic").style.zIndex = -1;
+	        document.getElementById("myCanvas").style.zIndex = 1;
 	    }
 
 	    // Resets all variabls so that the game can function properly.
