@@ -64,12 +64,8 @@
 	    var m_iMiddle;
 	    var m_iRight;
 
-<<<<<<< HEAD
-	    var m_Music = new Audio("ateFood.wav");
-=======
 		var m_FoodMusic = new Audio("food.mp3");
 		var m_BackgroundMusic = new Audio("backgroundMusic.mp3");
->>>>>>> origin/Epileptic-Dev
 	    var m_bIsPaused = false;
 	    var m_IntervalID;
 
@@ -88,12 +84,6 @@
 	        m_CanvasContext = document.getElementById("myCanvas").getContext("2d");
 	        setCanvasSize();
 
-<<<<<<< HEAD
-	        // Get canvas for event listening
-	        window.addEventListener('keydown', doKeyDown, true);
-
-=======
->>>>>>> origin/Epileptic-Dev
 	        // Initialize snake
 	        for (var index = 0; index < m_iSnakeStartingLength; index++)
 	            m_iSnakeBody[m_iSnakeStartingLength - index - 1] = { x: index - 1, y: m_iSnakeHead.y };
@@ -120,16 +110,10 @@
 	        drawMap();
 
 	        // If true, increase snake length, increase gamespeed.
-<<<<<<< HEAD
-	        if (gotFood()) {
-	            m_Music.currentTime = 0;
-	            m_Music.play();
-=======
 	        if (gotFood()) 
 	        {
 				m_FoodMusic.currentTime = 0;
 				m_FoodMusic.play();
->>>>>>> origin/Epileptic-Dev
 	            var tempData = { x: m_iSnakeBody[m_iSnakeBody.length - 1].x, y: m_iSnakeBody[m_iSnakeBody.length - 1].y };
 	            m_iSnakeBody.push(tempData);
 	            m_iAmountAte++;
