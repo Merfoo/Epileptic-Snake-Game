@@ -327,36 +327,20 @@ function doKeyDown(event) {
                     m_bIsSnakeUpdatedTwo = false;
                 }
             }
-
-            if (event.keyCode != 38 && event.keyCode != 40 && event.keyCode != 37 && event.keyCode != 39 &&
-                event.keyCode != 87 && event.keyCode != 83 && event.keyCode != 65 && event.keyCode != 68)
-                m_bIsPaused ? unPauseGameMulti() : pauseGameMulti();
-
-            if (event.keyCode == 27) // Escape was pressed
-            {
-                pauseGameMulti();
-                m_bIsPaused = false;
-                showPausePic(false);
-                showStartMenu(true);
-                m_bMultiplayer = false
-                m_bGameStarted = false;
-                m_iTotalScoreOne = 0;
-                m_iTotalScoreTwo = 0;
-            }
         }
     }
 }
 
 
-function doKeyUp(event) {
+function doKeyUp(event)
+{
 
-    if (m_bGameStarted) {
-        if (m_bSingle) {
+    if (m_bGameStarted)
+    {
+        if (m_bSingle)
+        {
             if (event.keyCode == 32)    // Space bar was pressed.
                 m_bIsPaused ? unPauseGameSingle() : pauseGameSingle();
-
-            else if (event.keyCode == 77)    // 'm' was pressed.
-                m_bSoundOn = !m_bSoundOn;
 
             else if (event.keyCode == 27)    // Escape was pressed, will eventually show start menu ... Jacob!!!
             {
@@ -370,6 +354,27 @@ function doKeyUp(event) {
                 m_iHighestAmount = 0;
             }
         }
+
+        if (m_bMultiplayer)
+        {
+            if (event.keyCode == 32)
+                m_bIsPaused ? unPauseGameMulti() : pauseGameMulti();
+
+            else if (event.keyCode == 27) // Escape was pressed
+            {
+                pauseGameMulti();
+                m_bIsPaused = false;
+                showPausePic(false);
+                showStartMenu(true);
+                m_bMultiplayer = false
+                m_bGameStarted = false;
+                m_iTotalScoreOne = 0;
+                m_iTotalScoreTwo = 0;
+            }
+        }
+
+        if (event.keyCode == 77)    // 'm' was pressed.
+            m_bSoundOn = !m_bSoundOn;
     }
 }
 

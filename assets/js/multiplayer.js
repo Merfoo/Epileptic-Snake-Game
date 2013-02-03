@@ -74,8 +74,9 @@ function drawMap() {
     // Prints score on top of snake game
     writeMessage(m_iLeft, m_cSnakeColorOne, "Score One: " + m_iAmountAteOne);
     writeMessage(m_iLeft + 10, m_cSnakeColorTwo, "Score Two: " + m_iAmountAteTwo);
-    writeMessage(m_iRight - 10, m_cSnakeColorOne, "Total Score One: " + m_iTotalScoreOne);
-    writeMessage(m_iRight, m_cSnakeColorTwo, "Total Score Two: " + m_iTotalScoreTwo);
+    writeMessage(m_iMiddle + 5, m_cSnakeColorOne, "Total Score One: " + m_iTotalScoreOne);
+    writeMessage(m_iMiddle + 15, m_cSnakeColorTwo, "Total Score Two: " + m_iTotalScoreTwo);
+    setSoundPicVisible(m_bSoundOn);
 }
 
 // Handles where the snake should be.
@@ -229,22 +230,33 @@ function checkCollision() {
 }
 
 // Chooses the next position for the food.
-function setFood() {
+function setFood()
+{
     var bIsFoodOnSnake = true;
 
-    while (bIsFoodOnSnake) {
+    while (bIsFoodOnSnake)
+    {
+        bIsFoodOnSnake = false;
         m_iFoodX = getRandomNumber(0, m_iMapWidth - 1);
         m_iFoodY = getRandomNumber(1, m_iMapHeight - 1);
 
         for (var index = 0; index < m_iSnakeBodyOne.length; index++)
+        {
             if (m_iFoodX == m_iSnakeBodyOne[index].x && m_iFoodY == m_iSnakeBodyOne[index].y)
-                continue;
+            {
+                bIsFoodOnSnake = true;
+                break;
+            }
+        }
 
         for (var index = 0; index < m_iSnakeBodyTwo.length; index++)
+        {
             if (m_iFoodX == m_iSnakeBodyTwo[index].x && m_iFoodY == m_iSnakeBodyTwo[index].y)
-                continue;
-
-        bIsFoodOnSnake = false;
+            {
+                bIsFoodOnSnake = true;
+                break;
+            }
+        }
     }
 }
 

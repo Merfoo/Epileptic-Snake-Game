@@ -169,18 +169,24 @@ function checkCollisionSingle() {
 }
 
 // Chooses the next position for the food.
-function setFoodSingle() {
+function setFoodSingle()
+{
     var bIsFoodOnSnake = true;
 
-    while (bIsFoodOnSnake) {
+    while (bIsFoodOnSnake)
+    {
+        bIsFoodOnSnake = false;
         m_iFoodX = getRandomNumber(0, m_iMapWidth - 1);
         m_iFoodY = getRandomNumber(1, m_iMapHeight - 1);
 
         for (var index = 0; index < m_iSnakeBodyOne.length; index++)
+        {
             if (m_iFoodX == m_iSnakeBodyOne[index].x && m_iFoodY == m_iSnakeBodyOne[index].y)
-                continue;
-
-        bIsFoodOnSnake = false;
+            {
+                bIsFoodOnSnake = true;
+                break;
+            }
+        }
     }
 }
 
