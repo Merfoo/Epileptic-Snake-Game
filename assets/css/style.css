@@ -1,0 +1,114 @@
+canvas 
+{
+    z-index: 1; 
+	padding-left: 0;
+	padding-right: 0;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	height: 100%;
+	width: 100%;
+    border:1px solid #000;
+}
+
+#pic 
+{
+    z-index:-1; 
+    height: 60%; 
+    width: 60%; 
+    position:absolute; 
+    top: 20%; 
+    left:20%;
+}
+
+#soundOn 
+{
+    z-index: 1; 
+    height: 3%; 
+    width: 2.75%;
+    position:absolute; 
+    top: 1%; 
+    left:93%;
+}
+
+#soundOff 
+{
+    z-index: -1; 
+    height: 3%; 
+    width: 2.75%;
+    position:absolute; 
+    top: 1%; 
+    left:93%;
+}
+
+#slowMode
+{
+    z-index: 1; 
+    height: 4.25%; 
+    width: 3%;
+    position:absolute; 
+    top: .01%; 
+    left:85%;
+}
+
+#fastMode
+{
+    z-index: -1; 
+    height: 4.25%; 
+    width: 3%;
+    position:absolute; 
+    top: .01%; 
+    left:85%;
+}
+
+#startMenu 
+{
+    z-index: 2; 
+    background-color: black;
+    height: 100%; 
+    width: 100%;
+    position: absolute; 
+    top: 0%; 
+    left: 0%;
+}
+
+#titleScreen 
+{
+    height: 40%; 
+    width: 40%;
+    position: absolute; 
+    top: 5%; 
+    left: 30%;
+}
+
+#singlePlayer 
+{
+    height: 50%; 
+    width: 30%;
+    position: absolute; 
+    top: 50%; 
+    left: 10%;
+}
+
+#multiPlayer 
+{
+    height: 50%; 
+    width: 25%;
+    position: absolute; 
+    top: 50%; 
+    left: 70%;
+}
+
+#start 
+{
+    height: 50%; 
+    width: 25%;
+    position: absolute; 
+    top: 50%; 
+    left: 40%;
+}
+
+img:focus, img:active
+{
+    color:green;
+}
