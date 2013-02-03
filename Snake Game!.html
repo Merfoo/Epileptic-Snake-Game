@@ -50,34 +50,41 @@
 	    var m_iPrevAmount = 0;
 	    var m_iHighestAmount = 0;
 
-	    // Canvas
-	    var m_CanvasContext;
-
 	    // GameSpeed
 	    var m_iOriginalSpeed = 80;
 	    var m_iGameSpeed = m_iOriginalSpeed;
 	    var m_iGameDecrease = 5;
-	    var m_iGameMinuim = m_iGameDecrease;
+	    var m_iGameMinuim = 1;
+	    var m_iFastDivider = 4;
+	    var m_iFastSpeed = Math.floor(m_iGameSpeed / m_iFastDivider);
+	    var m_bFastMode = false;
+	    var m_bIsPaused = false;
 
 	    // Messages related
 	    var m_iLeft;
 	    var m_iMiddle;
 	    var m_iRight;
 
+	    // Sound Related
 	    var m_FoodMusic = new Audio("assets/food.mp3");
 	    var m_BackgroundMusic = new Audio("assets/backgroundMusic.mp3");
-	    var m_bIsPaused = false;
-	    var m_IntervalID;
+	    var m_bSoundOn = true;
 
+	    // HTML5 Elemtents
+	    var m_CanvasContext;
+
+	    // Interval ID's
+	    var m_IntervalIDMain;
+
+	    // Events
 	    document.addEventListener("DOMContentLoaded", initialize, false);
 	    window.addEventListener('keydown', doKeyDown, true);
+	    window.addEventListener('keyup', doKeyUp, true);
 
 	    document.documentElement.style.overflowX = 'hidden';	 // horizontal scrollbar will be hidden
 	    document.documentElement.style.overflowY = 'hidden';
 
 	    function initialize() {
-	        // Initialize background music
-	        m_BackgroundMusic.play();
 
 	        // Get canvas context for drawing, add events
 	        m_CanvasContext = document.getElementById("myCanvas").getContext("2d");
@@ -96,30 +103,46 @@
 	        gameLoop();
 
 	        // Initialize gameloop.
-	        if (m_IntervalID != null)
-	            clearInterval(m_IntervalID);
+	        if (m_IntervalIDMain != null)
+	            clearInterval(m_IntervalIDMain);
 
-	        m_IntervalID = window.setInterval("gameLoop();", m_iGameSpeed);
+	        m_IntervalIDMain = window.setInterval("gameLoop();", m_iGameSpeed);
 	    }
 
 	    // Runs all the functions required for the game to work.
 	    function gameLoop() {
+
+	        // Plays music if mute is not checked.
+	        if (m_bSoundOn)
+	            m_BackgroundMusic.play();
+
+	        else if (!m_bSoundOn && !m_BackgroundMusic.paused)
+	            m_BackgroundMusic.pause();
+
 	        setUpSnake();
 	        drawMap();
 
 	        // If true, increase snake length, increase gamespeed.
 	        if (gotFood()) {
-	            m_FoodMusic.currentTime = 0;
-	            m_FoodMusic.play();
+	            if (m_bSoundOn) {
+	                m_FoodMusic.currentTime = 0;
+	                m_FoodMusic.play();
+	            }
+
 	            var tempData = { x: m_iSnakeBody[m_iSnakeBody.length - 1].x, y: m_iSnakeBody[m_iSnakeBody.length - 1].y };
 	            m_iSnakeBody.push(tempData);
 	            m_iAmountAte++;
 	            setFood();
 
 	            if ((m_iGameSpeed - m_iGameDecrease) >= m_iGameMinuim) {
-	                m_iGameSpeed = m_iGameSpeed - m_iGameDecrease;
-	                window.clearInterval(m_IntervalID);
-	                m_IntervalID = window.setInterval("gameLoop()", m_iGameSpeed, false);
+	                m_iGameSpeed -= m_iGameDecrease;
+	                m_iFastSpeed = Math.floor(m_iGameSpeed / m_iFastDivider);
+
+	                if (m_bFastMode)
+	                    changeGameSpeed(m_iFastSpeed);
+
+	                else
+	                    changeGameSpeed(m_iGameSpeed);
 	            }
 	        }
 
@@ -128,18 +151,18 @@
 	            resetGame();
 	            initialize();
 	        }
-
-	        // Plays music. 
-	        m_BackgroundMusic.play();
 	    }
 
 	    // Draws everything on the canvas.
 	    function drawMap() {
+
+	        // Generates random food color
 	        m_cFoodColor = getRandomColor(1, 255);
 
 	        // Snake head
 	        paintTile(m_iSnakeHead.x, m_iSnakeHead.y, "#FFF", m_iSnakeHeadBorderWidth);
 
+	        // Snake body
 	        for (var index = 1; index < m_iSnakeBody.length; index++)
 	            paintTile(m_iSnakeBody[index].x, m_iSnakeBody[index].y, getRandomColor(1, 255), m_iSnakeBodyBorderWidth);
 
@@ -148,8 +171,11 @@
 
 	        // Prints score on top of snake game
 	        writeMessage(m_iLeft, m_cScoreColor, "Score: " + m_iAmountAte);
-	        writeMessage(m_iMiddle, m_cPrevScoreColor, "Previous Score: " + m_iPrevAmount);
-	        writeMessage(m_iRight, m_cHighestScoreColor, "Highest Score: " + m_iHighestAmount);
+	        writeMessage(m_iLeft + 5, m_cPrevScoreColor, "Previous Score: " + m_iPrevAmount);
+	        writeMessage(m_iLeft + 13, m_cHighestScoreColor, "Highest Score: " + m_iHighestAmount);
+
+	        // Sets the sound pic to show or not
+	        setSoundPicVisible(m_bSoundOn);
 	    }
 
 	    // Handles where the snake should be.
@@ -222,27 +248,51 @@
 
 	    // Handles the changing direction of the snake.
 	    function doKeyDown(event) {
-	        if (!m_bIsPaused) {
-	            if (!m_bIsSnakeUpdated)
-	                gameLoop();
 
-	            if (event.keyCode == 38 && m_iDirection != "down")   // Up arrow key was pressed.
-	                m_iDirection = "up";
+	        if (event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 65) {
+	            if (!m_bIsPaused) {
+	                if (!m_bIsSnakeUpdated)
+	                    gameLoop();
 
-	            else if (event.keyCode == 40 && m_iDirection != "up")    // Down arrow key was pressed.
-	                m_iDirection = "down";
+	                if (event.keyCode == 38 && m_iDirection != "down")   // Up arrow key was pressed.
+	                    m_iDirection = "up";
 
-	            else if (event.keyCode == 37 && m_iDirection != "right") // Left arrow key was pressed.
-	                m_iDirection = "left";
+	                else if (event.keyCode == 40 && m_iDirection != "up")    // Down arrow key was pressed.
+	                    m_iDirection = "down";
 
-	            else if (event.keyCode == 39 && m_iDirection != "left") // Right arrow key was pressed.
-	                m_iDirection = "right";
+	                else if (event.keyCode == 37 && m_iDirection != "right") // Left arrow key was pressed.
+	                    m_iDirection = "left";
 
-	            m_bIsSnakeUpdated = false;
+	                else if (event.keyCode == 39 && m_iDirection != "left") // Right arrow key was pressed.
+	                    m_iDirection = "right";
+
+	                else if (event.keyCode == 65)    // The letter 'a' was pressed.
+	                {
+	                    m_bFastMode = !m_bFastMode;
+	                    m_bFastMode ? changeGameSpeed(m_iFastSpeed) : changeGameSpeed(m_iGameSpeed);
+	                }
+
+	                m_bIsSnakeUpdated = false;
+	            }
 	        }
+	    }
 
-	        if (event.keyCode != 38 && event.keyCode != 40 && event.keyCode != 37 && event.keyCode != 39)
+	    // Handles non-snake related events
+	    function doKeyUp(event) {
+
+	        if (event.keyCode == 32)    // Space bar was pressed.
 	            m_bIsPaused ? unPauseGame() : pauseGame();
+
+	        else if (event.keyCode == 77)    // 'm' was pressed.
+	            m_bSoundOn = !m_bSoundOn;
+
+	        else if (event.keyCode == 27);    // Escape was pressed, will eventually show start menu ... Jacob!!!
+	    }
+
+	    // Stops previous speed, sets new speed.
+	    function changeGameSpeed(gameSpeed) {
+	        window.clearInterval(m_IntervalIDMain);
+	        m_IntervalIDMain = window.setInterval("gameLoop();", gameSpeed);
 	    }
 
 	    // Sets the canvas as big as the broswer size.
@@ -264,16 +314,19 @@
 	        document.getElementById("pic").style.zIndex = 1;
 	        document.getElementById("myCanvas").style.zIndex = -1;
 
-	        window.clearInterval(m_IntervalID);
+	        window.clearInterval(m_IntervalIDMain);
 	        m_bIsPaused = true;
 
 	    }
 
 	    // Starts loop again
 	    function unPauseGame() {
-	        m_BackgroundMusic.play();
+
+	        if (m_bSoundOn)
+	            m_BackgroundMusic.play();
+
 	        m_bIsPaused = false;
-	        m_IntervalID = window.setInterval("gameLoop();", m_iGameSpeed);
+	        m_IntervalIDMain = window.setInterval("gameLoop();", m_iGameSpeed);
 	        document.getElementById("pic").style.zIndex = -1;
 	        document.getElementById("myCanvas").style.zIndex = 1;
 	    }
@@ -305,12 +358,26 @@
 	        m_CanvasContext.fillRect((x * m_iTileWidth) + borderThickness, (y * m_iTileHeight) + borderThickness, m_iTileWidth - (borderThickness * 2), m_iTileHeight - (borderThickness * 2));
 	    }
 
+	    // Sets the sound on pic on visible
+	    function setSoundPicVisible(bOn) {
+	        m_bSoundOn = bOn;
+
+	        if (m_bSoundOn) {
+	            document.getElementById("soundOn").style.zIndex = 1;
+	            document.getElementById("soundOFF").style.zIndex = -1;
+	        }
+
+	        else {
+	            document.getElementById("soundOn").style.zIndex = -1;
+	            document.getElementById("soundOFF").style.zIndex = 1;
+	        }
+	    }
 	    /*********************************************************************************************************/
 	    /*USEFULL FUNCTIONS*/
 
 	    function writeMessage(startTile, color, message) {
 	        m_CanvasContext.fillStyle = 'white';
-	        m_CanvasContext.fillRect(startTile * m_iTileWidth, 0, message.length * 9, m_iTileHeight);
+	        m_CanvasContext.fillRect(startTile * m_iTileWidth, 0, message.length * 12, m_iTileHeight);
 	        m_CanvasContext.font = '16pt Calibri';
 	        m_CanvasContext.fillStyle = color;
 	        m_CanvasContext.fillText(message, startTile * m_iTileWidth, 20);
@@ -346,11 +413,17 @@
 	    function getRandomNumber(iMin, iMax) {
 	        return Math.floor((Math.random() * (iMax - iMin)) + iMin);
 	    }
+
+	    function capitalizeFirst(sArg) {
+	        return sArg.charAt(0).toUpperCase() + sArg.slice(1);
+	    }
 	</script>
 </head>
 <body>
     <canvas id="myCanvas">
 	</canvas>
 	<img id="pic" src="assets/pause.png" style="z-index:-1; height: 60%; width: 60%; position:absolute; top: 20%; left:20%;"/>
+    <img id="soundOn" src="assets/ON.png" onclick="setSoundPicVisible(false);" style="z-index: 1; height: 3%; width: 2.75%; position:absolute; top: 1%; left:93%;"/>
+    <img id="soundOFF" src="assets/OFF.png" onclick="setSoundPicVisible(true);" style="z-index: -1; height: 3%; width: 2.75%; position:absolute; top: 1%; left:93%;"/>
 </body>
 </html>
