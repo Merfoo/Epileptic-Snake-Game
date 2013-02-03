@@ -42,8 +42,11 @@ var m_iMiddle;
 var m_iRight;
 
 // Sound Related
+var m_sDirectory = "assets/music/";
+var m_MusicList = new Array(m_sDirectory + "backgroundMusic.mp3", m_sDirectory + "Noseyuk-ROYALTY FREE DUBSTEP_ DRUM&BASS INSTRUMENTAL.mp3", m_sDirectory + "Portal2-01-Reconstructing_More_Science.mp3", m_sDirectory + "Portal2-04-An_Accent_Beyond.mp3", m_sDirectory + "Portal2-24-Robots_FTW.mp3");
+var m_iPrevMusicIndex = getRandomNumber(0, m_MusicList.length - 1);
 var m_FoodMusic = new Audio("assets/music/food.mp3");
-var m_BackgroundMusic = new Audio("assets/music/backgroundMusic.mp3");
+var m_BackgroundMusic = new Audio(m_MusicList[m_iPrevMusicIndex]);
 var m_bSoundOn = true;
 
 // HTML5 Elemtents
@@ -199,7 +202,20 @@ function writeMessage(startTile, color, message) {
 function playBackgroundMusic()
 {
     if (m_bSoundOn)
+    {
+        if (m_BackgroundMusic.ended)
+        {
+            var  iNewMusicIndex = getRandomNumber(0, m_MusicList.length - 1);
+
+            while(iNewMusicIndex == m_iPrevMusicIndex)
+                iNewMusicIndex = getRandomNumber(0, m_MusicList.length - 1);
+
+            m_iPrevMusicIndex = iNewMusicIndex;
+            m_BackgroundMusic.src = m_MusicList[m_iPrevMusicIndex];
+        }
+
         m_BackgroundMusic.play();
+    }
 
     else
         m_BackgroundMusic.pause();
