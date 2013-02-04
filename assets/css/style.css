@@ -108,6 +108,14 @@ canvas
     left: 40%;
 }
 
+#teleportic 
+{
+    height: 30%; 
+    width: 15%;
+    position: absolute; 
+    top: 25%; 
+    left: 5%;
+}
 img:focus, img:active
 {
     color:green;

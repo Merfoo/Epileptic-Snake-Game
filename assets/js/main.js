@@ -12,12 +12,7 @@ var m_iSnakeBodyBorderWidth = 2;
 var m_iSnakeHeadBorderWidth = 2;
 var m_iFoodBorderWidth = 0;
 var m_cBackroundColor = "#000";
-var m_cBorderColor = "#000";
-var m_cSnakeColor = "#000";
-var m_cFoodColor = "#000";
-var m_cScoreColor = "#000";
-var m_cPrevScoreColor = "#000";
-var m_cHighestScoreColor = "#000";
+var m_cScoreColorOne = "#000";
 
 // Snake Related
 var m_iSnakeStartingLengthOne = 7;
@@ -60,6 +55,7 @@ var m_iGameVersion = 0;
 var m_bGameStarted = false;
 var m_bMultiplayer = false;
 var m_bSingle = false;
+var m_bTeleportic = false;
 var m_bIsPaused = false;
 
 window.addEventListener('keydown', doKeyDown, true);
@@ -75,6 +71,9 @@ function startGame()
     else if (m_iGameVersion == 1)
         multiplayerInitialize();
 
+    else if (m_iGameVersion == 2)
+        initializeTeleportic();
+
     m_iGameVersion = 0;
 }
 
@@ -86,6 +85,11 @@ function setGameSingle()
 function setGameMulti()
 {
     m_iGameVersion = 1;
+}
+
+function setGameTeleportic()
+{
+    m_iGameVersion = 2;
 }
 
 function giveFocus(ID)
@@ -103,6 +107,7 @@ function giveFocus(ID)
     }
 }
 
+// Changes gamespeed
 function changeGameSpeed(intervalID, sFunction,gameSpeed)
 {
     window.clearInterval(intervalID);
@@ -240,138 +245,127 @@ function playFoodMusic()
     }
 }
 
+// Sets up the snake body based on direction
+function setUpSnake(snakeHead, snakeBody, sDirection)
+{
+    var tempSnakeData = snakeBody.pop();
+    paintTile(tempSnakeData.x, tempSnakeData.y, m_cBackroundColor, 0);
+
+    if (sDirection == "right")
+        tempSnakeData = { x: ++snakeHead.x, y: snakeHead.y };
+
+    if (sDirection == "left")
+        tempSnakeData = { x: --snakeHead.x, y: snakeHead.y };
+
+    if (sDirection == "down")
+        tempSnakeData = { x: snakeHead.x, y: ++snakeHead.y };
+
+    if (sDirection == "up")
+        tempSnakeData = { x: snakeHead.x, y: --snakeHead.y };
+
+    snakeBody.unshift(tempSnakeData);
+
+    return { newHead: snakeHead, newBody: snakeBody };
+}
+
+function checkCollision(snakeBody)
+{
+    // Checks if snake hit the borders
+    if (snakeBody[0].x >= m_iMapWidth)
+        return true;
+
+    if (snakeBody[0].x < 0)
+        return true;
+
+    if (snakeBody[0].y >= m_iMapHeight)
+        return true;
+
+    if (snakeBody[0].y <= 0)
+        return true;
+
+    // Checks if the snakes hit themselves
+    for (var index = 1; index < snakeBody.length; index++)
+        if (snakeBody[0].x == snakeBody[index].x && snakeBody[0].y == snakeBody[index].y)
+            return true;
+
+    return false;
+}
+
+function hitOtherSnakes(snakeBodyOne, snakeBodyTwo, snakeIdOne, snakeIdTwo)
+{
+    if (snakeBodyOne[0].x == snakeBodyTwo[0].x && snakeBodyOne[0].y == snakeBodyTwo[0].y)
+    {
+        if (getRandomNumber(0, 10) <= 4)
+            return snakeIdOne
+
+        else
+            return snakeIdTwo;
+    }
+
+    // Checks if the snakes hit the other snakes
+    for (var index = 1; index < snakeBodyTwo.length; index++)
+        if (snakeBodyOne[0].x == snakeBodyTwo[index].x && snakeBodyOne[0].y == snakeBodyTwo[index].y)
+            return snakeIdOne;
+
+    for (var index = 1; index < snakeBodyOne.length; index++)
+        if (snakeBodyTwo[0].x == snakeBodyOne[index].x && snakeBodyTwo[0].y == snakeBodyOne[index].y)
+            return snakeIdTwo;
+
+    return 0;
+}
+
+// Sets up food
+function setFood(snakeBody)
+{
+    var bIsFoodOnSnake = true;
+
+    // Makes sure food isn't on snakes
+    while (bIsFoodOnSnake)
+    {
+        bIsFoodOnSnake = false;
+        m_iFoodX = getRandomNumber(0, m_iMapWidth - 1);
+        m_iFoodY = getRandomNumber(1, m_iMapHeight - 1);
+
+        for (var index = 0; index < snakeBody.length; index++)
+        {
+            if (m_iFoodX == snakeBody[index].x && m_iFoodY == snakeBody[index].y)
+            {
+                bIsFoodOnSnake = true;
+                break;
+            }
+        }
+    }
+}
+
 // Handles the changing direction of the snake.
 function doKeyDown(event) {
 
-    if (m_bGameStarted) {
+    if (m_bGameStarted && !m_bIsPaused)
+    {
+        if (m_bSingle)
+            keyBoardDownSinglePlayer();
 
-        // For single player
-        if (m_bSingle) {
-            if (event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 65) {
-                if (!m_bIsPaused) {
-                    if (!m_bIsSnakeUpdatedOne)
-                        gameLoopSingle();
+        else if (m_bTeleportic)
+            keyBoardDownTeleportic();
 
-                    if (event.keyCode == 38 && m_iDirectionOne != "down")   // Up arrow key was pressed.
-                        m_iDirectionOne = "up";
-
-                    else if (event.keyCode == 40 && m_iDirectionOne != "up")    // Down arrow key was pressed.
-                        m_iDirectionOne = "down";
-
-                    else if (event.keyCode == 37 && m_iDirectionOne != "right") // Left arrow key was pressed.
-                        m_iDirectionOne = "left";
-
-                    else if (event.keyCode == 39 && m_iDirectionOne != "left") // Right arrow key was pressed.
-                        m_iDirectionOne = "right";
-
-                    else if (event.keyCode == 65)    // The letter 'a' was pressed.
-                    {
-                        m_bFastMode = !m_bFastMode;
-
-                        if (m_bFastMode) {
-                            m_IntervalIDMain = changeGameSpeed(m_IntervalIDMain, "gameLoopSingle();", m_iFastSpeed);
-                            setFastPicVisible(true);
-                        }
-
-                        else {
-                            m_IntervalIDMain = changeGameSpeed(m_IntervalIDMain, "gameLoopSingle();", m_iGameSpeedMain);
-                            setFastPicVisible(false);
-                        }
-                    }
-
-                    m_bIsSnakeUpdatedOne = false;
-                }
-            }
-        }
-
-        // For Multiplayer
-        else if (m_bMultiplayer) {
-            if (!m_bIsPaused) {
-                if (event.keyCode == 87 || event.keyCode == 83 || event.keyCode == 65 || event.keyCode == 68) {
-                    if (!m_bIsSnakeUpdatedOne)
-                        setUpSnakeOne();
-
-                    // Snake 1
-                    if (event.keyCode == 87 && m_iDirectionOne != "down")   // Up arrow key was pressed.
-                        m_iDirectionOne = "up";
-
-                    else if (event.keyCode == 83 && m_iDirectionOne != "up")    // Down arrow key was pressed.
-                        m_iDirectionOne = "down";
-
-                    else if (event.keyCode == 65 && m_iDirectionOne != "right") // Left arrow key was pressed.
-                        m_iDirectionOne = "left";
-
-                    else if (event.keyCode == 68 && m_iDirectionOne != "left") // Right arrow key was pressed.
-                        m_iDirectionOne = "right";
-
-                    m_bIsSnakeUpdatedOne = false;
-                }
-
-                if (event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 37 || event.keyCode == 39) {
-                    if (!m_bIsSnakeUpdatedTwo)
-                        setUpSnakeTwo();
-
-                    // Snake 2
-                    if (event.keyCode == 38 && m_iDirectionTwo != "down")   // Up arrow key was pressed.
-                        m_iDirectionTwo = "up";
-
-                    else if (event.keyCode == 40 && m_iDirectionTwo != "up")    // Down arrow key was pressed.
-                        m_iDirectionTwo = "down";
-
-                    else if (event.keyCode == 37 && m_iDirectionTwo != "right") // Left arrow key was pressed.
-                        m_iDirectionTwo = "left";
-
-                    else if (event.keyCode == 39 && m_iDirectionTwo != "left") // Right arrow key was pressed.
-                        m_iDirectionTwo = "right";
-
-                    m_bIsSnakeUpdatedTwo = false;
-                }
-            }
-        }
+        else if (m_bMultiplayer)
+            keyBoardDownMultiplayer();
     }
 }
 
 
 function doKeyUp(event)
 {
-
     if (m_bGameStarted)
     {
         if (m_bSingle)
-        {
-            if (event.keyCode == 32)    // Space bar was pressed.
-                m_bIsPaused ? unPauseGameSingle() : pauseGameSingle();
+            keyBoardUpSinglePlayer();
 
-            else if (event.keyCode == 27)    // Escape was pressed, will eventually show start menu ... Jacob!!!
-            {
-                pauseGameSingle(m_IntervalIDMain);
-                m_bIsPaused = false;
-                showPausePic(false);
-                showStartMenu(true);
-                m_bGameStarted = false;
-                m_bSingle = false;
-                m_iPrevAmount = 0;
-                m_iHighestAmount = 0;
-            }
-        }
+        if (m_bTeleportic)
+            keyBoardUpTeleportic();
 
         if (m_bMultiplayer)
-        {
-            if (event.keyCode == 32)
-                m_bIsPaused ? unPauseGameMulti() : pauseGameMulti();
-
-            else if (event.keyCode == 27) // Escape was pressed
-            {
-                pauseGameMulti();
-                m_bIsPaused = false;
-                showPausePic(false);
-                showStartMenu(true);
-                m_bMultiplayer = false
-                m_bGameStarted = false;
-                m_iTotalScoreOne = 0;
-                m_iTotalScoreTwo = 0;
-            }
-        }
+            keyBoardUpMultiplayer();
 
         if (event.keyCode == 77)    // 'm' was pressed.
             m_bSoundOn = !m_bSoundOn;
@@ -380,7 +374,6 @@ function doKeyUp(event)
 
 function getRandomColor(iMin, iMax)
 {
-
     // creating a random number between iMin and iMax
     var r = getRandomNumber(iMin, iMax)
     var g = getRandomNumber(iMin, iMax)
