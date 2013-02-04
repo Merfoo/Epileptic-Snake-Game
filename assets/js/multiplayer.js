@@ -1,8 +1,9 @@
-var m_iSnakeOneMultiLength = 12;
-
 // Snake ID's
 var m_cSnakeColorOne = "red";
 var m_cSnakeColorTwo = "blue";
+
+// Snake starting length for one
+var m_iSnakeOneMultiLength = 12;
 
 // Snake ID's
 var m_iSnakeOneID = 1;
@@ -17,8 +18,8 @@ var m_bIsSnakeUpdatedTwo = false;
 
 var m_iAmountAteOne = 0;
 var m_iAmountAteTwo = 0;
-var m_iTotalScoreOne = 1;
-var m_iTotalScoreTwo = 1;
+var m_iTotalScoreOne = 2;
+var m_iTotalScoreTwo = 2;
 
 // Gamespeed 
 var m_iGameSpeedOne = m_iGameSpeedOriginal;

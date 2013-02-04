@@ -361,10 +361,10 @@ function doKeyUp(event)
         if (m_bSingle)
             keyBoardUpSinglePlayer();
 
-        if (m_bTeleportic)
+        else if (m_bTeleportic)
             keyBoardUpTeleportic();
 
-        if (m_bMultiplayer)
+        else if (m_bMultiplayer)
             keyBoardUpMultiplayer();
 
         if (event.keyCode == 77)    // 'm' was pressed.

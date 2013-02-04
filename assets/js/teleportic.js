@@ -95,16 +95,13 @@ function gameLoopTeleportic() {
                 m_IntervalIDMain = changeGameSpeed(m_IntervalIDMain, "gameLoopTeleportic();", m_iGameSpeedMain);
         }
 
-        if (++m_iTeleporterFoodCount >= m_iTeleporterCheck && m_iTeleportIndexColor < m_iTeleporteMax) {
+        if (m_iTeleportIndexColor < m_iTeleporteMax) 
             createTeleportingBlocks();
-            m_iTeleporterFoodCount = 0;
-        }
     }
 
     // If true, reset the game.
-    if (checkCollision(m_iSnakeBodyOne)) {
+    if (checkCollision(m_iSnakeBodyOne))
         initializeTeleportic();
-    }
 }
 
 // Draws everything on the canvas.
@@ -148,20 +145,25 @@ function unPauseGameTeleportic()
 {
     playBackgroundMusic();
     showPausePic(false);
-    m_bIsPaused = false;
     m_IntervalIDMain = window.setInterval("gameLoopTeleportic();", m_iGameSpeedMain);
+    m_bIsPaused = false;
 }
 
-function runTeleporters() {
-    for (var index = 0; index < m_iTeleporters.length; index++) {
-        if (m_iSnakeHeadOne.x == m_iTeleporters[index].x && m_iSnakeHeadOne.y == m_iTeleporters[index].y) {
-            if (index % 2 == 0) {
+function runTeleporters()
+{
+    for (var index = 0; index < m_iTeleporters.length; index++)
+    {
+        if (m_iSnakeHeadOne.x == m_iTeleporters[index].x && m_iSnakeHeadOne.y == m_iTeleporters[index].y)
+        {
+            if (index % 2 == 0)
+            {
                 index++;
                 m_iSnakeHeadOne.x = m_iTeleporters[index].x;
                 m_iSnakeHeadOne.y = m_iTeleporters[index].y;
             }
 
-            else {
+            else
+            {
                 index--;
                 m_iSnakeHeadOne.x = m_iTeleporters[index].x;
                 m_iSnakeHeadOne.y = m_iTeleporters[index].y;
@@ -170,7 +172,8 @@ function runTeleporters() {
     }
 }
 
-function createTeleportingBlocks() {
+function createTeleportingBlocks()
+{
     var teleporterColor = m_cTeleporterColors[m_iTeleportIndexColor++];
     var newTeleporterA = { x: getRandomNumber(1, m_iMapWidth - 1), y: getRandomNumber(1, m_iMapHeight - 1), color: teleporterColor };
     m_iTeleporters.push(newTeleporterA);
@@ -179,7 +182,7 @@ function createTeleportingBlocks() {
 }
 
 // Stops loop
-function pauseGameSingle()
+function pauseGameTeleportic()
 {
     stopBackgroundMusic();
     showPausePic(true);
@@ -188,7 +191,7 @@ function pauseGameSingle()
 }
 
 // Starts loop again
-function unPauseGameSingle()
+function unPauseGameTeleportic()
 {
     playBackgroundMusic();
     showPausePic(false);
