@@ -43,11 +43,10 @@ var m_iGameDecrease = 5;
 var m_iGameMinuim = 1;
 
 // Scores
-var m_iAmountAteOne = 0;
-var m_iAmountAteTwo = 0;
-var m_iHighestAmount = 0;
-var m_iTotalScoreOne = 1;
-var m_iTotalScoreTwo = 1;
+var m_iScoreOne = 0;
+var m_iScoreTwo = 0;
+var m_iHighestScoreOne = 0;
+var m_iHighestScoreTwo = 0;
 
 // Fast Speed
 var m_iFastDivider = 4;

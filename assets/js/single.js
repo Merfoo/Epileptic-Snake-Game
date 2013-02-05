@@ -21,10 +21,10 @@ function initializeSingle() {
     m_iSnakeBodyOne = new Array(m_iOriginalSnakeLengthSingle);
     m_iDirectionOne = "right";
 
-    if (m_iAmountAteOne > m_iHighestAmount)
-        m_iHighestAmount = m_iPrevAmount;
+    if (m_iScoreOne > m_iHighestScoreOne)
+        m_iHighestScoreOne = m_iScoreOne;
 
-    m_iAmountAteOne = 0;
+    m_iScoreOne = 0;
 
     // Food Related
     m_iFoodX = 0;
@@ -65,7 +65,7 @@ function gameLoopSingle()
 
         var tempData = { x: m_iSnakeBodyOne[m_iSnakeBodyOne.length - 1].x, y: m_iSnakeBodyOne[m_iSnakeBodyOne.length - 1].y };
         m_iSnakeBodyOne.push(tempData);
-        m_iAmountAteOne++;
+        m_iScoreOne++;
         setFood(m_iSnakeBodyOne);
 
         if ((m_iGameSpeedMain - m_iGameDecrease) >= m_iGameMinuim) {
@@ -102,8 +102,8 @@ function drawMapSingle()
     paintTile(m_iFoodX, m_iFoodY, m_cFoodColor, m_iFoodBorderWidth);
 
     // Prints score on top of snake game
-    writeMessage(m_iLeft, m_cScoreColorOne, "Score: " + m_iAmountAteOne);
-    writeMessage(m_iLeft + 13, m_cScoreColorOne, "Highest Score: " + m_iHighestAmount);
+    writeMessage(m_iLeft, m_cScoreColorOne, "Score: " + m_iScoreOne);
+    writeMessage(m_iLeft + 13, m_cScoreColorOne, "Highest Score: " + m_iHighestScoreOne);
 
     // Sets the pics visible or not.
     setSoundPicVisible(m_bSoundOn);
@@ -184,6 +184,6 @@ function keyBoardUpSinglePlayer()
         m_bGameStarted = false;
         m_bSingle = false;
         m_iPrevAmount = 0;
-        m_iHighestAmount = 0;
+        m_iHighestScoreOne = 0;
     }
 }

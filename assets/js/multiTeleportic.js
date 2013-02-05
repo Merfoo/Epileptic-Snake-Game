@@ -17,8 +17,8 @@ function initializeMultiTeleportic()
 
     m_iTeleporters = new Array();
     createTeleportingBlocks();
-    m_iTotalScoreOne = 1;
-    m_iTotalScoreTwo = 1;
+    m_iHighestScoreOne = 1;
+    m_iHighestScoreTwo = 1;
     resetSnakeOneMultiTeleportic();
     resetSnakeTwoMultiTeleportic();
     setFood(m_iSnakeBodyOne.concat(m_iSnakeBodyTwo));
@@ -51,10 +51,10 @@ function drawMapMultiTeleportic()
         paintTile(m_iTeleporters[index].x, m_iTeleporters[index].y, m_iTeleporters[index].color, 0);
 
     // Prints score on top of snake game
-    writeMessage(m_iLeft, m_cSnakeColorOne, "Score One: " + m_iAmountAteOne);
-    writeMessage(m_iLeft + 10, m_cSnakeColorTwo, "Score Two: " + m_iAmountAteTwo);
-    writeMessage(m_iMiddle + 5, m_cSnakeColorOne, "Total Score One: " + m_iTotalScoreOne);
-    writeMessage(m_iMiddle + 15, m_cSnakeColorTwo, "Total Score Two: " + m_iTotalScoreTwo);
+    writeMessage(m_iLeft, m_cSnakeColorOne, "Score One: " + m_iScoreOne);
+    writeMessage(m_iLeft + 10, m_cSnakeColorTwo, "Score Two: " + m_iScoreTwo);
+    writeMessage(m_iMiddle + 5, m_cSnakeColorOne, "Total Score One: " + m_iHighestScoreOne);
+    writeMessage(m_iMiddle + 15, m_cSnakeColorTwo, "Total Score Two: " + m_iHighestScoreTwo);
     setSoundPicVisible(m_bSoundOn);
 }
 
@@ -74,8 +74,8 @@ function setUpSnakeOneMultiTeleportic()
         playFoodMusic();
         var tempData = { x: m_iSnakeBodyOne[m_iSnakeBodyOne.length - 1].x, y: m_iSnakeBodyOne[m_iSnakeBodyOne.length - 1].y };
         m_iSnakeBodyOne.push(tempData);
-        m_iAmountAteOne++;
-        m_iTotalScoreOne++;
+        m_iScoreOne++;
+        m_iHighestScoreOne++;
 
         if ((m_iGameSpeedOne - m_iGameDecrease) >= m_iGameMinuim) {
             m_iGameSpeedOne -= m_iGameDecrease;
@@ -111,8 +111,8 @@ function setUpSnakeTwoMultiTeleportic() {
         playFoodMusic();
         var tempData = { x: m_iSnakeBodyTwo[m_iSnakeBodyTwo.length - 1].x, y: m_iSnakeBodyTwo[m_iSnakeBodyTwo.length - 1].y };
         m_iSnakeBodyTwo.push(tempData);
-        m_iAmountAteTwo++;
-        m_iTotalScoreTwo++;
+        m_iScoreTwo++;
+        m_iHighestScoreTwo++;
 
         if ((m_iGameSpeedTwo - m_iGameDecrease) >= m_iGameMinuim) {
             m_iGameSpeedTwo -= m_iGameDecrease;
@@ -163,8 +163,8 @@ function resetSnakeOneMultiTeleportic()
     m_iDirectionOne = "right";
     m_iGameSpeedOne = m_iGameSpeedMain;
     m_iSnakeBodyOne = new Array(m_iOriginalSnakeLengthMulti);
-    m_iAmountAteOne = 0;
-    m_iTotalScoreOne--;
+    m_iScoreOne = 0;
+    m_iHighestScoreOne--;
 
     if (m_IntervalIDOne != null)
         clearInterval(m_IntervalIDOne);
@@ -191,8 +191,8 @@ function resetSnakeTwoMultiTeleportic()
     m_iDirectionTwo = "left";
     m_iGameSpeedTwo = m_iGameSpeedMain;
     m_iSnakeBodyTwo = new Array(m_iOriginalSnakeLengthMulti);
-    m_iAmountAteTwo = 0;
-    m_iTotalScoreTwo--;
+    m_iScoreTwo = 0;
+    m_iHighestScoreTwo--;
 
     if (m_IntervalIDTwo != null)
         clearInterval(m_IntervalIDTwo);

@@ -19,10 +19,10 @@ function initializeTeleportic() {
     m_iSnakeBodyOne = new Array(m_iOriginalSnakeLengthSingle);
     m_iDirectionOne = "right";
 
-    if (m_iAmountAteOne > m_iHighestAmount)
-        m_iHighestAmount = m_iAmountAteOne;
+    if (m_iScoreOne > m_iHighestScoreOne)
+        m_iHighestScoreOne = m_iScoreOne;
 
-    m_iAmountAteOne = 0;
+    m_iScoreOne = 0;
 
     // Food Related
     m_iFoodX = 0;
@@ -68,7 +68,7 @@ function gameLoopTeleportic() {
 
         var tempData = { x: m_iSnakeBodyOne[m_iSnakeBodyOne.length - 1].x, y: m_iSnakeBodyOne[m_iSnakeBodyOne.length - 1].y };
         m_iSnakeBodyOne.push(tempData);
-        m_iAmountAteOne++;
+        m_iScoreOne++;
         setFood(m_iSnakeBodyOne.concat(m_iTeleporters));
 
         if ((m_iGameSpeedMain - m_iGameDecrease) >= m_iGameMinuim) {
@@ -109,8 +109,8 @@ function drawMapTeleportic() {
     paintTile(m_iFoodX, m_iFoodY, getRandomColor(1, 255), m_iFoodBorderWidth);
 
     // Prints score on top of snake game
-    writeMessage(m_iLeft, m_cScoreColorOne, "Score: " + m_iAmountAteOne);
-    writeMessage(m_iLeft + 13, m_cScoreColorOne, "Highest Score: " + m_iHighestAmount);
+    writeMessage(m_iLeft, m_cScoreColorOne, "Score: " + m_iScoreOne);
+    writeMessage(m_iLeft + 13, m_cScoreColorOne, "Highest Score: " + m_iHighestScoreOne);
 
     // Sets the pics visible or not.
     setSoundPicVisible(m_bSoundOn);
@@ -199,6 +199,6 @@ function keyBoardUpTeleportic()
         showStartMenu(true);
         m_bGameStarted = false;
         m_bSingleTeleportic = false;
-        m_iHighestAmount = 0;
+        m_iHighestScoreOne = 0;
     }
 }
