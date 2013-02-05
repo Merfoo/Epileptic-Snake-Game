@@ -2,24 +2,21 @@
 var m_cSnakeColorOne = "red";
 var m_cSnakeColorTwo = "blue";
 
-// Snake starting length for one
-var m_iSnakeOneMultiLength = 12;
-
 // Snake ID's
 var m_iSnakeOneID = 1;
 var m_iSnakeTwoID = 2;
 
 // Snake Two Related
-var m_iSnakeStartingLengthTwo = 12;
-var m_iSnakeHeadTwo = { x: m_iMapWidth - m_iSnakeStartingLengthTwo + 1, y: 1 };
+var m_iSnakeHeadTwo = { x: m_iMapWidth - m_iOriginalSnakeLengthMulti + 1, y: 1 };
 var m_iSnakeBodyTwo = new Array();
 var m_iDirectionTwo = "left";
 var m_bIsSnakeUpdatedTwo = false;
 
+// For keeping track of the scores
 var m_iAmountAteOne = 0;
 var m_iAmountAteTwo = 0;
-var m_iTotalScoreOne = 2;
-var m_iTotalScoreTwo = 2;
+var m_iTotalScoreOne = 1;
+var m_iTotalScoreTwo = 1;
 
 // Gamespeed 
 var m_iGameSpeedOne = m_iGameSpeedOriginal;
@@ -28,23 +25,25 @@ var m_iGameSpeedTwo = m_iGameSpeedOriginal;;
 var m_IntervalIDOne;
 var m_IntervalIDTwo;
 
-function multiplayerInitialize() {
+function multiplayerInitialize()
+{
+    showStartMenu(false);
+    hideFastPic();
+    m_bGameStarted = true;
+    m_bMultiplayer = true;
 
     // Get canvas context for drawing, add events
     m_CanvasContext = document.getElementById("myCanvas").getContext("2d");
     setCanvasSize();
-    m_iSnakeStartingLengthOne = m_iSnakeOneMultiLength;
-    resetSnakeOne();
-    resetSnakeTwo();
 
     for (var x = 0; x < m_iMapWidth; x++)
         for (var y = 0; y < m_iMapHeight; y++)
             y == 0 ? paintTile(x, y, "#FFF", 0) : paintTile(x, y, m_cBackroundColor, 0);
 
-    showStartMenu(false);
-    hideFastPic();
-    m_bGameStarted = true;
-    m_bMultiplayer = true;
+    m_iTotalScoreOne = 1;
+    m_iTotalScoreTwo = 1;
+    resetSnakeOne();
+    resetSnakeTwo();
     setFood(m_iSnakeBodyOne.concat(m_iSnakeBodyTwo));
     drawMap();
     gameLoop();
@@ -57,16 +56,15 @@ function multiplayerInitialize() {
 }
 
 // Runs all the functions required for the game to work.
-function gameLoop() {
-
-    // Plays music. 
+function gameLoop() 
+{
     playBackgroundMusic();
-
     drawMap();
 }
 
 // Draws everything on the canvas.
-function drawMap() {
+function drawMap()
+{
     // Food
     m_cFoodColor = getRandomColor(1, 255);
     paintTile(m_iFoodX, m_iFoodY, m_cFoodColor, m_iFoodBorderWidth);
@@ -80,8 +78,8 @@ function drawMap() {
 }
 
 // Handles where the snake should be.
-function setUpSnakeOne() {
-
+function setUpSnakeOne()
+{
     var newData = setUpSnake(m_iSnakeHeadOne, m_iSnakeBodyOne, m_iDirectionOne);
     m_iSnakeHeadOne = newData.newHead;
     m_iSnakeBodyOne = newData.newBody;
@@ -169,10 +167,6 @@ function resetASnake(snakeID) {
 
     if (snakeID != 0)
     {
-        for (var x = 0; x < m_iMapWidth; x++)
-            for (var y = 0; y < 1; y++)
-                paintTile(x, y, "#FFF", 0);
-
         if (snakeID == m_iSnakeOneID)
             resetSnakeOne();
 
@@ -188,11 +182,15 @@ function resetSnakeOne()
         for (var index = 0; index < m_iSnakeBodyOne.length; index++)
             paintTile(m_iSnakeBodyOne[index].x, m_iSnakeBodyOne[index].y, m_cBackroundColor, m_iBackgroundBorderWidth);
 
-    m_iSnakeHeadOne.x = m_iSnakeStartingLengthOne - 2;
+    // Repaint white toolbar
+    if(m_iSnakeHeadOne.y == 0)
+        paintTile(m_iSnakeHeadOne.x, m_iSnakeHeadOne.y, "#FFF", 0);
+
+    m_iSnakeHeadOne.x = m_iOriginalSnakeLengthMulti - 2;
     m_iSnakeHeadOne.y = 1;
     m_iDirectionOne = "right";
     m_iGameSpeedOne = m_iGameSpeedMain;
-    m_iSnakeBodyOne = new Array(m_iSnakeStartingLengthOne);
+    m_iSnakeBodyOne = new Array(m_iOriginalSnakeLengthMulti);
     m_iAmountAteOne = 0;
     m_iTotalScoreOne--;
 
@@ -201,8 +199,8 @@ function resetSnakeOne()
 
     m_IntervalIDOne = window.setInterval("setUpSnakeOne();", m_iGameSpeedOne);
 
-    for (var index = 0; index < m_iSnakeStartingLengthOne; index++)
-        m_iSnakeBodyOne[m_iSnakeStartingLengthOne - index - 1] = { x: index - 1, y: m_iSnakeHeadOne.y };
+    for (var index = 0; index < m_iSnakeBodyOne.length; index++)
+        m_iSnakeBodyOne[m_iOriginalSnakeLengthMulti - index - 1] = { x: index - 1, y: m_iSnakeHeadOne.y };
 }
 
 // Resets all values related to snake two
@@ -212,11 +210,15 @@ function resetSnakeTwo()
         for (var index = 0; index < m_iSnakeBodyTwo.length; index++)
             paintTile(m_iSnakeBodyTwo[index].x, m_iSnakeBodyTwo[index].y, m_cBackroundColor, m_iBackgroundBorderWidth);
 
-    m_iSnakeHeadTwo.x = m_iMapWidth - m_iSnakeStartingLengthTwo + 1;
+    // Repaint white toolbar
+    if (m_iSnakeHeadTwo.y == 0)
+        paintTile(m_iSnakeHeadTwo.x, m_iSnakeHeadTwo.y, "#FFF", 0);
+
+    m_iSnakeHeadTwo.x = m_iMapWidth - m_iOriginalSnakeLengthMulti + 1;
     m_iSnakeHeadTwo.y = 1;
     m_iDirectionTwo = "left";
     m_iGameSpeedTwo = m_iGameSpeedMain;
-    m_iSnakeBodyTwo = new Array(m_iSnakeStartingLengthTwo);
+    m_iSnakeBodyTwo = new Array(m_iOriginalSnakeLengthMulti);
     m_iAmountAteTwo = 0;
     m_iTotalScoreTwo--;
 
@@ -225,8 +227,8 @@ function resetSnakeTwo()
 
     m_IntervalIDTwo = window.setInterval("setUpSnakeTwo();", m_iGameSpeedTwo);
 
-    for (var index = 0; index < m_iSnakeStartingLengthTwo; index++)
-        m_iSnakeBodyTwo[m_iSnakeStartingLengthTwo - index - 1] = { x: m_iMapWidth - index, y: m_iSnakeHeadTwo.y };
+    for (var index = 0; index < m_iSnakeBodyTwo.length; index++)
+        m_iSnakeBodyTwo[m_iOriginalSnakeLengthMulti - index - 1] = { x: m_iMapWidth - index, y: m_iSnakeHeadTwo.y };
 }
 
 // Stops loop
@@ -310,7 +312,5 @@ function keyBoardUpMultiplayer()
         showStartMenu(true);
         m_bMultiplayer = false
         m_bGameStarted = false;
-        m_iTotalScoreOne = 0;
-        m_iTotalScoreTwo = 0;
     }
 }

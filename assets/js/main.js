@@ -15,9 +15,10 @@ var m_cBackroundColor = "#000";
 var m_cScoreColorOne = "#000";
 
 // Snake Related
-var m_iSnakeStartingLengthOne = 7;
-var m_iSnakeHeadOne = { x: m_iSnakeStartingLengthOne - 2, y: 1 };
-var m_iSnakeBodyOne = new Array(m_iSnakeStartingLengthOne);
+var m_iOriginalSnakeLengthSingle = 7;
+var m_iOriginalSnakeLengthMulti = 12;
+var m_iSnakeHeadOne = { x: m_iOriginalSnakeLengthSingle - 2, y: 1 };
+var m_iSnakeBodyOne = new Array(m_iOriginalSnakeLengthSingle);
 var m_bIsSnakeUpdatedOne = false;
 var m_iDirectionOne = "right";
 

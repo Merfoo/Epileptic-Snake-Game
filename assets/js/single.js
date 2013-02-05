@@ -1,6 +1,3 @@
-
-var m_iSnakeSingleLength = 7;
-
 // Scores
 var m_iAmountAte = 0;
 var m_iPrevAmount = 0;
@@ -25,12 +22,11 @@ function initializeSingle() {
     // Game speed
     m_iGameSpeedMain = m_iGameSpeedOriginal;
     m_iFastSpeed = Math.floor(m_iGameSpeedMain / m_iFastDivider);
-    m_iSnakeStartingLengthOne = m_iSnakeSingleLength;
 
     // Snake 
-    m_iSnakeHeadOne.x = m_iSnakeStartingLengthOne - 2;
+    m_iSnakeHeadOne.x = m_iOriginalSnakeLengthSingle - 2;
     m_iSnakeHeadOne.y = 1;
-    m_iSnakeBodyOne = new Array(m_iSnakeStartingLengthOne);
+    m_iSnakeBodyOne = new Array(m_iOriginalSnakeLengthSingle);
     m_iDirectionOne = "right";
     m_iPrevAmount = m_iAmountAte;
 
@@ -44,8 +40,8 @@ function initializeSingle() {
     m_iFoodY = 0;
 
     // Initialize snake
-    for (var index = 0; index < m_iSnakeStartingLengthOne; index++)
-        m_iSnakeBodyOne[m_iSnakeStartingLengthOne - index - 1] = { x: index - 1, y: m_iSnakeHeadOne.y };
+    for (var index = 0; index < m_iSnakeBodyOne.length; index++)
+        m_iSnakeBodyOne[m_iOriginalSnakeLengthSingle - index - 1] = { x: index - 1, y: m_iSnakeHeadOne.y };
 
     for (var x = 0; x < m_iMapWidth; x++)
         for (var y = 0; y < m_iMapHeight; y++)

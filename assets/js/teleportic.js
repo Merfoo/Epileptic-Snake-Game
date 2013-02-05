@@ -1,6 +1,3 @@
-// Starting snake Length
-var m_iOriginalSnakeLength = 7;
-
 // Teleporting Blocks
 var m_iTeleportIndexColor = 0;
 var m_cTeleporterColors = new Array("white", "red", "blue", "yellow", "green");
@@ -21,12 +18,11 @@ function initializeTeleportic() {
     setCanvasSize();
 
     m_iGameSpeedMain = m_iGameSpeedOriginal;
-    m_iSnakeStartingLengthOne = m_iSnakeStartingLengthOne;
 
     // Snake 
-    m_iSnakeHeadOne.x = m_iSnakeStartingLengthOne - 2;
+    m_iSnakeHeadOne.x = m_iOriginalSnakeLengthSingle - 2;
     m_iSnakeHeadOne.y = 1;
-    m_iSnakeBodyOne = new Array(m_iSnakeStartingLengthOne);
+    m_iSnakeBodyOne = new Array(m_iOriginalSnakeLengthSingle);
     m_iDirectionOne = "right";
     m_iPrevAmount = m_iAmountAte;
 
@@ -44,8 +40,8 @@ function initializeTeleportic() {
     m_iTeleporters = new Array();
 
     // Initialize snake
-    for (var index = 0; index < m_iSnakeStartingLengthOne; index++)
-        m_iSnakeBodyOne[m_iSnakeStartingLengthOne - index - 1] = { x: index - 1, y: m_iSnakeHeadOne.y };
+    for (var index = 0; index < m_iSnakeBodyOne.length; index++)
+        m_iSnakeBodyOne[m_iOriginalSnakeLengthSingle - index - 1] = { x: index - 1, y: m_iSnakeHeadOne.y };
 
     for (var x = 0; x < m_iMapWidth; x++)
         for (var y = 0; y < m_iMapHeight; y++)
