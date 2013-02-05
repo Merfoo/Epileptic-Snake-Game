@@ -1,29 +1,4 @@
-// Snake ID's
-var m_cSnakeColorOne = "red";
-var m_cSnakeColorTwo = "blue";
-
-// Snake ID's
-var m_iSnakeOneID = 1;
-var m_iSnakeTwoID = 2;
-
-// Snake Two Related
-var m_iSnakeHeadTwo = { x: m_iMapWidth - m_iOriginalSnakeLengthMulti + 1, y: 1 };
-var m_iSnakeBodyTwo = new Array();
-var m_iDirectionTwo = "left";
-var m_bIsSnakeUpdatedTwo = false;
-
-// For keeping track of the scores
-var m_iAmountAteOne = 0;
-var m_iAmountAteTwo = 0;
-var m_iTotalScoreOne = 1;
-var m_iTotalScoreTwo = 1;
-
-// Gamespeed 
-var m_iGameSpeedOne = m_iGameSpeedOriginal;
-var m_iGameSpeedTwo = m_iGameSpeedOriginal;;
-
-var m_IntervalIDOne;
-var m_IntervalIDTwo;
+// Muliplayer Teleportic
 
 function initializeMulti()
 {

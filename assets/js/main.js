@@ -17,21 +17,37 @@ var m_cScoreColorOne = "#000";
 // Snake Related
 var m_iOriginalSnakeLengthSingle = 7;
 var m_iOriginalSnakeLengthMulti = 12;
+
+// Snake One Related
+var m_iSnakeOneID = 1;
+var m_cSnakeColorOne = "red";
 var m_iSnakeHeadOne = { x: m_iOriginalSnakeLengthSingle - 2, y: 1 };
 var m_iSnakeBodyOne = new Array(m_iOriginalSnakeLengthSingle);
-var m_bIsSnakeUpdatedOne = false;
 var m_iDirectionOne = "right";
+var m_bIsSnakeUpdatedOne = false;
+
+// Snake Two Related
+var m_iSnakeTwoID = 2;
+var m_cSnakeColorTwo = "blue";
+var m_iSnakeHeadTwo = { x: m_iMapWidth - m_iOriginalSnakeLengthMulti + 1, y: 1 };
+var m_iSnakeBodyTwo = new Array();
+var m_iDirectionTwo = "left";
+var m_bIsSnakeUpdatedTwo = false;
 
 // Game speed
 var m_iGameSpeedOriginal = 80;
 var m_iGameSpeedMain = m_iGameSpeedOriginal;
+var m_iGameSpeedOne = m_iGameSpeedOriginal;
+var m_iGameSpeedTwo = m_iGameSpeedOriginal;
 var m_iGameDecrease = 5;
 var m_iGameMinuim = 1;
 
 // Scores
-var m_iAmountAte = 0;
-var m_iPrevAmount = 0;
+var m_iAmountAteOne = 0;
+var m_iAmountAteTwo = 0;
 var m_iHighestAmount = 0;
+var m_iTotalScoreOne = 1;
+var m_iTotalScoreTwo = 1;
 
 // Fast Speed
 var m_iFastDivider = 4;
@@ -66,6 +82,8 @@ var m_CanvasContext;
 
 // Interval ID's
 var m_IntervalIDMain;
+var m_IntervalIDOne;
+var m_IntervalIDTwo;
 
 // Game version related.
 var m_iGameVersion = 0;
@@ -156,17 +174,17 @@ function showStartMenu(bVisible)
         document.getElementById("startMenu").style.zIndex = -1;
 }
 
-// Shows pause pic if true, otherwise hides it.
+// Shows pause pause if true, otherwise hides it.
 function showPausePic(bVisible)
 {
     if (bVisible)
-        document.getElementById("pic").style.zIndex = 1;
+        document.getElementById("pause").style.zIndex = 1;
 
     else
-        document.getElementById("pic").style.zIndex = -1;
+        document.getElementById("pause").style.zIndex = -1;
 }
 
-// Sets the sound on pic on visible
+// Sets the sound on pause on visible
 function setSoundPicVisible(bOn)
 {
     m_bSoundOn = bOn;
@@ -184,7 +202,7 @@ function setSoundPicVisible(bOn)
     }
 }
 
-// Sets the fast pic visible
+// Sets the fast pause visible
 function setFastPicVisible(bVisible)
 {
     m_bFastMode = bVisible;
