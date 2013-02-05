@@ -116,6 +116,16 @@ canvas
     top: 25%; 
     left: 5%;
 }
+
+#multiTeleportic 
+{
+    height: 30%; 
+    width: 15%;
+    position: absolute; 
+    top: 25%; 
+    left: 80%;
+}
+
 img:focus, img:active
 {
     color:green;

@@ -28,6 +28,16 @@ var m_iGameSpeedMain = m_iGameSpeedOriginal;
 var m_iGameDecrease = 5;
 var m_iGameMinuim = 1;
 
+// Scores
+var m_iAmountAte = 0;
+var m_iPrevAmount = 0;
+var m_iHighestAmount = 0;
+
+// Fast Speed
+var m_iFastDivider = 4;
+var m_iFastSpeed = Math.floor(m_iGameSpeedMain / m_iFastDivider);
+var m_bFastMode = false;
+
 // Food
 var m_iFoodX = 0;
 var m_iFoodY = 0;
@@ -36,6 +46,12 @@ var m_iFoodY = 0;
 var m_iLeft;
 var m_iMiddle;
 var m_iRight;
+
+// Teleporting Blocks
+var m_cTeleporterColors = new Array("white", "red", "blue", "yellow", "green");
+var m_iTeleporters = new Array()
+var m_iTeleporterCheck = 1;
+var m_iTeleporteMax = 5;
 
 // Sound Related
 var m_sDirectory = "assets/music/";
@@ -51,12 +67,13 @@ var m_CanvasContext;
 // Interval ID's
 var m_IntervalIDMain;
 
+// Game version related.
 var m_iGameVersion = 0;
-
 var m_bGameStarted = false;
-var m_bMultiplayer = false;
 var m_bSingle = false;
-var m_bTeleportic = false;
+var m_bMulti = false;
+var m_bSingleTeleportic = false;
+var m_bMultiTeleportic = false;
 var m_bIsPaused = false;
 
 window.addEventListener('keydown', doKeyDown, true);
@@ -70,10 +87,13 @@ function startGame()
         initializeSingle();
 
     else if (m_iGameVersion == 1)
-        multiplayerInitialize();
+        initializeMulti();
 
     else if (m_iGameVersion == 2)
         initializeTeleportic();
+
+    else if (m_iGameVersion == 3)
+        initializeMultiTeleportic();
 
     m_iGameVersion = 0;
 }
@@ -88,24 +108,14 @@ function setGameMulti()
     m_iGameVersion = 1;
 }
 
-function setGameTeleportic()
+function setGameSingleTeleportic()
 {
     m_iGameVersion = 2;
 }
 
-function giveFocus(ID)
+function setGameMultiTeleportic()
 {
-    if (ID == 1) 
-    {
-        document.getElementById("singlePlayer").focus();
-        document.getElementById("multiPlayer").blur();
-    }
-
-    if (ID == 2)
-    {
-        document.getElementById("singlePlayer").blur();
-        document.getElementById("multiPlayer").focus();
-    }
+    m_iGameVersion = 3;
 }
 
 // Changes gamespeed
@@ -246,6 +256,38 @@ function playFoodMusic()
     }
 }
 
+function runTeleporters(snakeHead)
+{
+    for (var index = 0; index < m_iTeleporters.length; index++)
+    {
+        if (snakeHead.x == m_iTeleporters[index].x && snakeHead.y == m_iTeleporters[index].y)
+        {
+            if (index % 2 == 0)
+            {
+                index++;
+                snakeHead.x = m_iTeleporters[index].x;
+                snakeHead.y = m_iTeleporters[index].y;
+            }
+
+            else
+            {
+                index--;
+                snakeHead.x = m_iTeleporters[index].x;
+                snakeHead.y = m_iTeleporters[index].y;
+            }
+        }
+    }
+}
+
+function createTeleportingBlocks()
+{
+    var teleporterColor = m_cTeleporterColors[m_iTeleporters.length / 2];
+    var newTeleporterA = { x: getRandomNumber(1, m_iMapWidth - 1), y: getRandomNumber(1, m_iMapHeight - 1), color: teleporterColor };
+    m_iTeleporters.push(newTeleporterA);
+    var newTeleporterB = { x: getRandomNumber(1, m_iMapWidth - 1), y: getRandomNumber(1, m_iMapHeight - 1), color: teleporterColor };
+    m_iTeleporters.push(newTeleporterB);
+}
+
 // Sets up the snake body based on direction
 function setUpSnake(snakeHead, snakeBody, sDirection)
 {
@@ -265,8 +307,6 @@ function setUpSnake(snakeHead, snakeBody, sDirection)
         tempSnakeData = { x: snakeHead.x, y: --snakeHead.y };
 
     snakeBody.unshift(tempSnakeData);
-
-    return { newHead: snakeHead, newBody: snakeBody };
 }
 
 function checkCollision(snakeBody)
@@ -346,15 +386,18 @@ function doKeyDown(event) {
         if (m_bSingle)
             keyBoardDownSinglePlayer();
 
-        else if (m_bTeleportic)
+        else if (m_bSingleTeleportic)
             keyBoardDownTeleportic();
 
-        else if (m_bMultiplayer)
+        else if (m_bMulti)
             keyBoardDownMultiplayer();
+
+        else if(m_bMultiTeleportic)
+            keyBoardDownMultiplayerTeleportic();
     }
 }
 
-
+// Handles key up events
 function doKeyUp(event)
 {
     if (m_bGameStarted)
@@ -362,11 +405,14 @@ function doKeyUp(event)
         if (m_bSingle)
             keyBoardUpSinglePlayer();
 
-        else if (m_bTeleportic)
+        else if (m_bSingleTeleportic)
             keyBoardUpTeleportic();
 
-        else if (m_bMultiplayer)
+        else if (m_bMulti)
             keyBoardUpMultiplayer();
+
+        else if (m_bMultiTeleportic)
+            keyBoardUpMultiplayerTeleportic();
 
         if (event.keyCode == 77)    // 'm' was pressed.
             m_bSoundOn = !m_bSoundOn;

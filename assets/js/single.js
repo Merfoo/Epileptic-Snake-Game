@@ -1,13 +1,4 @@
-// Scores
-var m_iAmountAte = 0;
-var m_iPrevAmount = 0;
-var m_iHighestAmount = 0;
-
-// Fast Speed
-var m_iFastDivider = 4;
-var m_iFastSpeed = Math.floor(m_iGameSpeedMain / m_iFastDivider);
-var m_bFastMode = false;
-
+// Single Player 
 function initializeSingle() {
 
     // Get canvas context for drawing, add events

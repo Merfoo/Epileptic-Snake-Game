@@ -1,16 +1,10 @@
-// Teleporting Blocks
-var m_iTeleportIndexColor = 0;
-var m_cTeleporterColors = new Array("white", "red", "blue", "yellow", "green");
-var m_iTeleporters = new Array()
-var m_iTeleporterFoodCount = 0;
-var m_iTeleporterCheck = 1;
-var m_iTeleporteMax = 5;
+// Single Player Teleportic
 
 function initializeTeleportic() {
 
     showStartMenu(false);
     m_bGameStarted = true;
-    m_bTeleportic = true;
+    m_bSingleTeleportic = true;
     m_bFastMode = false;
 
     // Get canvas context for drawing, add events
@@ -35,8 +29,6 @@ function initializeTeleportic() {
     m_iFoodX = 0;
     m_iFoodY = 0;
 
-    m_iTeleportIndexColor = 0;
-    m_iTeleporterFoodCount = 0;
     m_iTeleporters = new Array();
 
     // Initialize snake
@@ -67,7 +59,7 @@ function gameLoopTeleportic() {
 
     setUpSnake(m_iSnakeHeadOne, m_iSnakeBodyOne, m_iDirectionOne);
     m_bIsSnakeUpdatedOne = true;
-    runTeleporters();
+    runTeleporters(m_iSnakeHeadOne);
     drawMapTeleportic();
 
     // If true, increase snake length, increase gamespeed.
@@ -91,7 +83,7 @@ function gameLoopTeleportic() {
                 m_IntervalIDMain = changeGameSpeed(m_IntervalIDMain, "gameLoopTeleportic();", m_iGameSpeedMain);
         }
 
-        if (m_iTeleportIndexColor < m_iTeleporteMax) 
+        if (m_iTeleporters.length/2 < m_iTeleporteMax) 
             createTeleportingBlocks();
     }
 
@@ -143,38 +135,6 @@ function unPauseGameTeleportic()
     showPausePic(false);
     m_IntervalIDMain = window.setInterval("gameLoopTeleportic();", m_iGameSpeedMain);
     m_bIsPaused = false;
-}
-
-function runTeleporters()
-{
-    for (var index = 0; index < m_iTeleporters.length; index++)
-    {
-        if (m_iSnakeHeadOne.x == m_iTeleporters[index].x && m_iSnakeHeadOne.y == m_iTeleporters[index].y)
-        {
-            if (index % 2 == 0)
-            {
-                index++;
-                m_iSnakeHeadOne.x = m_iTeleporters[index].x;
-                m_iSnakeHeadOne.y = m_iTeleporters[index].y;
-            }
-
-            else
-            {
-                index--;
-                m_iSnakeHeadOne.x = m_iTeleporters[index].x;
-                m_iSnakeHeadOne.y = m_iTeleporters[index].y;
-            }
-        }
-    }
-}
-
-function createTeleportingBlocks()
-{
-    var teleporterColor = m_cTeleporterColors[m_iTeleportIndexColor++];
-    var newTeleporterA = { x: getRandomNumber(1, m_iMapWidth - 1), y: getRandomNumber(1, m_iMapHeight - 1), color: teleporterColor };
-    m_iTeleporters.push(newTeleporterA);
-    var newTeleporterB = { x: getRandomNumber(1, m_iMapWidth - 1), y: getRandomNumber(1, m_iMapHeight - 1), color: teleporterColor };
-    m_iTeleporters.push(newTeleporterB);
 }
 
 // Stops loop
@@ -240,7 +200,7 @@ function keyBoardUpTeleportic()
         showPausePic(false);
         showStartMenu(true);
         m_bGameStarted = false;
-        m_bTeleportic = false;
+        m_bSingleTeleportic = false;
         m_iPrevAmount = 0;
         m_iHighestAmount = 0;
     }
