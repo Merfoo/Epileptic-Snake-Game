@@ -70,10 +70,9 @@ var m_iTeleporteMax = 5;
 
 // Sound Related
 var m_sDirectory = "assets/music/";
-var m_MusicList = new Array(m_sDirectory + "Ephixia - Zelda Remix.mp3", m_sDirectory + "Song One.mp3", m_sDirectory + "Song Two.mp3", m_sDirectory + "Song Three.mp3",
-    m_sDirectory + "Song Four.mp3");
+var m_MusicList = new Array(m_sDirectory + "backgroundMusic.mp3", m_sDirectory + "Noseyuk-ROYALTY FREE DUBSTEP_ DRUM&BASS INSTRUMENTAL.mp3", m_sDirectory + "Portal2-01-Reconstructing_More_Science.mp3", m_sDirectory + "Portal2-04-An_Accent_Beyond.mp3", m_sDirectory + "Portal2-24-Robots_FTW.mp3");
 var m_iPrevMusicIndex = getRandomNumber(0, m_MusicList.length - 1);
-var m_FoodMusic = new Audio(m_sDirectory + "food.mp3");
+var m_FoodMusic = new Audio("assets/music/food.mp3");
 var m_BackgroundMusic = new Audio(m_MusicList[m_iPrevMusicIndex]);
 var m_bSoundOn = true;
 
@@ -99,8 +98,11 @@ window.addEventListener('keyup', doKeyUp, true);
 document.documentElement.style.overflowX = 'hidden';	 // Horizontal scrollbar will be hidden
 document.documentElement.style.overflowY = 'hidden';     // Vertical scrollbar will be hidden
 
-function startGame()
+// Starts game
+function startGame(iGameVersion)
 {
+    m_iGameVersion = iGameVersion;
+
     if (m_iGameVersion == 0)
         initializeSingle();
 
@@ -112,28 +114,6 @@ function startGame()
 
     else if (m_iGameVersion == 3)
         initializeMultiTeleportic();
-
-    m_iGameVersion = 0;
-}
-
-function setGameSingle()
-{
-    m_iGameVersion = 0;
-}
-
-function setGameMulti()
-{
-    m_iGameVersion = 1;
-}
-
-function setGameSingleTeleportic()
-{
-    m_iGameVersion = 2;
-}
-
-function setGameMultiTeleportic()
-{
-    m_iGameVersion = 3;
 }
 
 // Changes gamespeed
@@ -219,13 +199,16 @@ function setFastPicVisible(bVisible)
     }
 }
 
+// Hides fast pic, show slow pic
 function hideFastPic()
 {
     document.getElementById("fastMode").style.zIndex = -1;
     document.getElementById("slowMode").style.zIndex = -1;
 }
 
-function writeMessage(startTile, color, message) {
+// Writes message to corresponding tile, with specified colour
+function writeMessage(startTile, color, message)
+{
     m_CanvasContext.fillStyle = 'white';
     m_CanvasContext.fillRect(startTile * m_iTileWidth, 0, message.length * 12, m_iTileHeight);
     m_CanvasContext.font = '16pt Calibri';
@@ -233,6 +216,7 @@ function writeMessage(startTile, color, message) {
     m_CanvasContext.fillText(message, startTile * m_iTileWidth, 20);
 }
 
+// Plays background music if mute is off
 function playBackgroundMusic()
 {
     if (m_bSoundOn)
@@ -255,25 +239,31 @@ function playBackgroundMusic()
         m_BackgroundMusic.pause();
 }
 
+// Resets background music to zero
 function resetBackgroundMusic()
 {
     m_BackgroundMusic.currentTime = 0;
 }
 
+// Stops background music
 function stopBackgroundMusic()
 {
     m_BackgroundMusic.pause();
 }
 
+// Plays food music
 function playFoodMusic()
 {
     if(m_bSoundOn)
     {
-        //m_FoodMusic.currentTime = 0;
+        if (m_FoodMusic.currentTime != null)
+            m_FoodMusic.currentTime = 0;
+
         m_FoodMusic.play();
     }
 }
 
+// Checks if the snake it a teleporter, if so teleports it
 function runTeleporters(snakeHead)
 {
     for (var index = 0; index < m_iTeleporters.length; index++)
@@ -297,6 +287,7 @@ function runTeleporters(snakeHead)
     }
 }
 
+// Creates a pair of teleporters
 function createTeleportingBlocks()
 {
     var teleporterColor = m_cTeleporterColors[m_iTeleporters.length / 2];
@@ -327,6 +318,7 @@ function setUpSnake(snakeHead, snakeBody, sDirection)
     snakeBody.unshift(tempSnakeData);
 }
 
+// Checks if the snake hit the wall or itself
 function checkCollision(snakeBody)
 {
     // Checks if snake hit the borders
@@ -350,6 +342,7 @@ function checkCollision(snakeBody)
     return false;
 }
 
+// Checks if the snakes hit eachother's body
 function hitOtherSnakes(snakeBodyOne, snakeBodyTwo, snakeIdOne, snakeIdTwo)
 {
     if (snakeBodyOne[0].x == snakeBodyTwo[0].x && snakeBodyOne[0].y == snakeBodyTwo[0].y)
@@ -437,6 +430,7 @@ function doKeyUp(event)
     }
 }
 
+// Returns random color between iMin and iMax.
 function getRandomColor(iMin, iMax)
 {
     // creating a random number between iMin and iMax
@@ -464,11 +458,13 @@ function getRandomColor(iMin, iMax)
     return hexColor.toUpperCase();
 }
 
+// Returns random number between iMin and iMax.
 function getRandomNumber(iMin, iMax)
 {
     return Math.floor((Math.random() * (iMax - iMin)) + iMin);
 }
 
+// Capitalizes first leter of string.
 function capitalizeFirst(sArg)
 {
     return sArg.charAt(0).toUpperCase() + sArg.slice(1);

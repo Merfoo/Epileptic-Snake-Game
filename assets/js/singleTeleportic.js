@@ -3,9 +3,9 @@
 function initializeTeleportic() {
 
     showStartMenu(false);
+    m_bFastMode = false;
     m_bGameStarted = true;
     m_bSingleTeleportic = true;
-    m_bFastMode = false;
 
     // Get canvas context for drawing, add events
     m_CanvasContext = document.getElementById("myCanvas").getContext("2d");
