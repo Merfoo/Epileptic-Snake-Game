@@ -82,7 +82,7 @@ function setUpSnakeOneMultiTeleportic()
             m_IntervalIDOne = changeGameSpeed(m_IntervalIDOne, "setUpSnakeOneMultiTeleportic();", m_iGameSpeedOne);
         }
 
-        setFood(m_iSnakeBodyOne.concat(m_iSnakeBodyTwo));
+        setFood(m_iSnakeBodyOne.concat(m_iSnakeBodyTwo, m_iTeleporters));
 
         if (m_iTeleporters.length / 2 < m_iTeleporteMax)
             createTeleportingBlocks();
@@ -119,7 +119,7 @@ function setUpSnakeTwoMultiTeleportic() {
             m_IntervalIDTwo = changeGameSpeed(m_IntervalIDTwo, "setUpSnakeTwoMultiTeleportic();", m_iGameSpeedTwo);
         }
 
-        setFood(m_iSnakeBodyOne.concat(m_iSnakeBodyTwo));
+        setFood(m_iSnakeBodyOne.concat(m_iSnakeBodyTwo, m_iTeleporters));
 
         if (m_iTeleporters.length / 2 < m_iTeleporteMax)
             createTeleportingBlocks();
