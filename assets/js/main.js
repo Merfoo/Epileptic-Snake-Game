@@ -114,6 +114,11 @@ function initializeCanvas()
     m_CanvasContext = document.getElementById("myCanvas").getContext("2d");
     setCanvasSize();
     setUpLetters();
+    var isChrome = /chrome/.test(navigator.userAgent.toLowerCase());
+    
+    if(!isChrome)
+        alert("This game currently does not fully function in IE or Firefox, for best results try Google Chrome :D");
+
     showStartMenu(true);
 }
 
