@@ -68,8 +68,7 @@ var m_iTeleporteMax = 5;
 
 // Sound Related
 var m_sDirectory = "assets/music/";
-var m_MusicList = new Array(m_sDirectory + "Ephixia - Zelda Remix.mp3", m_sDirectory + "Song One.mp3", m_sDirectory + "Song Two.mp3", m_sDirectory + "Song Three.mp3",
-    m_sDirectory + "Song Four.mp3");
+var m_MusicList = new Array(m_sDirectory + "Ephixia - Zelda Remix.mp3", m_sDirectory + "Song One.mp3", m_sDirectory + "Song Two.mp3", m_sDirectory + "Song Three.mp3");
 var m_iPrevMusicIndex = getRandomNumber(0, m_MusicList.length - 1);
 var m_FoodMusic = new Audio(m_sDirectory + "Food.mp3");
 var m_BackgroundMusic = new Audio(m_MusicList[m_iPrevMusicIndex]);
