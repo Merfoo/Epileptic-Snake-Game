@@ -7,10 +7,6 @@ function initializeMulti()
     m_bGameStarted = true;
     m_bMulti = true;
 
-    // Get canvas context for drawing, add events
-    m_CanvasContext = document.getElementById("myCanvas").getContext("2d");
-    setCanvasSize();
-
     for (var x = 0; x < m_iMapWidth; x++)
         for (var y = 0; y < m_iMapHeight; y++)
             y == 0 ? paintTile(x, y, "#FFF", 0) : paintTile(x, y, m_cBackroundColor, 0);

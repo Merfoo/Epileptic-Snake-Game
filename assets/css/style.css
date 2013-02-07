@@ -23,7 +23,7 @@ canvas
 
 #soundOn 
 {
-    z-index: 1; 
+    z-index: -1; 
     height: 3%; 
     width: 2.75%;
     position:absolute; 
@@ -43,7 +43,7 @@ canvas
 
 #slowMode
 {
-    z-index: 1; 
+    z-index: -1; 
     height: 4.25%; 
     width: 3%;
     position:absolute; 
@@ -61,28 +61,9 @@ canvas
     left:85%;
 }
 
-#startMenu 
-{
-    z-index: 2; 
-    background-color: black;
-    height: 100%; 
-    width: 100%;
-    position: absolute; 
-    top: 0%; 
-    left: 0%;
-}
-
-#titleScreen 
-{
-    height: 40%; 
-    width: 40%;
-    position: absolute; 
-    top: 5%; 
-    left: 30%;
-}
-
 #singlePlayer 
 {
+    z-index: -1;
     height: 50%; 
     width: 30%;
     position: absolute; 
@@ -92,6 +73,7 @@ canvas
 
 #multiPlayer 
 {
+    z-index: -1;
     height: 50%; 
     width: 25%;
     position: absolute; 
@@ -99,17 +81,9 @@ canvas
     left: 70%;
 }
 
-#start 
-{
-    height: 40%; 
-    width: 25%;
-    position: absolute; 
-    top: 50%; 
-    left: 40%;
-}
-
 #teleportic 
 {
+    z-index: -1;
     height: 30%; 
     width: 15%;
     position: absolute; 
@@ -119,14 +93,10 @@ canvas
 
 #multiTeleportic 
 {
-    height: 30%; 
+    z-index: -1;
+    height: 30%;
     width: 15%;
-    position: absolute; 
-    top: 25%; 
+    position: absolute;
+    top: 25%;
     left: 80%;
-}
-
-img:focus, img:active
-{
-    color:green;
-}
+}

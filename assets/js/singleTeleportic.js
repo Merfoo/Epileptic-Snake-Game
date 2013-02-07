@@ -7,10 +7,6 @@ function initializeTeleportic() {
     m_bGameStarted = true;
     m_bSingleTeleportic = true;
 
-    // Get canvas context for drawing, add events
-    m_CanvasContext = document.getElementById("myCanvas").getContext("2d");
-    setCanvasSize();
-
     m_iGameSpeedMain = m_iGameSpeedOriginal;
     m_iFastSpeed = Math.floor(m_iGameSpeedMain / m_iFastDivider);
 
@@ -147,7 +143,7 @@ function unPauseGameTeleportic()
 {
     playBackgroundMusic();
     showPausePic(false);
-    m_IntervalIDMain = window.setInterval("gameLoopTeleportic();", m_iGameSpeedMain);
+    m_IntervalIDMain = (m_bFastMode ? changeGameSpeed(m_IntervalIDMain, "gameLoopTeleportic();", m_iFastSpeed) : changeGameSpeed(m_IntervalIDMain, "gameLoopTeleportic();", m_iGameSpeedMain));
     m_bIsPaused = false;
 }
 
