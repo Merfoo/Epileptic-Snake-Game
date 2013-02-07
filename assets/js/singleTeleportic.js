@@ -59,17 +59,8 @@ function gameLoopTeleportic() {
     drawMapTeleportic();
 
     // If true, increase snake length, increase gamespeed.
-    if (gotFoodSingle()) {
-        
-        playFoodMusic();
-
-        var tempData = { x: m_iSnakeBodyOne[m_iSnakeBodyOne.length - 1].x, y: m_iSnakeBodyOne[m_iSnakeBodyOne.length - 1].y };
-        m_iSnakeBodyOne.push(tempData);
-        m_iScoreOne++;
-        setFood(m_iSnakeBodyOne.concat(m_iTeleporters));
-        m_iGameSpeedMain = increaseSpeed(m_iGameSpeedMain);
-        m_iFastSpeed = Math.floor(m_iGameSpeedMain / m_iFastDivider);
-
+    if (gotFoodSingle())
+    {
         if (m_bFastMode)
             m_IntervalIDMain = changeGameSpeed(m_IntervalIDMain, "gameLoopTeleportic();", m_iFastSpeed);
 
@@ -78,6 +69,14 @@ function gameLoopTeleportic() {
 
         if (m_iTeleporters.length/2 < m_iTeleporteMax) 
             createTeleportingBlocks();
+
+        playFoodMusic();
+        var tempData = { x: m_iSnakeBodyOne[m_iSnakeBodyOne.length - 1].x, y: m_iSnakeBodyOne[m_iSnakeBodyOne.length - 1].y };
+        m_iSnakeBodyOne.push(tempData);
+        m_iScoreOne++;
+        setFood(m_iSnakeBodyOne.concat(m_iTeleporters));
+        m_iGameSpeedMain = increaseSpeed(m_iGameSpeedMain);
+        m_iFastSpeed = Math.floor(m_iGameSpeedMain / m_iFastDivider);
     }
 
     // If true, reset the game.

@@ -67,6 +67,9 @@ function setUpSnakeOneMultiTeleportic()
 
     if (gotFoodMulti() == m_iSnakeOneID)
     {
+        if (m_iTeleporters.length / 2 < m_iTeleporteMax)
+            createTeleportingBlocks();
+
         playFoodMusic();
         var tempData = { x: m_iSnakeBodyOne[m_iSnakeBodyOne.length - 1].x, y: m_iSnakeBodyOne[m_iSnakeBodyOne.length - 1].y };
         m_iSnakeBodyOne.push(tempData);
@@ -75,9 +78,6 @@ function setUpSnakeOneMultiTeleportic()
         m_iGameSpeedOne = increaseSpeed(m_iGameSpeedOne);
         m_IntervalIDOne = changeGameSpeed(m_IntervalIDOne, "setUpSnakeOneMultiTeleportic();", m_iGameSpeedOne);
         setFood(m_iSnakeBodyOne.concat(m_iSnakeBodyTwo, m_iTeleporters));
-
-        if (m_iTeleporters.length / 2 < m_iTeleporteMax)
-            createTeleportingBlocks();
     }
 
     if (checkCollision(m_iSnakeBodyOne))
@@ -89,7 +89,8 @@ function setUpSnakeOneMultiTeleportic()
     m_bIsSnakeUpdatedOne = true;
 }
 
-function setUpSnakeTwoMultiTeleportic() {
+function setUpSnakeTwoMultiTeleportic()
+{
     // Snake 2
     setUpSnake(m_iSnakeHeadTwo, m_iSnakeBodyTwo, m_iDirectionTwo);
     runTeleporters(m_iSnakeHeadTwo)
@@ -99,7 +100,11 @@ function setUpSnakeTwoMultiTeleportic() {
 
     paintTile(m_iSnakeHeadTwo.x, m_iSnakeHeadTwo.y, m_cSnakeColorTwo, m_iSnakeHeadBorderWidth);
 
-    if (gotFoodMulti() == m_iSnakeTwoID) {
+    if (gotFoodMulti() == m_iSnakeTwoID)
+    {
+        if (m_iTeleporters.length / 2 < m_iTeleporteMax)
+            createTeleportingBlocks();
+
         playFoodMusic();
         var tempData = { x: m_iSnakeBodyTwo[m_iSnakeBodyTwo.length - 1].x, y: m_iSnakeBodyTwo[m_iSnakeBodyTwo.length - 1].y };
         m_iSnakeBodyTwo.push(tempData);
@@ -108,9 +113,6 @@ function setUpSnakeTwoMultiTeleportic() {
         m_iGameSpeedTwo = increaseSpeed(m_iGameSpeedTwo);
         m_IntervalIDTwo = changeGameSpeed(m_IntervalIDTwo, "setUpSnakeTwoMultiTeleportic();", m_iGameSpeedTwo);
         setFood(m_iSnakeBodyOne.concat(m_iSnakeBodyTwo, m_iTeleporters));
-
-        if (m_iTeleporters.length / 2 < m_iTeleporteMax)
-            createTeleportingBlocks();
     }
 
     if (checkCollision(m_iSnakeBodyTwo))
