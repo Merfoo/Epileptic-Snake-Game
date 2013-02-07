@@ -275,5 +275,9 @@ function keyBoardUpMultiplayer()
         showStartMenu(true);
         m_bMulti = false
         m_bGameStarted = false;
+        m_iScoreOne = 0;
+        m_iScoreTwo = 0;
+        m_iHighestScoreOne = 0;
+        m_iHighestScoreTwo = 0;
     }
 }

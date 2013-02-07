@@ -197,6 +197,7 @@ function keyBoardUpTeleportic()
         showStartMenu(true);
         m_bGameStarted = false;
         m_bSingleTeleportic = false;
+        m_iScoreOne = 0;
         m_iHighestScoreOne = 0;
     }
 }
