@@ -59,25 +59,21 @@ function gameLoopSingle()
     drawMapSingle();
 
     // If true, increase snake length, increase gamespeed.
-    if (gotFoodSingle()) {
-        
+    if (gotFoodSingle())
+    {
         playFoodMusic();
-
         var tempData = { x: m_iSnakeBodyOne[m_iSnakeBodyOne.length - 1].x, y: m_iSnakeBodyOne[m_iSnakeBodyOne.length - 1].y };
         m_iSnakeBodyOne.push(tempData);
         m_iScoreOne++;
         setFood(m_iSnakeBodyOne);
+        m_iGameSpeedMain = increaseSpeed(m_iGameSpeedMain);
+        m_iFastSpeed = Math.floor(m_iGameSpeedMain / m_iFastDivider);
 
-        if ((m_iGameSpeedMain - m_iGameDecrease) >= m_iGameMinuim) {
-            m_iGameSpeedMain -= m_iGameDecrease;
-            m_iFastSpeed = Math.floor(m_iGameSpeedMain / m_iFastDivider);
+        if (m_bFastMode)
+            m_IntervalIDMain = changeGameSpeed(m_IntervalIDMain, "gameLoopSingle();", m_iFastSpeed);
 
-            if (m_bFastMode)
-                m_IntervalIDMain = changeGameSpeed(m_IntervalIDMain, "gameLoopSingle();", m_iFastSpeed);
-
-            else
-                m_IntervalIDMain = changeGameSpeed(m_IntervalIDMain, "gameLoopSingle();", m_iGameSpeedMain);
-        }
+        else
+            m_IntervalIDMain = changeGameSpeed(m_IntervalIDMain, "gameLoopSingle();", m_iGameSpeedMain);
     }
 
     // If true, reset the game.
@@ -183,7 +179,7 @@ function keyBoardUpSinglePlayer()
         showStartMenu(true);
         m_bGameStarted = false;
         m_bSingle = false;
-        m_iPrevAmount = 0;
+        m_iScoreOne = 0;
         m_iHighestScoreOne = 0;
     }
 }

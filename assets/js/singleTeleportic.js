@@ -12,6 +12,7 @@ function initializeTeleportic() {
     setCanvasSize();
 
     m_iGameSpeedMain = m_iGameSpeedOriginal;
+    m_iFastSpeed = Math.floor(m_iGameSpeedMain / m_iFastDivider);
 
     // Snake 
     m_iSnakeHeadOne.x = m_iOriginalSnakeLengthSingle - 2;
@@ -70,17 +71,14 @@ function gameLoopTeleportic() {
         m_iSnakeBodyOne.push(tempData);
         m_iScoreOne++;
         setFood(m_iSnakeBodyOne.concat(m_iTeleporters));
+        m_iGameSpeedMain = increaseSpeed(m_iGameSpeedMain);
+        m_iFastSpeed = Math.floor(m_iGameSpeedMain / m_iFastDivider);
 
-        if ((m_iGameSpeedMain - m_iGameDecrease) >= m_iGameMinuim) {
-            m_iGameSpeedMain -= m_iGameDecrease;
-            m_iFastSpeed = Math.floor(m_iGameSpeedMain / m_iFastDivider);
+        if (m_bFastMode)
+            m_IntervalIDMain = changeGameSpeed(m_IntervalIDMain, "gameLoopTeleportic();", m_iFastSpeed);
 
-            if (m_bFastMode)
-                m_IntervalIDMain = changeGameSpeed(m_IntervalIDMain, "gameLoopTeleportic();", m_iFastSpeed);
-
-            else
-                m_IntervalIDMain = changeGameSpeed(m_IntervalIDMain, "gameLoopTeleportic();", m_iGameSpeedMain);
-        }
+        else
+            m_IntervalIDMain = changeGameSpeed(m_IntervalIDMain, "gameLoopTeleportic();", m_iGameSpeedMain);
 
         if (m_iTeleporters.length/2 < m_iTeleporteMax) 
             createTeleportingBlocks();

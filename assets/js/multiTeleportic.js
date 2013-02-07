@@ -76,12 +76,8 @@ function setUpSnakeOneMultiTeleportic()
         m_iSnakeBodyOne.push(tempData);
         m_iScoreOne++;
         m_iHighestScoreOne++;
-
-        if ((m_iGameSpeedOne - m_iGameDecrease) >= m_iGameMinuim) {
-            m_iGameSpeedOne -= m_iGameDecrease;
-            m_IntervalIDOne = changeGameSpeed(m_IntervalIDOne, "setUpSnakeOneMultiTeleportic();", m_iGameSpeedOne);
-        }
-
+        m_iGameSpeedOne = increaseSpeed(m_iGameSpeedOne);
+        m_IntervalIDOne = changeGameSpeed(m_IntervalIDOne, "setUpSnakeOneMultiTeleportic();", m_iGameSpeedOne);
         setFood(m_iSnakeBodyOne.concat(m_iSnakeBodyTwo, m_iTeleporters));
 
         if (m_iTeleporters.length / 2 < m_iTeleporteMax)
@@ -113,12 +109,8 @@ function setUpSnakeTwoMultiTeleportic() {
         m_iSnakeBodyTwo.push(tempData);
         m_iScoreTwo++;
         m_iHighestScoreTwo++;
-
-        if ((m_iGameSpeedTwo - m_iGameDecrease) >= m_iGameMinuim) {
-            m_iGameSpeedTwo -= m_iGameDecrease;
-            m_IntervalIDTwo = changeGameSpeed(m_IntervalIDTwo, "setUpSnakeTwoMultiTeleportic();", m_iGameSpeedTwo);
-        }
-
+        m_iGameSpeedTwo = increaseSpeed(m_iGameSpeedTwo);
+        m_IntervalIDTwo = changeGameSpeed(m_IntervalIDTwo, "setUpSnakeTwoMultiTeleportic();", m_iGameSpeedTwo);
         setFood(m_iSnakeBodyOne.concat(m_iSnakeBodyTwo, m_iTeleporters));
 
         if (m_iTeleporters.length / 2 < m_iTeleporteMax)

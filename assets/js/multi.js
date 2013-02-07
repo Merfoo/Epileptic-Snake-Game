@@ -62,18 +62,15 @@ function setUpSnakeOneMulti()
 
     paintTile(m_iSnakeHeadOne.x, m_iSnakeHeadOne.y, m_cSnakeColorOne, m_iSnakeHeadBorderWidth);
 
-    if (gotFoodMulti() == m_iSnakeOneID) {
+    if (gotFoodMulti() == m_iSnakeOneID)
+    {
         playFoodMusic();
         var tempData = { x: m_iSnakeBodyOne[m_iSnakeBodyOne.length - 1].x, y: m_iSnakeBodyOne[m_iSnakeBodyOne.length - 1].y };
         m_iSnakeBodyOne.push(tempData);
         m_iScoreOne++;
         m_iHighestScoreOne++;
-
-        if ((m_iGameSpeedOne - m_iGameDecrease) >= m_iGameMinuim) {
-            m_iGameSpeedOne -= m_iGameDecrease;
-            m_IntervalIDOne = changeGameSpeed(m_IntervalIDOne, "setUpSnakeOneMulti();", m_iGameSpeedOne);
-        }
-
+        m_iGameSpeedOne = increaseSpeed(m_iGameSpeedOne);
+        m_IntervalIDOne = changeGameSpeed(m_IntervalIDOne, "setUpSnakeOneMulti();", m_iGameSpeedOne);
         setFood(m_iSnakeBodyOne.concat(m_iSnakeBodyTwo));
     }
 
@@ -103,13 +100,8 @@ function setUpSnakeTwoMulti()
         m_iSnakeBodyTwo.push(tempData);
         m_iScoreTwo++;
         m_iHighestScoreTwo++;
-
-        if ((m_iGameSpeedTwo - m_iGameDecrease) >= m_iGameMinuim)
-        {
-            m_iGameSpeedTwo -= m_iGameDecrease;
-            m_IntervalIDTwo = changeGameSpeed(m_IntervalIDTwo, "setUpSnakeTwoMulti();", m_iGameSpeedTwo);
-        }
-
+        m_iGameSpeedTwo = increaseSpeed(m_iGameSpeedTwo);
+        m_IntervalIDTwo = changeGameSpeed(m_IntervalIDTwo, "setUpSnakeTwoMulti();", m_iGameSpeedTwo);
         setFood(m_iSnakeBodyOne.concat(m_iSnakeBodyTwo));
     }
 

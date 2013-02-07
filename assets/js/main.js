@@ -39,8 +39,6 @@ var m_iGameSpeedOriginal = 80;
 var m_iGameSpeedMain = m_iGameSpeedOriginal;
 var m_iGameSpeedOne = m_iGameSpeedOriginal;
 var m_iGameSpeedTwo = m_iGameSpeedOriginal;
-var m_iGameDecrease = 5;
-var m_iGameMinuim = 1;
 
 // Scores
 var m_iScoreOne = 0;
@@ -388,6 +386,12 @@ function setFood(snakeBody)
             }
         }
     }
+}
+
+// Handles increasing the speed variable
+function increaseSpeed(iGameSpeed)
+{
+    return (1.0 / ((1.0 / iGameSpeed) + 0.002));
 }
 
 // Handles the changing direction of the snake.
