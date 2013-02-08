@@ -60,43 +60,57 @@ canvas
     top: .01%; 
     left:85%;
 }
+#startMenu 
+{
+    z-index: -1;
+    height: 100%; 
+    width: 100%;
+    position: absolute; 
+    top: 0%; 
+    left: 0%;
+}
+
+#title
+{
+    height: 40%; 
+    width: 20%;
+    position: absolute; 
+    top: 0%; 
+    left: 0%;
+}
 
 #singlePlayer 
 {
-    z-index: -1;
-    height: 50%; 
-    width: 30%;
+    height: 30%; 
+    width: 15%;
     position: absolute; 
-    top: 50%; 
-    left: 10%;
+    top: 65%; 
+    left: 20%;
 }
 
 #multiPlayer 
 {
-    z-index: -1;
-    height: 50%; 
-    width: 25%;
+    height: 40%; 
+    width: 20%;
     position: absolute; 
-    top: 50%; 
+    top: 60%; 
     left: 70%;
 }
 
 #teleportic 
 {
-    z-index: -1;
     height: 30%; 
     width: 15%;
     position: absolute; 
-    top: 25%; 
-    left: 5%;
+    top: 40%; 
+    left: 10%;
 }
 
 #multiTeleportic 
 {
-    z-index: -1;
     height: 30%;
     width: 15%;
     position: absolute;
-    top: 25%;
-    left: 80%;
-}
+    top: 35%;
+    left: 78%;
+}

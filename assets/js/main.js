@@ -35,7 +35,7 @@ var m_iDirectionTwo = "left";
 var m_bIsSnakeUpdatedTwo = false;
 
 // Game speed
-var m_iMenuSpeed = 50;
+var m_iMenuSpeed = 60;
 var m_iGameSpeedOriginal = 80;
 var m_iGameSpeedMain = m_iGameSpeedOriginal;
 var m_iGameSpeedOne = m_iGameSpeedOriginal;
@@ -114,6 +114,7 @@ function initializeCanvas()
     m_CanvasContext = document.getElementById("myCanvas").getContext("2d");
     setCanvasSize();
     setUpLetters();
+
     var isChrome = /chrome/.test(navigator.userAgent.toLowerCase());
     
     if(!isChrome)
@@ -173,20 +174,14 @@ function showStartMenu(bVisible)
 {
     if (!m_bShownYet && bVisible)
     {
-        document.getElementById("singlePlayer").style.zIndex = 1;
-        document.getElementById("multiPlayer").style.zIndex = 1;
-        document.getElementById("teleportic").style.zIndex = 1;
-        document.getElementById("multiTeleportic").style.zIndex = 1;
+        document.getElementById("startMenu").style.zIndex = 1;
         m_IntervalMenu = window.setInterval("paintStartMenu();", m_iMenuSpeed);
         m_bShownYet = true;
     }
 
     else
     {
-        document.getElementById("singlePlayer").style.zIndex = -1;
-        document.getElementById("multiPlayer").style.zIndex = -1;
-        document.getElementById("teleportic").style.zIndex = -1;
-        document.getElementById("multiTeleportic").style.zIndex = -1;
+        document.getElementById("startMenu").style.zIndex = -1;
         window.clearInterval(m_IntervalMenu);
         m_bShownYet = false;
     }
@@ -204,21 +199,6 @@ function paintStartMenu()
     for (var index = 0; index < tempArray.length; index++)
         paintTile(tempArray[index].x, tempArray[index].y, getRandomColor(1, 255), 0);
 }
-
-//function showStartMenu(bVisible)
-//{
-//    if (bVisible)
-//        document.getElementById("startMenu").style.zIndex = 2;
-
-//    else
-//        document.getElementById("startMenu").style.zIndex = -1;
-//m_CanvasContext.font = '42pt Verdana Italic';
-//m_CanvasContext.fillStyle = "white";
-//m_CanvasContext.fillText("SinglePlayer!", 7 * m_iTileWidth, 16 * m_iTileHeight);
-//m_CanvasContext.fillText("SinglePlayer Teleportic!", 3 * m_iTileWidth, 26 * m_iTileHeight);
-//m_CanvasContext.fillText("Multiplayer!", 37 * m_iTileWidth, 16 * m_iTileHeight);
-//m_CanvasContext.fillText("Multiplayer Teleportic!", 33 * m_iTileWidth, 26 * m_iTileHeight);
-//}
 
 // Shows pause pause if true, otherwise hides it.
 function showPausePic(bVisible)
@@ -645,249 +625,3 @@ function setUpLetters()
     m_cE[index++] = { x: 43, y: 9 };    
     index = 0;
 } 
-
-function handleClickLocation(x, y)
-{
-
-}
-//// S
-//m_cS[index++] = { x: 19, y: 3 };
-//m_cS[index++] = { x: 18, y: 3 };
-//m_cS[index++] = { x: 17, y: 3 };
-//m_cS[index++] = { x: 16, y: 3 };
-//m_cS[index++] = { x: 15, y: 3 };    // 5
-//m_cS[index++] = { x: 15, y: 4 };
-//m_cS[index++] = { x: 15, y: 5 };
-//m_cS[index++] = { x: 15, y: 6 };
-//m_cS[index++] = { x: 19, y: 6 };
-//m_cS[index++] = { x: 18, y: 6 };    // 10
-//m_cS[index++] = { x: 17, y: 6 };
-//m_cS[index++] = { x: 16, y: 6 };
-//m_cS[index++] = { x: 19, y: 7 };
-//m_cS[index++] = { x: 19, y: 8 };
-//m_cS[index++] = { x: 19, y: 9 };    // 15
-//m_cS[index++] = { x: 15, y: 9 };
-//m_cS[index++] = { x: 16, y: 9 };
-//m_cS[index++] = { x: 17, y: 9 };
-//m_cS[index++] = { x: 18, y: 9 };
-//m_cS[index++] = { x: 19, y: 9 };    // 20
-//index = 0;
-
-//// N
-//m_cN[index++] = { x: 21, y: 3 };
-//m_cN[index++] = { x: 22, y: 3 };
-//m_cN[index++] = { x: 23, y: 3 };
-//m_cN[index++] = { x: 24, y: 3 };
-//m_cN[index++] = { x: 25, y: 3 };    // 5
-//m_cN[index++] = { x: 21, y: 4 };
-//m_cN[index++] = { x: 21, y: 5 };
-//m_cN[index++] = { x: 21, y: 6 };
-//m_cN[index++] = { x: 21, y: 7 };
-//m_cN[index++] = { x: 21, y: 8 };    // 10
-//m_cN[index++] = { x: 21, y: 9 };
-//m_cN[index++] = { x: 25, y: 4 };
-//m_cN[index++] = { x: 25, y: 5 };
-//m_cN[index++] = { x: 25, y: 6 };
-//m_cN[index++] = { x: 25, y: 7 };    // 15
-//m_cN[index++] = { x: 25, y: 8 };
-//m_cN[index++] = { x: 25, y: 9 };
-//index = 0;
-
-//// A
-//m_cA[index++] = { x: 30, y: 3 };
-//m_cA[index++] = { x: 29, y: 3 };
-//m_cA[index++] = { x: 28, y: 3 };
-//m_cA[index++] = { x: 27, y: 4 };
-//m_cA[index++] = { x: 27, y: 5 };    // 5
-//m_cA[index++] = { x: 27, y: 6 };
-//m_cA[index++] = { x: 27, y: 7 };
-//m_cA[index++] = { x: 27, y: 8 };
-//m_cA[index++] = { x: 27, y: 9 };
-//m_cA[index++] = { x: 31, y: 4 };    // 10
-//m_cA[index++] = { x: 31, y: 5 };
-//m_cA[index++] = { x: 31, y: 6 };
-//m_cA[index++] = { x: 31, y: 7 };
-//m_cA[index++] = { x: 31, y: 8 };
-//m_cA[index++] = { x: 31, y: 9 };    // 15
-//m_cA[index++] = { x: 28, y: 6 };
-//m_cA[index++] = { x: 29, y: 6 };
-//m_cA[index++] = { x: 30, y: 6 };
-//index = 0;
-
-//// K
-//m_cK[index++] = { x: 33, y: 3 };
-//m_cK[index++] = { x: 33, y: 4 };
-//m_cK[index++] = { x: 33, y: 5 };
-//m_cK[index++] = { x: 33, y: 6 };
-//m_cK[index++] = { x: 33, y: 7 };    // 5
-//m_cK[index++] = { x: 33, y: 8 };
-//m_cK[index++] = { x: 33, y: 9 };
-//m_cK[index++] = { x: 27, y: 8 };
-//m_cK[index++] = { x: 27, y: 9 };
-//m_cK[index++] = { x: 34, y: 6 };    // 10
-//m_cK[index++] = { x: 35, y: 5 };
-//m_cK[index++] = { x: 35, y: 7 };
-//m_cK[index++] = { x: 36, y: 4 };
-//m_cK[index++] = { x: 36, y: 8 };
-//m_cK[index++] = { x: 37, y: 3 };
-//m_cK[index++] = { x: 37, y: 9 };    // 15
-//index = 0;
-
-//// E
-//m_cE[index++] = { x: 39, y: 3 };
-//m_cE[index++] = { x: 40, y: 3 };
-//m_cE[index++] = { x: 41, y: 3 };
-//m_cE[index++] = { x: 42, y: 3 };
-//m_cE[index++] = { x: 43, y: 3 };    // 5
-//m_cE[index++] = { x: 39, y: 4 };
-//m_cE[index++] = { x: 39, y: 5 };
-//m_cE[index++] = { x: 39, y: 6 };
-//m_cE[index++] = { x: 39, y: 7 };
-//m_cE[index++] = { x: 39, y: 8 };    // 10
-//m_cE[index++] = { x: 39, y: 9 };
-//m_cE[index++] = { x: 40, y: 6 };
-//m_cE[index++] = { x: 41, y: 6 };
-//m_cE[index++] = { x: 42, y: 6 };
-//m_cE[index++] = { x: 40, y: 9 };
-//m_cE[index++] = { x: 41, y: 9 };    // 15
-//m_cE[index++] = { x: 42, y: 9 };
-//m_cE[index++] = { x: 43, y: 9 };
-//index = 0;
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-//    m_cS[0].x = 19;
-//    m_cS[0].y = 3;
-//    m_cS[1].x = 18;
-//    m_cS[1].y = 3;
-//    m_cS[2].x = 17;
-//    m_cS[2].y = 3;
-//    m_cS[3].x = 16;
-//    m_cS[3].y = 3;
-//    m_cS[4].x = 15;
-//    m_cS[4].y = 3;
-//    m_cS[5].x = 15;
-//    m_cS[5].y = 4;
-//    m_cS[6].x = 15;
-//    m_cS[6].y = 5;
-//    m_cS[7].x = 15;
-//    m_cS[7].y = 6;
-//    m_cS[8].x = 16;
-//    m_cS[8].y = 6;
-//    m_cS[9].x = 17;
-//    m_cS[9].y = 6;
-//    m_cS[10].x = 18;
-//    m_cS[10].y = 6;
-//    m_cS[11].x = 19;
-//    m_cS[11].y = 6;
-//    m_cS[12].x = 19;
-//    m_cS[12].y = 7;
-//    m_cS[13].x = 19;
-//    m_cS[13].y = 8;
-//    m_cS[14].x = 19;
-//    m_cS[14].y = 9;
-//    m_cS[15].x = 18;
-//    m_cS[15].y = 9;
-//    m_cS[16].x = 17;
-//    m_cS[16].y = 9;
-//    m_cS[17].x = 16;
-//    m_cS[17].y = 9;
-//    m_cS[18].x = 15;
-//    m_cS[18].y = 9;
-
-//    // N
-//    m_cN[0].x = 25
-//    m_cN[0].y = 3;
-//    m_cN[1].x = 24
-//    m_cN[1].y = 3;
-//    m_cN[2].x = 23
-//    m_cN[2].y = 3;
-//    m_cN[3].x = 22
-//    m_cN[3].y = 3;
-//    m_cN[4].x = 21
-//    m_cN[4].y = 3;
-//    m_cN[5].x = 21
-//    m_cN[5].y = 4;
-//    m_cN[6].x = 21
-//    m_cN[6].y = 5;
-//    m_cN[7].x = 21
-//    m_cN[7].y = 6;
-//    m_cN[8].x = 21
-//    m_cN[8].y = 7;
-//    m_cN[9].x = 21
-//    m_cN[9].y = 8;
-//    m_cN[10].x = 21
-//    m_cN[10].y = 9;
-//    m_cN[11].x = 25
-//    m_cN[11].y = 3;
-//    m_cN[12].x = 25
-//    m_cN[12].y = 4;
-//    m_cN[13].x = 25
-//    m_cN[13].y = 5;
-//    m_cN[14].x = 25
-//    m_cN[14].y = 6;
-//    m_cN[15].x = 25
-//    m_cN[15].y = 7;
-//    m_cN[16].x = 25
-//    m_cN[16].y = 8;
-//    m_cN[17].x = 25
-//    m_cN[17].y = 9;
-
-//    // A
-//    m_cA[0].x = 28;
-//    m_cA[0].y = 3;
-//    m_cA[1].x = 29;
-//    m_cA[1].y = 3;
-//    m_cA[2].x = 30;
-//    m_cA[2].y = 3;
-//    m_cA[3].x = 27;
-//    m_cA[3].y = 4;
-//    m_cA[4].x = 27;
-//    m_cA[4].y = 5;
-//    m_cA[5].x = 27;
-//    m_cA[5].y = 6;
-//    m_cA[6].x = 27;
-//    m_cA[6].y = 7;
-//    m_cA[7].x = 27;
-//    m_cA[7].y = 8;
-//    m_cA[8].x = 27;
-//    m_cA[8].y = 9;
-//    m_cA[9].x = 31;
-//    m_cA[9].y = 4;
-//    m_cA[10].x = 31;
-//    m_cA[10].y = 5;
-//    m_cA[12].x = 31;
-//    m_cA[12].y = 6;
-//    m_cA[13].x = 31;
-//    m_cA[13].y = 7;
-//    m_cA[14].x = 31;
-//    m_cA[14].y = 8;
-//    m_cA[15].x = 31;
-//    m_cA[15].y = 9;
-//    m_cA[16].x = 28;
-//    m_cA[16].y = 6;
-//    m_cA[17].x = 29;
-//    m_cA[17].y = 6;
-//    m_cA[18].x = 30;
-//    m_cA[18].y = 6;
-
-//    // K
-//    m_cK[0].x =
-//}
