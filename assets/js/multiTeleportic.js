@@ -216,53 +216,54 @@ function unPauseGameMultiTeleportic()
 }
 
 // Handle keyboard events for multiplayer
-function keyBoardDownMultiplayerTeleportic() {
-    if (event.keyCode == 87 || event.keyCode == 83 || event.keyCode == 65 || event.keyCode == 68) {
+function keyBoardDownMultiplayerTeleportic(keyCode)
+{
+    if (keyCode == 87 || keyCode == 83 || keyCode == 65 || keyCode == 68) {
         if (!m_bIsSnakeUpdatedOne)
             setUpSnakeOneMultiTeleportic();
 
         // Snake 1
-        if (event.keyCode == 87 && m_iDirectionOne != "down")   // Up arrow key was pressed.
+        if (keyCode == 87 && m_iDirectionOne != "down")   // Up arrow key was pressed.
             m_iDirectionOne = "up";
 
-        else if (event.keyCode == 83 && m_iDirectionOne != "up")    // Down arrow key was pressed.
+        else if (keyCode == 83 && m_iDirectionOne != "up")    // Down arrow key was pressed.
             m_iDirectionOne = "down";
 
-        else if (event.keyCode == 65 && m_iDirectionOne != "right") // Left arrow key was pressed.
+        else if (keyCode == 65 && m_iDirectionOne != "right") // Left arrow key was pressed.
             m_iDirectionOne = "left";
 
-        else if (event.keyCode == 68 && m_iDirectionOne != "left") // Right arrow key was pressed.
+        else if (keyCode == 68 && m_iDirectionOne != "left") // Right arrow key was pressed.
             m_iDirectionOne = "right";
 
         m_bIsSnakeUpdatedOne = false;
     }
 
-    if (event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 37 || event.keyCode == 39) {
+    if (keyCode == 38 || keyCode == 40 || keyCode == 37 || keyCode == 39) {
         if (!m_bIsSnakeUpdatedTwo)
             setUpSnakeTwoMultiTeleportic();
 
         // Snake 2
-        if (event.keyCode == 38 && m_iDirectionTwo != "down")   // Up arrow key was pressed.
+        if (keyCode == 38 && m_iDirectionTwo != "down")   // Up arrow key was pressed.
             m_iDirectionTwo = "up";
 
-        else if (event.keyCode == 40 && m_iDirectionTwo != "up")    // Down arrow key was pressed.
+        else if (keyCode == 40 && m_iDirectionTwo != "up")    // Down arrow key was pressed.
             m_iDirectionTwo = "down";
 
-        else if (event.keyCode == 37 && m_iDirectionTwo != "right") // Left arrow key was pressed.
+        else if (keyCode == 37 && m_iDirectionTwo != "right") // Left arrow key was pressed.
             m_iDirectionTwo = "left";
 
-        else if (event.keyCode == 39 && m_iDirectionTwo != "left") // Right arrow key was pressed.
+        else if (keyCode == 39 && m_iDirectionTwo != "left") // Right arrow key was pressed.
             m_iDirectionTwo = "right";
 
         m_bIsSnakeUpdatedTwo = false;
     }
 }
 
-function keyBoardUpMultiplayerTeleportic() {
-    if (event.keyCode == 32)
+function keyBoardUpMultiplayerTeleportic(keyCode) {
+    if (keyCode == 32)
         m_bIsPaused ? unPauseGameMultiTeleportic() : pauseGameMultiTeleportic();
 
-    else if (event.keyCode == 27) // Escape was pressed
+    else if (keyCode == 27) // Escape was pressed
     {
         pauseGameMultiTeleportic();
         m_bIsPaused = false;

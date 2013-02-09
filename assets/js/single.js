@@ -129,28 +129,28 @@ function unPauseGameSingle()
     m_bIsPaused = false;
 }
 
-function keyBoardDownSinglePlayer()
+function keyBoardDownSinglePlayer(keyCode)
 {
-    if (event.keyCode == 38 || event.keyCode == 40 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 65)
+    if (keyCode == 38 || keyCode == 40 || keyCode == 37 || keyCode == 39 || keyCode == 65)
     {
         if (!m_bIsPaused)
         {
             if (!m_bIsSnakeUpdatedOne)
                 gameLoopSingle();
 
-            if (event.keyCode == 38 && m_iDirectionOne != "down")   // Up arrow key was pressed.
+            if (keyCode == 38 && m_iDirectionOne != "down")   // Up arrow key was pressed.
                 m_iDirectionOne = "up";
 
-            else if (event.keyCode == 40 && m_iDirectionOne != "up")    // Down arrow key was pressed.
+            else if (keyCode == 40 && m_iDirectionOne != "up")    // Down arrow key was pressed.
                 m_iDirectionOne = "down";
 
-            else if (event.keyCode == 37 && m_iDirectionOne != "right") // Left arrow key was pressed.
+            else if (keyCode == 37 && m_iDirectionOne != "right") // Left arrow key was pressed.
                 m_iDirectionOne = "left";
 
-            else if (event.keyCode == 39 && m_iDirectionOne != "left") // Right arrow key was pressed.
+            else if (keyCode == 39 && m_iDirectionOne != "left") // Right arrow key was pressed.
                 m_iDirectionOne = "right";
 
-            else if (event.keyCode == 65)    // The letter 'a' was pressed.
+            else if (keyCode == 65)    // The letter 'a' was pressed.
             {
                 m_bFastMode = !m_bFastMode;
                 m_IntervalIDMain = (m_bFastMode ? changeGameSpeed(m_IntervalIDMain, "gameLoopSingle();", m_iFastSpeed) : changeGameSpeed(m_IntervalIDMain, "gameLoopSingle();", m_iGameSpeedMain));
@@ -162,12 +162,12 @@ function keyBoardDownSinglePlayer()
     }
 }
 
-function keyBoardUpSinglePlayer()
+function keyBoardUpSinglePlayer(keyCode)
 {
-    if (event.keyCode == 32)    // Space bar was pressed.
+    if (keyCode == 32)    // Space bar was pressed.
         m_bIsPaused ? unPauseGameSingle() : pauseGameSingle();
 
-    else if (event.keyCode == 27)    // Escape was pressed, will eventually show start menu ... Jacob!!!
+    else if (keyCode == 27)    // Escape was pressed, will eventually show start menu ... Jacob!!!
     {
         pauseGameSingle(m_IntervalIDMain);
         m_bIsPaused = false;

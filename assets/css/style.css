@@ -24,40 +24,40 @@ canvas
 #soundOn 
 {
     z-index: -1; 
-    height: 3%; 
+    height: 2.5%; 
     width: 2.75%;
     position:absolute; 
-    top: 1.25%; 
+    top: 1.75%; 
     left:93%;
 }
 
 #soundOff 
 {
     z-index: -1; 
-    height: 3%; 
+    height: 2.5%; 
     width: 2.75%;
     position:absolute; 
-    top: 1.25%; 
+    top: 1.75%; 
     left:93%;
 }
 
 #slowMode
 {
     z-index: -1; 
-    height: 4.25%; 
+    height: 3.75%; 
     width: 3%;
     position:absolute; 
-    top: .01%; 
+    top: .5%; 
     left:85%;
 }
 
 #fastMode
 {
     z-index: -1; 
-    height: 4.25%; 
+    height: 3.75%; 
     width: 3%;
     position:absolute; 
-    top: .01%; 
+    top: .5%; 
     left:85%;
 }
 #startMenu 

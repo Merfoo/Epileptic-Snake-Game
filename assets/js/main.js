@@ -257,9 +257,9 @@ function writeMessage(startTile, color, message)
 {
     m_CanvasContext.fillStyle = 'white';
     m_CanvasContext.fillRect(startTile * m_iTileWidth, 0, message.length * 12, m_iTileHeight);
-    m_CanvasContext.font = '16pt Calibri';
+    m_CanvasContext.font = (m_iTileHeight/2) + 'pt Calibri';
     m_CanvasContext.fillStyle = color;
-    m_CanvasContext.fillText(message, startTile * m_iTileWidth, 20);
+    m_CanvasContext.fillText(message, startTile * m_iTileWidth, (m_iTileHeight / 2) + 4);
 }
 
 // Plays background music if mute is off
@@ -442,16 +442,16 @@ function doKeyDown(event) {
     if (m_bGameStarted && !m_bIsPaused)
     {
         if (m_bSingle)
-            keyBoardDownSinglePlayer();
+            keyBoardDownSinglePlayer(event.keyCode);
 
         else if (m_bSingleTeleportic)
-            keyBoardDownTeleportic();
+            keyBoardDownTeleportic(event.keyCode);
 
         else if (m_bMulti)
-            keyBoardDownMultiplayer();
+            keyBoardDownMultiplayer(event.keyCode);
 
         else if(m_bMultiTeleportic)
-            keyBoardDownMultiplayerTeleportic();
+            keyBoardDownMultiplayerTeleportic(event.keyCode);
     }
 }
 
@@ -461,16 +461,16 @@ function doKeyUp(event)
     if (m_bGameStarted)
     {
         if (m_bSingle)
-            keyBoardUpSinglePlayer();
+            keyBoardUpSinglePlayer(event.keyCode);
 
         else if (m_bSingleTeleportic)
-            keyBoardUpTeleportic();
+            keyBoardUpTeleportic(event.keyCode);
 
         else if (m_bMulti)
-            keyBoardUpMultiplayer();
+            keyBoardUpMultiplayer(event.keyCode);
 
         else if (m_bMultiTeleportic)
-            keyBoardUpMultiplayerTeleportic();
+            keyBoardUpMultiplayerTeleportic(event.keyCode);
 
         if (event.keyCode == 77)    // 'm' was pressed.
             m_bSoundOn = !m_bSoundOn;
