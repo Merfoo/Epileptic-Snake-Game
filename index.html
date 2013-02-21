@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Robotic's Snake Game!</title>
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <script type="text/javascript" src="assets/js/main.js"></script>
+    <script type="text/javascript" src="assets/js/single.js"></script>
+    <script type="text/javascript" src="assets/js/singleTeleportic.js"></script>
+    <script type="text/javascript" src="assets/js/multi.js"></script>
+    <script type="text/javascript" src="assets/js/multiTeleportic.js"></script>
+</head>
+<body>
+    <canvas id="myCanvas"></canvas>
+	<img id="pause" src="assets/pics/pause.png"/>
+    <img id="soundOn" src="assets/pics/ON.png" onclick="setSoundPicVisible(false);"/>
+    <img id="soundOff" src="assets/pics/OFF.png" onclick="setSoundPicVisible(true);"/>
+    <img id="fastMode" src="assets/pics/Fast.png" onclick="setFastPicVisible(false);"/>
+    <img id="slowMode" src="assets/pics/Slow.png" onclick="setFastPicVisible(true);"/>
+    <img id="touchEnable" src="assets/pics/touchEnabled.png" onclick="showTouch(false);" />
+    <img id="touchDisable" src="assets/pics/touchDisabled.png" onclick="showTouch(true);" />
+    <div id="startMenu">
+        <img id="title" src="assets/pics/title.png" />
+        <img id="singlePlayer" src ="assets/pics/1player.png" onclick="startGame(0);" />
+        <img id="multiPlayer" src ="assets/pics/2player.png" onclick="startGame(1);" />
+        <img id="teleportic" src ="assets/pics/teleportic.png" onclick="startGame(2);" />
+        <img id="multiTeleportic" src ="assets/pics/multiTeleportic.png" onclick="startGame(3);"/>
+    </div>
+    <div id="DPADSingle">
+        <img id="arrowUpSingle" src="assets/pics/arrowUp.png" onclick="handleDpad(1);" />
+        <img id="arrowRightSingle" src="assets/pics/arrowRight.png" onclick="handleDpad(2);" />
+        <img id="arrowDownSingle" src="assets/pics/arrowDown.png" onclick="handleDpad(3);" />
+        <img id="arrowLeftSingle" src="assets/pics/arrowLeft.png" onclick="handleDpad(4);" />
+    </div>
+    <div id="DPADMulti">
+        <img id="arrowUpMulti" src="assets/pics/arrowUp.png" onclick="handleDpad(5);" />
+        <img id="arrowRightMulti" src="assets/pics/arrowRight.png" onclick="handleDpad(6);" />
+        <img id="arrowDownMulti" src="assets/pics/arrowDown.png" onclick="handleDpad(7);" />
+        <img id="arrowLeftMulti" src="assets/pics/arrowLeft.png" onclick="handleDpad(8);" />
+    </div>
+</body>
+</html>

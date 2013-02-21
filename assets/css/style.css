@@ -1,0 +1,229 @@
+canvas 
+{
+    z-index: 1; 
+	padding-left: 0;
+	padding-right: 0;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	/*height: 100%;*/
+	width: 100%;
+    border:3px solid blue;
+}
+
+#pause 
+{
+    z-index:-1; 
+    height: 60%; 
+    width: 60%; 
+    position:absolute; 
+    top: 20%; 
+    left:20%;
+}
+
+#soundOn 
+{
+    z-index: -1; 
+    height: 2.5%; 
+    width: 2.75%;
+    position:absolute; 
+    top: 1.75%; 
+    left:93%;
+}
+
+#soundOff 
+{
+    z-index: -1; 
+    height: 2.5%; 
+    width: 2.75%;
+    position:absolute; 
+    top: 1.75%; 
+    left:93%;
+}
+
+#slowMode
+{
+    z-index: -1; 
+    height: 3.75%; 
+    width: 3%;
+    position:absolute; 
+    top: .5%; 
+    left:85%;
+}
+
+#fastMode
+{
+    z-index: -1; 
+    height: 3.75%; 
+    width: 3%;
+    position:absolute; 
+    top: .5%; 
+    left:85%;
+}
+
+#touchEnable 
+{
+    z-index: 1;
+    height: 30%; 
+    width: 15%;
+    position: absolute; 
+    top: 75%; 
+    left: 50%;
+}
+
+#touchDisable 
+{
+    z-index: -1;
+    height: 30%; 
+    width: 15%;
+    position: absolute; 
+    top: 75%; 
+    left: 50%;
+}
+
+#startMenu 
+{
+    z-index: -1;
+    height: 100%; 
+    width: 100%;
+    position: absolute; 
+    top: 0%; 
+    left: 0%;
+}
+
+#title
+{
+    height: 40%; 
+    width: 20%;
+    position: absolute; 
+    top: 0%; 
+    left: 0%;
+}
+
+#singlePlayer 
+{
+    height: 30%; 
+    width: 15%;
+    position: absolute; 
+    top: 65%; 
+    left: 20%;
+}
+
+#multiPlayer 
+{
+    height: 40%; 
+    width: 20%;
+    position: absolute; 
+    top: 60%; 
+    left: 70%;
+}
+
+#teleportic 
+{
+    height: 30%; 
+    width: 15%;
+    position: absolute; 
+    top: 40%; 
+    left: 10%;
+}
+
+#multiTeleportic 
+{
+    height: 30%;
+    width: 15%;
+    position: absolute;
+    top: 35%;
+    left: 78%;
+}
+
+#DPADSingle 
+{
+    z-index: 1;
+    height: 20%; 
+    width: 20%;
+    position: absolute; 
+    top: 70%; 
+    left: 70%;
+}
+
+#arrowUpSingle 
+{
+    height: 40%;
+    width: 25%;
+    position: absolute;
+    top: 5%;
+    left: 47.5%;
+}
+
+#arrowRightSingle 
+{
+    height: 40%;
+    width: 25%;
+    position: absolute;
+    top: 90%;
+    left: 95%;
+}
+
+#arrowDownSingle 
+{
+    height: 40%;
+    width: 25%;
+    position: absolute;
+    top: 90%;
+    left: 47.5%;
+}
+
+#arrowLeftSingle 
+{
+    height: 40%;
+    width: 25%;
+    position: absolute;
+    top: 90%;
+    left: 0%;
+}
+
+#DPADMulti 
+{
+    z-index: 1;
+    height: 20%; 
+    width: 20%;
+    position: absolute; 
+    top: 70%; 
+    left: 5%;
+}
+
+#arrowUpMulti 
+{
+    height: 40%;
+    width: 25%;
+    position: absolute;
+    top: 5%;
+    left: 47.5%;
+}
+
+#arrowRightMulti 
+{
+    height: 40%;
+    width: 25%;
+    position: absolute;
+    top: 90%;
+    left: 95%;
+}
+
+#arrowDownMulti 
+{
+    height: 40%;
+    width: 25%;
+    position: absolute;
+    top: 90%;
+    left: 47.5%;
+}
+
+#arrowLeftMulti 
+{
+    height: 40%;
+    width: 25%;
+    position: absolute;
+    top: 90%;
+    left: 0%;
+}
