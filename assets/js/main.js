@@ -67,7 +67,7 @@ var m_iRight;
 
 // Teleporting Blocks
 var m_cTeleporterColors = new Array("white", "red", "blue", "yellow", "green");
-var m_iTeleporters = new Array()
+var m_iTeleporters = new Array();
 var m_iTeleporterCheck = 1;
 var m_iTeleporteMax = 5;
 
@@ -106,7 +106,6 @@ var m_bMulti = false;
 var m_bSingleTeleportic = false;
 var m_bMultiTeleportic = false;
 var m_bIsPaused = false;
-var m_bShownYet = false;
 var m_bDpadControlls = false;
 
 window.addEventListener('keydown', doKeyDown, true);
@@ -199,18 +198,16 @@ function paintTile(x, y, color, borderThickness)
 // Shows start menu, based on argument.
 function showStartMenu(bVisible)
 {
-    if (!m_bShownYet && bVisible)
+    if (bVisible)
     {
         document.getElementById("startMenu").style.zIndex = 1;
         m_IntervalMenu = window.setInterval("paintStartMenu();", m_iMenuSpeed);
-        m_bShownYet = true;
     }
 
     else
     {
         document.getElementById("startMenu").style.zIndex = -1;
         window.clearInterval(m_IntervalMenu);
-        m_bShownYet = false;
     }
 }
 
@@ -475,7 +472,7 @@ function hitOtherSnakes(snakeBodyOne, snakeBodyTwo, snakeIdOne, snakeIdTwo)
     if (snakeBodyOne[0].x == snakeBodyTwo[0].x && snakeBodyOne[0].y == snakeBodyTwo[0].y)
     {
         if (getRandomNumber(0, 10) <= 4)
-            return snakeIdOne
+            return snakeIdOne;
 
         else
             return snakeIdTwo;
@@ -625,9 +622,9 @@ function doKeyUp(event)
 function getRandomColor(iMin, iMax)
 {
     // creating a random number between iMin and iMax
-    var r = getRandomNumber(iMin, iMax)
-    var g = getRandomNumber(iMin, iMax)
-    var b = getRandomNumber(iMin, iMax)
+    var r = getRandomNumber(iMin, iMax);
+    var g = getRandomNumber(iMin, iMax);
+    var b = getRandomNumber(iMin, iMax);
 
     // going from decimal to hex
     var hexR = r.toString(16);

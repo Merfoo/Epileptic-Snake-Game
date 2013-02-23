@@ -1,13 +1,12 @@
 canvas 
 {
     z-index: 1; 
-	padding-left: 0;
-	padding-right: 0;
-	margin-left: auto;
-	margin-right: auto;
-	display: block;
-	/*height: 100%;*/
-	width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    width: 100%;
     border:3px solid blue;
 }
 

@@ -99,7 +99,7 @@ function setUpSnakeTwoMultiTeleportic()
 {
     // Snake 2
     setUpSnake(m_iSnakeHeadTwo, m_iSnakeBodyTwo, m_iDirectionTwo);
-    runTeleporters(m_iSnakeHeadTwo)
+    runTeleporters(m_iSnakeHeadTwo);
 
     for (var index = 1; index < m_iSnakeBodyTwo.length; index++)
         paintTile(m_iSnakeBodyTwo[index].x, m_iSnakeBodyTwo[index].y, m_cSnakeColorTwo, m_iSnakeBodyBorderWidth);

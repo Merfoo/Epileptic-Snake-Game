@@ -280,7 +280,7 @@ function keyBoardUpMultiplayer(event)
         showStartMenu(true);
         showControlls(0);
         hideTouchSettings(false);
-        m_bMulti = false
+        m_bMulti = false;
         m_bGameStarted = false;
         m_iScoreOne = 0;
         m_iScoreTwo = 0;
