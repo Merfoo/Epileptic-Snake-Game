@@ -21,6 +21,8 @@ var m_cScoreColorOne = "#000";
 // Snake Related
 var m_iOriginalSnakeLengthSingle = 7;
 var m_iOriginalSnakeLengthMulti = 12;
+var m_iSnakeColorLow = 1;
+var m_iSnakeColorHigh = 255;
 
 // Snake One Related
 var m_iSnakeOneID = 1;
@@ -77,8 +79,8 @@ var m_MP3List = new Array(m_sDirectory + "Ephixia - Zelda Remix.mp3", m_sDirecto
 var m_OGGList = new Array(m_sDirectory + "Ephixia - Zelda Remix.ogg", m_sDirectory + "Song One.ogg", m_sDirectory + "Song Two.ogg", m_sDirectory + "Song Three.ogg", m_sDirectory + "Song Four.ogg");
 var m_MusicList = m_MP3List;
 var m_iPrevMusicIndex = getRandomNumber(0, m_MusicList.length - 1);
-var m_FoodMusic = new Audio(m_sDirectory + "Food.mp3");
-var m_BackgroundMusic = new Audio(m_MusicList[m_iPrevMusicIndex]);
+var m_FoodMusic;
+var m_BackgroundMusic;
 var m_bSoundOn = true;
 
 // Lettering
@@ -125,18 +127,19 @@ function initializeCanvas()
     setCanvasSize();
     setUpLetters();
 
-    var isChrome = /chrome/.test(navigator.userAgent.toLowerCase());
-    
-    if(!isChrome)
-        alert("Google Chome is awesome, for best results try Google Chrome! :D");
-
     if (!supportMP3())
     {
-        m_FoodMusic.src = m_sDirectory + "Food.ogg";
         m_MusicList = m_OGGList;
-        m_BackgroundMusic.src = m_MusicList[m_iPrevMusicIndex];
+        m_FoodMusic = new Audio(m_sDirectory + "Food.ogg");        
     }
 
+    else
+    {
+        m_MusicList = m_MP3List;
+        m_FoodMusic = new Audio(m_sDirectory + "Food.mp3");
+    }
+
+    m_BackgroundMusic = new Audio(m_MusicList[m_iPrevMusicIndex]);
     showControlls(0);
     hideTouchSettings(false);
     showStartMenu(true);

@@ -98,7 +98,7 @@ function drawMapTeleportic() {
 
     // Snake body
     for (var index = 1; index < m_iSnakeBodyOne.length; index++)
-        paintTile(m_iSnakeBodyOne[index].x, m_iSnakeBodyOne[index].y, getRandomColor(1, 255), m_iSnakeBodyBorderWidth);
+        paintTile(m_iSnakeBodyOne[index].x, m_iSnakeBodyOne[index].y, getRandomColor(m_iSnakeColorLow, m_iSnakeColorHigh), m_iSnakeBodyBorderWidth);
 
     // Teleporting blocks
     for (var index = 0; index < m_iTeleporters.length; index++)

@@ -94,7 +94,7 @@ function drawMapSingle()
 
     // Snake body
     for (var index = 1; index < m_iSnakeBodyOne.length; index++)
-        paintTile(m_iSnakeBodyOne[index].x, m_iSnakeBodyOne[index].y, getRandomColor(1, 255), m_iSnakeBodyBorderWidth);
+        paintTile(m_iSnakeBodyOne[index].x, m_iSnakeBodyOne[index].y, getRandomColor(m_iSnakeColorLow, m_iSnakeColorHigh), m_iSnakeBodyBorderWidth);
 
     // Food
     paintTile(m_iFoodX, m_iFoodY, m_cFoodColor, m_iFoodBorderWidth);
