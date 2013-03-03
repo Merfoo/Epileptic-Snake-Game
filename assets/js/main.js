@@ -199,16 +199,17 @@ function setCanvasSize()
 function setUpMusic()
 {
     var a = document.createElement('audio');
+
     if(!!(a.canPlayType && a.canPlayType('audio/mpeg;').replace(/no/, '')))
     {
-        m_MusicList = m_OGGList;
-        m_FoodMusic = new Audio(m_sDirectory + "Food.ogg");        
+        m_MusicList = m_MP3List;
+        m_FoodMusic = new Audio(m_sDirectory + "Food.mp3");       
     }
 
     else
     {
-        m_MusicList = m_MP3List;
-        m_FoodMusic = new Audio(m_sDirectory + "Food.mp3");
+        m_MusicList = m_OGGList;
+        m_FoodMusic = new Audio(m_sDirectory + "Food.ogg");
     }
 
     m_BackgroundMusic = new Audio(m_MusicList[m_iPrevMusicIndex]);
