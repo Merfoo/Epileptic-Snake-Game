@@ -1,8 +1,8 @@
 // This file conatins all variables used with different variations of the game, and some useful functions
 
 // Viewable client-region of the browser (not screen size, not window size)
-var viewportWidth;
-var viewportHeight;
+var m_iViewportWidth;
+var m_iViewportHeight;
 
 // Map Related
 var m_iMapWidth = 60;
@@ -92,7 +92,6 @@ var m_cE = new Array(17);
 
 // HTML5 Elemtents
 var m_CanvasContext;
-var m_Canvas;
 
 // Interval ID's
 var m_IntervalMenu;
@@ -112,34 +111,16 @@ var m_bDpadControlls = false;
 
 window.addEventListener('keydown', doKeyDown, true);
 window.addEventListener('keyup', doKeyUp, true);
-document.addEventListener("DOMContentLoaded", initializeCanvas, false);
+document.addEventListener("DOMContentLoaded", initializeGame, false);
 document.documentElement.style.overflowX = 'hidden';	 // Horizontal scrollbar will be hidden
 document.documentElement.style.overflowY = 'hidden';     // Vertical scrollbar will be hidden
 
 // Initialize canvas
-function initializeCanvas()
+function initializeGame()
 {
-    // Get canvas context for drawing, add events
-    m_Canvas = document.getElementById("myCanvas");
-    m_CanvasContext = document.getElementById("myCanvas").getContext("2d");
-
-	GetViewportSize();
+    setUpMusic();
     setCanvasSize();
     setUpLetters();
-
-    if (!supportMP3())
-    {
-        m_MusicList = m_OGGList;
-        m_FoodMusic = new Audio(m_sDirectory + "Food.ogg");        
-    }
-
-    else
-    {
-        m_MusicList = m_MP3List;
-        m_FoodMusic = new Audio(m_sDirectory + "Food.mp3");
-    }
-
-    m_BackgroundMusic = new Audio(m_MusicList[m_iPrevMusicIndex]);
     showControlls(0);
     hideTouchSettings(false);
     showStartMenu(true);
@@ -181,13 +162,56 @@ function changeGameSpeed(intervalID, sFunction,gameSpeed)
 // Sets the canvas as big as the broswer size.
 function setCanvasSize()
 {
-    m_iTileWidth = Math.floor(viewportWidth / m_iMapWidth);
-    m_iTileHeight = Math.floor(viewportHeight / m_iMapHeight) - 1;
-    m_Canvas.width = (m_iTileWidth * m_iMapWidth);
-    m_Canvas.height = (m_iTileHeight * m_iMapHeight);
+    m_CanvasContext = document.getElementById("myCanvas").getContext("2d");
+    
+    // The more standards compliant browsers (mozilla/netscape/opera/IE7) use window.innerWidth and window.innerHeight
+    if (typeof window.innerWidth != 'undefined')
+    {
+        m_iViewportWidth = window.innerWidth;
+        m_iViewportHeight = window.innerHeight;
+    }
+    // IE6 in standards compliant mode (i.e. with a valid doctype as the first line in the document)
+    else if (typeof document.documentElement != 'undefined'
+            && typeof document.documentElement.clientWidth != 'undefined'
+            && document.documentElement.clientWidth != 0)
+    {
+        m_iViewportWidth = document.documentElement.clientWidth;
+        m_iViewportHeight = document.documentElement.clientHeight;
+    }
+    // Older versions of IE
+    else
+    {
+        m_iViewportWidth = document.getElementsByTagName('body')[0].clientWidth;
+        m_iViewportHeight = document.getElementsByTagName('body')[0].clientHeight;
+    }
+    
+    m_iViewportHeight -= Math.floor(m_iViewportHeight / 60);
+    m_iTileWidth = Math.floor(m_iViewportWidth / m_iMapWidth);
+    m_iTileHeight = Math.floor(m_iViewportHeight / m_iMapHeight);
+    m_CanvasContext.canvas.width = (m_iTileWidth * m_iMapWidth);
+    m_CanvasContext.canvas.height = (m_iTileHeight * m_iMapHeight);
     m_iLeft = 1;
     m_iMiddle = Math.floor((m_iMapWidth / 2) - 6);
     m_iRight = Math.floor((m_iMapWidth) - 10);
+}
+
+// Sets up the music
+function setUpMusic()
+{
+    var a = document.createElement('audio');
+    if(!!(a.canPlayType && a.canPlayType('audio/mpeg;').replace(/no/, '')))
+    {
+        m_MusicList = m_OGGList;
+        m_FoodMusic = new Audio(m_sDirectory + "Food.ogg");        
+    }
+
+    else
+    {
+        m_MusicList = m_MP3List;
+        m_FoodMusic = new Audio(m_sDirectory + "Food.mp3");
+    }
+
+    m_BackgroundMusic = new Audio(m_MusicList[m_iPrevMusicIndex]);
 }
 
 // Paints a tile on the screen, handles converting pixel to tile.
@@ -769,33 +793,3 @@ function setUpLetters()
     m_cE[index++] = { x: 43, y: 9 };    
     index = 0;
 } 
-
-function GetViewportSize()
-{
-	// the more standards compliant browsers (mozilla/netscape/opera/IE7) use window.innerWidth and window.innerHeight
-	if (typeof window.innerWidth != 'undefined')
-	{
-		viewportWidth = window.innerWidth;
-		viewportHeight = window.innerHeight;
-	}
-	// IE6 in standards compliant mode (i.e. with a valid doctype as the first line in the document)
-	else if (typeof document.documentElement != 'undefined'
-		&& typeof document.documentElement.clientWidth != 'undefined'
-		&& document.documentElement.clientWidth != 0)
-	{
-		viewportWidth = document.documentElement.clientWidth;
-		viewportHeight = document.documentElement.clientHeight;
-	}
-	// older versions of IE
-	else
-	{
-		viewportWidth = document.getElementsByTagName('body')[0].clientWidth;
-		viewportHeight = document.getElementsByTagName('body')[0].clientHeight;
-	}
-}
-
-function supportMP3()
-{
-    var a = document.createElement('audio');
-    return !!(a.canPlayType && a.canPlayType('audio/mpeg;').replace(/no/, ''));
-}
