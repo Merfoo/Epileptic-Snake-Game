@@ -124,6 +124,12 @@ function initializeGame()
     showControlls(0);
     hideTouchSettings(false);
     showStartMenu(true);
+    
+    var bIsChrome = /chrome/.test(navigator.userAgent.toLowerCase());
+    var bIsFirefox = /firefox/.test(navigator.userAgent.toLowerCase());
+    
+    if(!bIsChrome && !bIsFirefox)
+        alert("Music currently isn't supported in IE, for music please try Google Chrome or Firefox :D");
 }
 
 // Starts game
