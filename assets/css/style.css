@@ -7,7 +7,7 @@ canvas
     margin-right: auto;
     display: block;
     width: 100%;
-    border:3px solid blue;
+    border:3px solid gray;
 }
 
 #pause 
@@ -58,26 +58,6 @@ canvas
     position:absolute; 
     top: .5%; 
     left:85%;
-}
-
-#touchEnable 
-{
-    z-index: 1;
-    height: 30%; 
-    width: 15%;
-    position: absolute; 
-    top: 75%; 
-    left: 50%;
-}
-
-#touchDisable 
-{
-    z-index: -1;
-    height: 30%; 
-    width: 15%;
-    position: absolute; 
-    top: 75%; 
-    left: 50%;
 }
 
 #startMenu 
@@ -133,96 +113,4 @@ canvas
     position: absolute;
     top: 35%;
     left: 78%;
-}
-
-#DPADSingle 
-{
-    z-index: 1;
-    height: 20%; 
-    width: 20%;
-    position: absolute; 
-    top: 70%; 
-    left: 70%;
-}
-
-#arrowUpSingle 
-{
-    height: 40%;
-    width: 25%;
-    position: absolute;
-    top: 5%;
-    left: 47.5%;
-}
-
-#arrowRightSingle 
-{
-    height: 40%;
-    width: 25%;
-    position: absolute;
-    top: 90%;
-    left: 95%;
-}
-
-#arrowDownSingle 
-{
-    height: 40%;
-    width: 25%;
-    position: absolute;
-    top: 90%;
-    left: 47.5%;
-}
-
-#arrowLeftSingle 
-{
-    height: 40%;
-    width: 25%;
-    position: absolute;
-    top: 90%;
-    left: 0%;
-}
-
-#DPADMulti 
-{
-    z-index: 1;
-    height: 20%; 
-    width: 20%;
-    position: absolute; 
-    top: 70%; 
-    left: 5%;
-}
-
-#arrowUpMulti 
-{
-    height: 40%;
-    width: 25%;
-    position: absolute;
-    top: 5%;
-    left: 47.5%;
-}
-
-#arrowRightMulti 
-{
-    height: 40%;
-    width: 25%;
-    position: absolute;
-    top: 90%;
-    left: 95%;
-}
-
-#arrowDownMulti 
-{
-    height: 40%;
-    width: 25%;
-    position: absolute;
-    top: 90%;
-    left: 47.5%;
-}
-
-#arrowLeftMulti 
-{
-    height: 40%;
-    width: 25%;
-    position: absolute;
-    top: 90%;
-    left: 0%;
 }

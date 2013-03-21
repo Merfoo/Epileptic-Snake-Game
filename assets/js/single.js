@@ -7,9 +7,6 @@ function initializeSingle()
     m_bSingle = true;
     m_bFastMode = false;
 
-    if (m_bDpadControlls)
-        showControlls(1);
-
     // Game speed
     m_iGameSpeedMain = m_iGameSpeedOriginal;
     m_iFastSpeed = Math.floor(m_iGameSpeedMain / m_iFastDivider);
@@ -51,9 +48,6 @@ function initializeSingle()
 // Runs all the functions required for the game to work.
 function gameLoopSingle()
 {
-    if (m_bDpadControlls)
-        showControlls(1);
-
     // Plays music if mute is not checked.
     playBackgroundMusic();
     setUpSnake(m_iSnakeHeadOne, m_iSnakeBodyOne, m_iDirectionOne);
@@ -183,8 +177,6 @@ function keyBoardUpSinglePlayer(event)
         m_bIsPaused = false;
         showPausePic(false);
         showStartMenu(true);
-        showControlls(0);
-        hideTouchSettings(false);
         m_bGameStarted = false;
         m_bSingle = false;
         m_iScoreOne = 0;

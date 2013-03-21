@@ -7,9 +7,6 @@ function initializeMulti()
     m_bGameStarted = true;
     m_bMulti = true;
 
-    if (m_bDpadControlls)
-        showControlls(2);
-
     for (var x = 0; x < m_iMapWidth; x++)
         for (var y = 0; y < m_iMapHeight; y++)
             y == 0 ? paintTile(x, y, "#FFF", 0) : paintTile(x, y, m_cBackroundColor, 0);
@@ -32,9 +29,6 @@ function initializeMulti()
 // Runs all the functions required for the game to work.
 function gameLoopMulti() 
 {
-    if (m_bDpadControlls)
-        showControlls(2);
-
     playBackgroundMusic();
     drawMapMulti();
 }
@@ -244,7 +238,8 @@ function keyBoardDownMultiplayer(event)
         m_bIsSnakeUpdatedOne = false;
     }
 
-    if (keyCode == 38 || keyCode == 40 || keyCode == 37 || keyCode == 39) {
+    if (keyCode == 38 || keyCode == 40 || keyCode == 37 || keyCode == 39) 
+    {
         if (!m_bIsSnakeUpdatedTwo)
             setUpSnakeTwoMulti();
 
@@ -278,8 +273,6 @@ function keyBoardUpMultiplayer(event)
         m_bIsPaused = false;
         showPausePic(false);
         showStartMenu(true);
-        showControlls(0);
-        hideTouchSettings(false);
         m_bMulti = false;
         m_bGameStarted = false;
         m_iScoreOne = 0;

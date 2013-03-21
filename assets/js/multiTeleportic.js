@@ -7,9 +7,6 @@ function initializeMultiTeleportic()
     m_bGameStarted = true;
     m_bMultiTeleportic = true;
 
-    if (m_bDpadControlls)
-        showControlls(2);
-
     for (var x = 0; x < m_iMapWidth; x++)
         for (var y = 0; y < m_iMapHeight; y++)
             y == 0 ? paintTile(x, y, "#FFF", 0) : paintTile(x, y, m_cBackroundColor, 0);
@@ -34,9 +31,6 @@ function initializeMultiTeleportic()
 // Runs all the functions required for the game to work.
 function gameLoopMultiTeleportic()
 {
-    if (m_bDpadControlls)
-        showControlls(2);
-
     playBackgroundMusic();
     drawMapMultiTeleportic();
 }
@@ -280,9 +274,7 @@ function keyBoardUpMultiplayerTeleportic(event)
         m_bIsPaused = false;
         showPausePic(false);
         showStartMenu(true);
-        showControlls(0);
-        hideTouchSettings(false);
-        m_bMultiTeleportic = false
+        m_bMultiTeleportic = false;
         m_bGameStarted = false;
         m_iScoreOne = 0;
         m_iScoreTwo = 0;

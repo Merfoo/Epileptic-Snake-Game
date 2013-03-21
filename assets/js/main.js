@@ -121,8 +121,6 @@ function initializeGame()
     setUpMusic();
     setCanvasSize();
     setUpLetters();
-    showControlls(0);
-    hideTouchSettings(false);
     showStartMenu(true);
     
     var bIsChrome = /chrome/.test(navigator.userAgent.toLowerCase());
@@ -150,9 +148,6 @@ function startGame(iGameVersion)
 
         else if (m_iGameVersion == 3)
             initializeMultiTeleportic();
-
-        hideTouchSettings(true);
-        showControlls(0);
     }
 }
 
@@ -256,59 +251,6 @@ function paintStartMenu()
 
     for (var index = 0; index < tempArray.length; index++)
         paintTile(tempArray[index].x, tempArray[index].y, getRandomColor(1, 255), 1);
-}
-
-// Shows touch or disable touch on start menu
-function showTouch(bVisible)
-{
-    if (bVisible)
-    {
-        document.getElementById("touchEnable").style.zIndex = 3;
-        document.getElementById("touchDisable").style.zIndex = -3;
-        m_bDpadControlls = true;
-    }
-
-    if (!bVisible)
-    {
-        document.getElementById("touchEnable").style.zIndex = -3;
-        document.getElementById("touchDisable").style.zIndex = 3;
-        m_bDpadControlls = false;
-    }
-}
-
-function hideTouchSettings(bTrue)
-{
-    if (bTrue)
-    {
-        document.getElementById("touchEnable").style.zIndex = -3;
-        document.getElementById("touchDisable").style.zIndex = -3;
-    }
-
-    else if (!bTrue)
-    {
-        document.getElementById("touchEnable").style.zIndex = -3;
-        document.getElementById("touchDisable").style.zIndex = 3;
-        m_bDpadControlls = false;
-    }
-}
-
-// Shows dpad pics, 0 for hide , 1 for show single player and 2 for both
-function showControlls(iNum)
-{
-    if (iNum == 0)
-    {
-        document.getElementById("DPADSingle").style.zIndex = -1;
-        document.getElementById("DPADMulti").style.zIndex = -1;
-    }
-    
-    if(iNum == 1)
-        document.getElementById("DPADSingle").style.zIndex = 2;
-
-    if(iNum == 2)
-    {
-        document.getElementById("DPADSingle").style.zIndex = 2;
-        document.getElementById("DPADMulti").style.zIndex = 2;
-    }
 }
 
 // Shows pause pause if true, otherwise hides it.

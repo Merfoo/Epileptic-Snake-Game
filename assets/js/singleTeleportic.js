@@ -6,10 +6,8 @@ function initializeTeleportic() {
     m_bFastMode = false;
     m_bGameStarted = true;
     m_bSingleTeleportic = true;
-
-    if (m_bDpadControlls)
-        showControlls(1);
-
+    
+    // Game speed
     m_iGameSpeedMain = m_iGameSpeedOriginal;
     m_iFastSpeed = Math.floor(m_iGameSpeedMain / m_iFastDivider);
 
@@ -53,9 +51,6 @@ function initializeTeleportic() {
 // Runs all the functions required for the game to work.
 function gameLoopTeleportic()
 {
-    if (m_bDpadControlls)
-        showControlls(1);
-
     // Plays music if mute is not checked.
     playBackgroundMusic();
 
@@ -200,8 +195,6 @@ function keyBoardUpTeleportic(event)
         m_bIsPaused = false;
         showPausePic(false);
         showStartMenu(true);
-        showControlls(0);
-        hideTouchSettings(false);
         m_bGameStarted = false;
         m_bSingleTeleportic = false;
         m_iScoreOne = 0;
