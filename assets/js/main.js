@@ -491,10 +491,16 @@ function setFood(snakeBody)
         {
             if(m_iTeleporters[iPos].x == m_iFoodX && m_iTeleporters[iPos].y == m_iFoodY)
             {
+                alert("Its on a teleporter");
                 bIsFoodOnSnake = true;
                 break;
             }
         }
+        
+        for(var i = 0; i < m_iTeleporters.length; i++)
+            console.log("Teleporter " + i + " : " + m_iTeleporters[i].x + "-" + m_iTeleporters[i].y);
+        
+        console.log("Food (x, y): " + m_iFoodX + "-" + m_iFoodY)
     }
 }
 
