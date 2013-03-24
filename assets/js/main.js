@@ -10,6 +10,9 @@ var m_iMapHeight = 30;
 var m_iTileWidth;
 var m_iTileHeight;
 
+// Credits
+var m_Credits = { y: -600, startY: 100, minY: -600, yDecrease: 3, showing: false, interval: null, speed: 33 };
+
 // All colors/ borders
 var m_iBackgroundBorderWidth = 0;
 var m_iSnakeBodyBorderWidth = 2;
@@ -216,7 +219,7 @@ function paintTile(x, y, color, borderThickness)
 {
     m_CanvasContext.fillStyle = color;
     m_CanvasContext.fillRect((x * m_iTileWidth) + borderThickness, (y * m_iTileHeight) + borderThickness,
-		m_iTileWidth - (borderThickness * 2), m_iTileHeight - (borderThickness * 2));
+        m_iTileWidth - (borderThickness * 2), m_iTileHeight - (borderThickness * 2));
 }
 
 // Shows start menu, based on argument.
@@ -226,6 +229,13 @@ function showStartMenu(bVisible)
     {
         document.getElementById("startMenu").style.zIndex = 1;
         m_IntervalMenu = window.setInterval("paintStartMenu();", m_iMenuSpeed);
+        m_Credits.showing = false;
+        
+        if(m_Credits.interval != null)
+        {
+            window.clearInterval(m_Credits.interval);
+            m_Credits.interval = null;
+        }
     }
 
     else
@@ -567,6 +577,10 @@ function doKeyUp(event)
             m_bSoundOn = !m_bSoundOn;
     }
 
+    if(m_Credits.showing)
+       if (event.keyCode == 27) // Escape was pressed
+            showStartMenu(true);
+    
     event.preventDefault();
     return false;
 }
@@ -719,3 +733,28 @@ function setUpLetters()
     m_cE[index++] = { x: 43, y: 9 };    
     index = 0;
 } 
+
+function clickedCredits()
+{
+    showStartMenu(false);
+    m_Credits.showing = true;  
+    window.clearInterval(m_IntervalMenu);
+    m_Credits.interval = window.setInterval("showCredits();", m_Credits.speed);
+    m_Credits.y = m_Credits.minY;
+}
+
+function showCredits()
+{
+    if(m_Credits.y <= m_Credits.minY)
+        m_Credits.y = m_iViewportHeight + m_Credits.startY;
+    
+    m_CanvasContext.fillStyle = m_cBackroundColor;
+    m_CanvasContext.fillRect(0, 0, m_iViewportWidth, m_iViewportHeight, m_cBackroundColor);
+    m_CanvasContext.fillStyle = "white";
+    m_CanvasContext.font = '40px san-serif';
+    m_CanvasContext.textBaseline = 'bottom';
+    m_CanvasContext.fillText('Head Developer: Fauzi Kliman', Math.floor(m_iViewportWidth / 3), m_Credits.y);
+    m_CanvasContext.fillText('Assistant Developer: Jacob Payne', Math.floor(m_iViewportWidth / 3), m_Credits.y + 200);
+    m_CanvasContext.fillText('Beta Tester: Gil Parnon', Math.floor(m_iViewportWidth / 3), m_Credits.y + 400);
+    m_Credits.y -= m_Credits.yDecrease;
+}

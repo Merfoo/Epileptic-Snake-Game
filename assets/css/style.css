@@ -94,3 +94,13 @@ canvas
     top: 35%;
     left: 78%;
 }
+
+#credits
+{
+    z-index: 3;
+    height: 15%; 
+    width: 10%;
+    position: absolute; 
+    top: 75%; 
+    left: 45%;
+}
