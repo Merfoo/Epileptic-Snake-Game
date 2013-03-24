@@ -3,13 +3,11 @@
 function initializeTeleportic() {
 
     showStartMenu(false);
-    m_bFastMode = false;
     m_bGameStarted = true;
     m_bSingleTeleportic = true;
     
     // Game speed
     m_iGameSpeedMain = m_iGameSpeedOriginal;
-    m_iFastSpeed = Math.floor(m_iGameSpeedMain / m_iFastDivider);
 
     // Snake 
     m_iSnakeHeadOne.x = m_iOriginalSnakeLengthSingle - 2;
@@ -62,11 +60,7 @@ function gameLoopTeleportic()
     // If true, increase snake length, increase gamespeed.
     if (gotFoodSingle())
     {
-        if (m_bFastMode)
-            m_IntervalIDMain = changeGameSpeed(m_IntervalIDMain, "gameLoopTeleportic();", m_iFastSpeed);
-
-        else
-            m_IntervalIDMain = changeGameSpeed(m_IntervalIDMain, "gameLoopTeleportic();", m_iGameSpeedMain);
+        m_IntervalIDMain = changeGameSpeed(m_IntervalIDMain, "gameLoopTeleportic();", m_iGameSpeedMain);
 
         if (m_iTeleporters.length/2 < m_iTeleporteMax) 
             createTeleportingBlocks();
@@ -77,7 +71,6 @@ function gameLoopTeleportic()
         m_iScoreOne++;
         setFood(m_iSnakeBodyOne.concat(m_iTeleporters));
         m_iGameSpeedMain = increaseSpeed(m_iGameSpeedMain);
-        m_iFastSpeed = Math.floor(m_iGameSpeedMain / m_iFastDivider);
     }
 
     // If true, reset the game.
@@ -108,7 +101,6 @@ function drawMapTeleportic() {
 
     // Sets the pics visible or not.
     setSoundPicVisible(m_bSoundOn);
-    setFastPicVisible(m_bFastMode);
 }
 
 // Stops loop
@@ -143,7 +135,7 @@ function unPauseGameTeleportic()
 {
     playBackgroundMusic();
     showPausePic(false);
-    m_IntervalIDMain = (m_bFastMode ? changeGameSpeed(m_IntervalIDMain, "gameLoopTeleportic();", m_iFastSpeed) : changeGameSpeed(m_IntervalIDMain, "gameLoopTeleportic();", m_iGameSpeedMain));
+    m_IntervalIDMain = changeGameSpeed(m_IntervalIDMain, "gameLoopTeleportic();", m_iGameSpeedMain);
     m_bIsPaused = false;
 }
 
@@ -169,13 +161,6 @@ function keyBoardDownTeleportic(event)
 
             else if (keyCode == 39 && m_iDirectionOne != "left") // Right arrow key was pressed.
                 m_iDirectionOne = "right";
-
-            else if (keyCode == 65)    // The letter 'a' was pressed.
-            {
-                m_bFastMode = !m_bFastMode;
-                m_IntervalIDMain = (m_bFastMode ? changeGameSpeed(m_IntervalIDMain, "gameLoopTeleportic();", m_iFastSpeed) : changeGameSpeed(m_IntervalIDMain, "gameLoopTeleportic();", m_iGameSpeedMain));
-                setFastPicVisible(m_bFastMode);
-            }
 
             m_bIsSnakeUpdatedOne = false;
         }

@@ -5,11 +5,9 @@ function initializeSingle()
     showStartMenu(false);
     m_bGameStarted = true;
     m_bSingle = true;
-    m_bFastMode = false;
 
     // Game speed
     m_iGameSpeedMain = m_iGameSpeedOriginal;
-    m_iFastSpeed = Math.floor(m_iGameSpeedMain / m_iFastDivider);
 
     // Snake 
     m_iSnakeHeadOne.x = m_iOriginalSnakeLengthSingle - 2;
@@ -63,13 +61,7 @@ function gameLoopSingle()
         m_iScoreOne++;
         setFood(m_iSnakeBodyOne);
         m_iGameSpeedMain = increaseSpeed(m_iGameSpeedMain);
-        m_iFastSpeed = Math.floor(m_iGameSpeedMain / m_iFastDivider);
-
-        if (m_bFastMode)
-            m_IntervalIDMain = changeGameSpeed(m_IntervalIDMain, "gameLoopSingle();", m_iFastSpeed);
-
-        else
-            m_IntervalIDMain = changeGameSpeed(m_IntervalIDMain, "gameLoopSingle();", m_iGameSpeedMain);
+        m_IntervalIDMain = changeGameSpeed(m_IntervalIDMain, "gameLoopSingle();", m_iGameSpeedMain);
     }
 
     // If true, reset the game.
@@ -99,7 +91,6 @@ function drawMapSingle()
 
     // Sets the pics visible or not.
     setSoundPicVisible(m_bSoundOn);
-    setFastPicVisible(m_bFastMode);
 }
 
 // Checks if the snake got the food, so make it longer.
@@ -125,7 +116,7 @@ function unPauseGameSingle()
 {
     playBackgroundMusic();
     showPausePic(false);
-    m_IntervalIDMain = (m_bFastMode ? changeGameSpeed(m_IntervalIDMain, "gameLoopSingle();", m_iFastSpeed) : changeGameSpeed(m_IntervalIDMain, "gameLoopSingle();", m_iGameSpeedMain));
+    m_IntervalIDMain = changeGameSpeed(m_IntervalIDMain, "gameLoopSingle();", m_iGameSpeedMain);
     m_bIsPaused = false;
 }
 
@@ -151,13 +142,6 @@ function keyBoardDownSinglePlayer(event)
 
             else if (keyCode == 39 && m_iDirectionOne != "left") // Right arrow key was pressed.
                 m_iDirectionOne = "right";
-
-            else if (keyCode == 65)    // The letter 'a' was pressed.
-            {
-                m_bFastMode = !m_bFastMode;
-                m_IntervalIDMain = (m_bFastMode ? changeGameSpeed(m_IntervalIDMain, "gameLoopSingle();", m_iFastSpeed) : changeGameSpeed(m_IntervalIDMain, "gameLoopSingle();", m_iGameSpeedMain));
-                setFastPicVisible(m_bFastMode);
-            }
 
             m_bIsSnakeUpdatedOne = false;
         }

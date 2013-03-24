@@ -53,11 +53,6 @@ var m_iScoreTwo = 0;
 var m_iHighestScoreOne = 0;
 var m_iHighestScoreTwo = 0;
 
-// Fast Speed
-var m_iFastDivider = 4;
-var m_iFastSpeed = Math.floor(m_iGameSpeedMain / m_iFastDivider);
-var m_bFastMode = false;
-
 // Food
 var m_iFoodX = 0;
 var m_iFoodY = 0;
@@ -279,30 +274,6 @@ function setSoundPicVisible(bOn)
         document.getElementById("soundOn").style.zIndex = -1;
         document.getElementById("soundOff").style.zIndex = 1;
     }
-}
-
-// Sets the fast pause visible
-function setFastPicVisible(bVisible)
-{
-    m_bFastMode = bVisible;
-
-    if (m_bFastMode)
-    {
-        document.getElementById("fastMode").style.zIndex = 1;
-        document.getElementById("slowMode").style.zIndex = -1;
-    }
-
-    else {
-        document.getElementById("fastMode").style.zIndex = -1;
-        document.getElementById("slowMode").style.zIndex = 1;
-    }
-}
-
-// Hides fast pic, show slow pic
-function hideFastPic()
-{
-    document.getElementById("fastMode").style.zIndex = -1;
-    document.getElementById("slowMode").style.zIndex = -1;
 }
 
 // Writes message to corresponding tile, with specified colour

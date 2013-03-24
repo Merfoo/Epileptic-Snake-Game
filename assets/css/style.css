@@ -26,7 +26,7 @@ canvas
     height: 2.5%; 
     width: 2.75%;
     position:absolute; 
-    top: 1.75%; 
+    top: 2%; 
     left:93%;
 }
 
@@ -36,28 +36,8 @@ canvas
     height: 2.5%; 
     width: 2.75%;
     position:absolute; 
-    top: 1.75%; 
+    top: 2%; 
     left:93%;
-}
-
-#slowMode
-{
-    z-index: -1; 
-    height: 3.75%; 
-    width: 3%;
-    position:absolute; 
-    top: .5%; 
-    left:85%;
-}
-
-#fastMode
-{
-    z-index: -1; 
-    height: 3.75%; 
-    width: 3%;
-    position:absolute; 
-    top: .5%; 
-    left:85%;
 }
 
 #startMenu 
