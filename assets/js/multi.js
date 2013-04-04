@@ -3,7 +3,6 @@
 function initializeMulti()
 {
     showStartMenu(false);
-    hideFastPic();
     m_bGameStarted = true;
     m_bMulti = true;
 

@@ -3,7 +3,6 @@
 function initializeMultiTeleportic()
 {
     showStartMenu(false);
-    hideFastPic();
     m_bGameStarted = true;
     m_bMultiTeleportic = true;
 
