@@ -1,28 +1,30 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-    <title>Robotic's Snake Game!</title>
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
-    <script type="text/javascript" src="assets/js/main.js"></script>
-    <script type="text/javascript" src="assets/js/single.js"></script>
-    <script type="text/javascript" src="assets/js/singleTeleportic.js"></script>
-    <script type="text/javascript" src="assets/js/multi.js"></script>
-    <script type="text/javascript" src="assets/js/multiTeleportic.js"></script>
+    <title>Snake Game!</title>
+    
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <script type="text/javascript" src="js/util.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/single.js"></script>
+    <script type="text/javascript" src="js/singleTeleportic.js"></script>
+    <script type="text/javascript" src="js/multi.js"></script>
+    <script type="text/javascript" src="js/multiTeleportic.js"></script>
 </head>
 <body>
     <canvas id="myCanvas"></canvas>
-    <img id="pause" src="assets/pics/pause.png"/>
-    <img id="soundOn" src="assets/pics/ON.png" onclick="setSoundPicVisible(false);"/>
-    <img id="soundOff" src="assets/pics/OFF.png" onclick="setSoundPicVisible(true);"/>
+    <img id="pause" src="images/pause.png"/>
+    <img id="soundOn" src="images/ON.png" onclick="setSoundPicVisible(false);"/>
+    <img id="soundOff" src="images/OFF.png" onclick="setSoundPicVisible(true);"/>
     <div id="startMenu">
-        <img id="title" src="assets/pics/title.png" />
-        <img id="credits" src="assets/pics/credit.png" onclick="clickedCredits();"/>
-        <img id="singlePlayer" src ="assets/pics/1player.png" onclick="startGame(0);" />
-        <img id="multiPlayer" src ="assets/pics/2player.png" onclick="startGame(1);" />
-        <img id="teleportic" src ="assets/pics/teleportic.png" onclick="startGame(2);" />
-        <img id="multiTeleportic" src ="assets/pics/multiTeleportic.png" onclick="startGame(3);"/>
+        <img id="title" src="images/title.png" />
+        <img id="credits" src="images/credit.png" onclick="clickedCredits();"/>
+        <img id="singlePlayer" src ="images/1player.png" onclick="startGame(0);" />
+        <img id="multiPlayer" src ="images/2player.png" onclick="startGame(1);" />
+        <img id="teleportic" src ="images/teleportic.png" onclick="startGame(2);" />
+        <img id="multiTeleportic" src ="images/multiTeleportic.png" onclick="startGame(3);"/>
     </div>
 </body>
 </html>
