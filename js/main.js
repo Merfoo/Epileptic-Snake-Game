@@ -141,10 +141,10 @@ function paintTile(x, y, color, borderThickness)
 function showStartMenu(bVisible)
 {
     paintGameScreen();
-    resetGame();
 
     if (bVisible)
     {
+		resetGame();
         document.getElementById("startMenu").style.zIndex = 1;
         m_iIntervalId.menu = window.setInterval("paintStartMenu();", m_iSpeed.menu);
     }
