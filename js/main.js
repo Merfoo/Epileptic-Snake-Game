@@ -3,8 +3,8 @@
 // Maxwidth is the total pixels across the screen, width is amount of tiles across the screen and tileWidth is the pixel across each tile
 var m_iMap = { maxWidth: 0, maxHeight: 0, width: 60, height: 30, tileWidth: 0, tileHeight: 0, backgroundColor: "black", toolbarColor: "white" };
 
-// Credits
-var m_Credits = { y: -600, startY: 100, minY: -600, yDecrease: 3, showing: false, interval: null, speed: 33 };
+// Directions
+var m_sDirection = { left: "left", right: "right", up: "up", down: "down" };
 
 // Border widths
 var m_iBorderWidth = { background: 0, snakeBody: 4, snakeHead: 2, food: 0 };
@@ -13,10 +13,10 @@ var m_iBorderWidth = { background: 0, snakeBody: 4, snakeHead: 2, food: 0 };
 var m_iSnakeData = { lengthSingle: 7, lengthMulti: 12, headColor: "white" };
 
 // Snake One 
-var m_iSnakeOne = { id: 1, color: "red", head: { x: m_iSnakeData.lengthSingle - 2, y: 1 }, body: new Array(), direction: "right", updated: false };
+var m_iSnakeOne = { id: 1, color: "red", head: { x: m_iSnakeData.lengthSingle - 2, y: 1 }, body: new Array(), direction: m_sDirection.right, updated: false };
 
 // Snake Two 
-var m_iSnakeTwo = { id: 2, color: "blue", head: { x: m_iMap.width - m_iSnakeData.lengthMulti + 1, y: 1 }, body: new Array(), direction: "left", updated: false };
+var m_iSnakeTwo = { id: 2, color: "blue", head: { x: m_iMap.width - m_iSnakeData.lengthMulti + 1, y: 1 }, body: new Array(), direction: m_sDirection.left, updated: false };
 
 // Game speed
 var m_iSpeed = { menu: 60, gameOriginal: 80, gameMain: 80, gameOne: 80, gameTwo: 80 };
@@ -140,22 +140,17 @@ function paintTile(x, y, color, borderThickness)
 // Shows start menu, based on argument.
 function showStartMenu(bVisible)
 {
+    paintGameScreen();
+    resetGame();
+
     if (bVisible)
     {
         document.getElementById("startMenu").style.zIndex = 1;
         m_iIntervalId.menu = window.setInterval("paintStartMenu();", m_iSpeed.menu);
-        m_Credits.showing = false;
-        
-        if(m_Credits.interval != null)
-        {
-            window.clearInterval(m_Credits.interval);
-            m_Credits.interval = null;
-        }
     }
 
     else
     {
-        paintGameScreen();
         document.getElementById("startMenu").style.zIndex = -1;
         window.clearInterval(m_iIntervalId.menu);
     }
@@ -200,8 +195,6 @@ function setSoundPicVisible(bOn)
 // Writes message to corresponding tile, with specified colour
 function writeMessage(startTile, color, message)
 {
-    m_CanvasContext.fillStyle = "white";
-    m_CanvasContext.fillRect(startTile * m_iMap.tileWidth, 0, message.length * 12, m_iMap.tileHeight);
     m_CanvasContext.font = (m_iMap.tileHeight/2) + 'pt Calibri';
     m_CanvasContext.fillStyle = color;
     m_CanvasContext.fillText(message, startTile * m_iMap.tileWidth, (m_iMap.tileHeight / 2) + 4);
@@ -239,31 +232,40 @@ function playFoodMusic()
 }
 
 // Checks if the snake it a teleporter, if so teleports it
-function runTeleporters(snakeHead)
+function runTeleporters(snake)
 {
     for (var index = 0; index < m_iTeleporters.teleporters.length; index++)
     {
-        if (snakeHead.x == m_iTeleporters.teleporters[index].x && snakeHead.y == m_iTeleporters.teleporters[index].y)
+        if (snake.head.x == m_iTeleporters.teleporters[index].x && snake.head.y == m_iTeleporters.teleporters[index].y)
         {
             if (index % 2 == 0)
             {
                 index++;
-                snakeHead.x = m_iTeleporters.teleporters[index].x;
-                snakeHead.y = m_iTeleporters.teleporters[index].y;
+                snake.head.x = m_iTeleporters.teleporters[index].x;
+                snake.head.y = m_iTeleporters.teleporters[index].y;
             }
 
             else
             {
                 index--;
-                snakeHead.x = m_iTeleporters.teleporters[index].x;
-                snakeHead.y = m_iTeleporters.teleporters[index].y;
+                snake.head.x = m_iTeleporters.teleporters[index].x;
+                snake.head.y = m_iTeleporters.teleporters[index].y;
             }
+
+            break;
         }
     }
 }
 
+// Paints teleporters
+function paintTeleporters()
+{
+    for (var index = 0; index < m_iTeleporters.teleporters.length; index++)
+        paintTile(m_iTeleporters.teleporters[index].x, m_iTeleporters.teleporters[index].y, m_iTeleporters.teleporters[index].color, 0);
+}
+
 // Creates a pair of teleporters
-function createTeleportingBlocks()
+function createTeleporters()
 {
     m_iTeleporters.teleporters.length;
     var teleporterColor = m_iTeleporters.color[m_iTeleporters.teleporters.length / 2];
@@ -273,71 +275,78 @@ function createTeleportingBlocks()
     m_iTeleporters.teleporters.push(newTeleporterB);
 }
 
-// Sets up the snake body based on direction
-function setUpSnake(snakeHead, snakeBody, sDirection)
+
+// Paints the food
+function paintFood()
 {
-    paintTile(snakeHead.x, snakeHead.y, m_iMap.backgroundColor, 0);
-    paintTile(snakeBody[snakeBody.length - 1].x, snakeBody[snakeBody.length - 1].y, m_iMap.backgroundColor, 0);
-    var tempSnakeData = snakeBody.pop();
+    paintTile(m_iFood.x, m_iFood.y, getRandomColor(1, 255), m_iBorderWidth.food);
+}
 
-    if (sDirection == "right")
-        tempSnakeData = { x: ++snakeHead.x, y: snakeHead.y };
+// Sets up the snake body based on direction
+function setUpSnake(snake)
+{
+    paintTile(snake.head.x, snake.head.y, m_iMap.backgroundColor, 0);
+    paintTile(snake.body[snake.body.length - 1].x, snake.body[snake.body.length - 1].y, m_iMap.backgroundColor, 0);
+    var tempSnakeData = snake.body.pop();
 
-    if (sDirection == "left")
-        tempSnakeData = { x: --snakeHead.x, y: snakeHead.y };
+    if (snake.direction == m_sDirection.right)
+        tempSnakeData = { x: ++snake.head.x, y: snake.head.y };
 
-    if (sDirection == "down")
-        tempSnakeData = { x: snakeHead.x, y: ++snakeHead.y };
+    if (snake.direction == m_sDirection.left)
+        tempSnakeData = { x: --snake.head.x, y: snake.head.y };
 
-    if (sDirection == "up")
-        tempSnakeData = { x: snakeHead.x, y: --snakeHead.y };
+    if (snake.direction == m_sDirection.down)
+        tempSnakeData = { x: snake.head.x, y: ++snake.head.y };
 
-    snakeBody.unshift(tempSnakeData);
+    if (snake.direction == m_sDirection.up)
+        tempSnakeData = { x: snake.head.x, y: --snake.head.y };
+
+    snake.body.unshift(tempSnakeData);
 }
 
 // Checks if the snake hit the wall or itself
-function checkCollision(snakeBody)
+function checkCollision(snake)
 {
     // Checks if snake hit the borders
-    if (snakeBody[0].x >= m_iMap.width)
+    if (snake.head.x >= m_iMap.width)
         return true;
 
-    if (snakeBody[0].x < 0)
+    if (snake.head.x < 0)
         return true;
 
-    if (snakeBody[0].y >= m_iMap.height)
+    if (snake.head.y >= m_iMap.height)
         return true;
 
-    if (snakeBody[0].y <= 0)
+    if (snake.head.y <= 0)
         return true;
 
     // Checks if the snakes hit themselves
-    for (var index = 1; index < snakeBody.length; index++)
-        if (snakeBody[0].x == snakeBody[index].x && snakeBody[0].y == snakeBody[index].y)
+    for (var index = 1; index < snake.body.length; index++)
+        if (snake.head.x == snake.body[index].x && snake.head.y == snake.body[index].y)
             return true;
 
     return false;
 }
 
 // Checks if the snakes hit eachother's body
-function hitOtherSnakes(snakeBodyOne, snakeBodyTwo, snakeIdOne, snakeIdTwo)
+function hitOtherSnakes(snakeOne, snakeTwo)
 {
-    if (snakeBodyOne[0].x == snakeBodyTwo[0].x && snakeBodyOne[0].y == snakeBodyTwo[0].y)
+    if (snakeOne.head.x == snakeTwo.head.x && snakeOne.head.y == snakeTwo.head.y)
     {
         if (getRandomNumber(0, 10) <= 5)
-            return snakeIdOne;
+            return snakeOne.id;
 
-        return snakeIdTwo;
+        return snakeTwo.id;
     }
 
     // Checks if the snakes hit the other snakes
-    for (var index = 1; index < snakeBodyTwo.length; index++)
-        if (snakeBodyOne[0].x == snakeBodyTwo[index].x && snakeBodyOne[0].y == snakeBodyTwo[index].y)
-            return snakeIdOne;
+    for (var index = 1; index < snakeTwo.body.length; index++)
+        if (snakeOne.head.x == snakeTwo.body[index].x && snakeOne.head.y == snakeTwo.body[index].y)
+            return snakeOne.id;
 
-    for (var index = 1; index < snakeBodyOne.length; index++)
-        if (snakeBodyTwo[0].x == snakeBodyOne[index].x && snakeBodyTwo[0].y == snakeBodyOne[index].y)
-            return snakeIdTwo;
+    for (var index = 1; index < snakeOne.body.length; index++)
+        if (snakeTwo.head.x == snakeOne.body[index].x && snakeTwo.head.y == snakeOne.body[index].y)
+            return snakeTwo.id;
 
     return 0;
 }
@@ -374,6 +383,21 @@ function setFood(snakeBody)
     }
 }
 
+// Resets all variables
+function resetGame()
+{
+    m_bGameStatus.paused = false;
+    m_bGameStatus.started = false;
+    m_bGameStatus.single = false;
+    m_bGameStatus.singleTeleportic = false;
+    m_bGameStatus.multi = false;
+    m_bGameStatus.multiTeleportic = false;
+    m_iScore.one = 0;
+    m_iScore.highestOne = 0;
+    m_iScore.two = 0;
+    m_iScore.highestTwo = 0;
+}
+
 // Handles increasing the speed variable
 function increaseSpeed(iGameSpeed)
 {
@@ -392,7 +416,7 @@ function doKeyDown(event)
             keyBoardDownTeleportic(event);
 
         else if (m_bGameStatus.multi)
-            keyBoardDownMultiplayer(event);
+            keyBoardDownMulti(event);
 
         else if(m_bGameStatus.multiTeleportic)
             keyBoardDownMultiplayerTeleportic(event);
@@ -414,7 +438,7 @@ function doKeyUp(event)
             keyBoardUpTeleportic(event);
 
         else if (m_bGameStatus.multi)
-            keyBoardUpMultiplayer(event);
+            keyBoardUpMulti(event);
 
         else if (m_bGameStatus.multiTeleportic)
             keyBoardUpMultiplayerTeleportic(event);
@@ -422,26 +446,22 @@ function doKeyUp(event)
 
     if (event.keyCode == 77)    // 'm' was pressed.
         setSoundPicVisible(m_Music.soundOn = !m_Music.soundOn);
-
-    if(m_Credits.showing)
-       if (event.keyCode == 27) // Escape was pressed
-            showStartMenu(true);
     
     event.preventDefault();
     return false;
 }
 
-function paintWholeScreen(color)
-{
-    m_CanvasContext.fillStyle = color;
-    m_CanvasContext.fillRect(0, 0, m_iMap.maxWidth, m_iMap.maxHeight);
-}
-
 function paintGameScreen()
 {
-    for (var x = 0; x < m_iMap.width; x++)
-        for (var y = 0; y < m_iMap.height; y++)
-            y == 0 ? paintTile(x, y, m_iMap.toolbarColor, 0) : paintTile(x, y, m_iMap.backgroundColor, 0);
+    paintToolbar();
+    m_CanvasContext.fillStyle = m_iMap.backgroundColor;
+    m_CanvasContext.fillRect(0, m_iMap.tileHeight, m_iMap.maxWidth, m_iMap.maxHeight - m_iMap.tileHeight);
+}
+
+function paintToolbar()
+{
+    m_CanvasContext.fillStyle = "white";
+    m_CanvasContext.fillRect(0, 0, m_iMap.maxWidth, m_iMap.tileHeight);
 }
 
 function setUpLetters()
@@ -545,27 +565,3 @@ function setUpLetters()
     m_iTitle.push({ x: 42, y: 9 });
     m_iTitle.push({ x: 43, y: 9 });    
 } 
-
-function clickedCredits()
-{
-    showStartMenu(false);
-    m_Credits.showing = true;  
-    window.clearInterval(m_iIntervalId.menu);
-    m_Credits.interval = window.setInterval("showCredits();", m_Credits.speed);
-    m_Credits.y = m_Credits.minY;
-}
-
-function showCredits()
-{
-    if(m_Credits.y <= m_Credits.minY)
-        m_Credits.y = m_iMap.maxHeight + m_Credits.startY;
-    
-    paintWholeScreen(m_iMap.backgroundColor);
-    m_CanvasContext.fillStyle = "white";
-    m_CanvasContext.font = '40px san-serif';
-    m_CanvasContext.textBaseline = 'bottom';
-    m_CanvasContext.fillText('Head Developer: Fauzi Kliman', Math.floor(m_iMap.maxWidth / 3), m_Credits.y);
-    m_CanvasContext.fillText('Assistant Developer: Jacob Payne', Math.floor(m_iMap.maxWidth / 3), m_Credits.y + 200);
-    m_CanvasContext.fillText('Beta Tester: Gil Parnon', Math.floor(m_iMap.maxWidth / 3), m_Credits.y + 400);
-    m_Credits.y -= m_Credits.yDecrease;
-}

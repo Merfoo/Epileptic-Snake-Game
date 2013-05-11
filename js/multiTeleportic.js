@@ -5,21 +5,21 @@ function initializeMultiTeleportic()
     showStartMenu(false);
     m_bGameStatus.started = true;
     m_bGameStatus.multiTeleportic = true;
+
+    // Teleporters
     m_iTeleporters.teleporters = new Array();
-    createTeleportingBlocks();
+    createTeleporters();
+
+    // Scores
     m_iScore.highestOne = 1;
     m_iScore.highestTwo = 1;
+
+    // Snakes
     resetSnakeOneMultiTeleportic();
     resetSnakeTwoMultiTeleportic();
+
+    // Food
     setFood(m_iSnakeOne.body.concat(m_iSnakeTwo.body));
-    drawMapMultiTeleportic();
-    gameLoopMultiTeleportic();
-
-    // Initialize gameloop.
-    if (m_iIntervalId.main != null)
-        clearInterval(m_iIntervalId.main);
-
-    m_iIntervalId.main = window.setInterval("gameLoopMultiTeleportic();", m_iSpeed.gameMain);
 }
 
 // Runs all the functions required for the game to work.
@@ -33,11 +33,13 @@ function gameLoopMultiTeleportic()
 function drawMapMultiTeleportic()
 {
     // Teleporting blocks
-    for (var index = 0; index < m_iTeleporters.teleporters.length; index++)
-        paintTile(m_iTeleporters.teleporters[index].x, m_iTeleporters.teleporters[index].y, m_iTeleporters.teleporters[index].color, 0);
+    paintTeleporters();
 
     // Food
-    paintTile(m_iFood.x, m_iFood.y, getRandomColor(1, 255), m_iBorderWidth.food);
+    paintFood();
+
+    // Repaint toolbar
+    paintToolbar();
 
     // Prints score on top of snake game
     writeMessage(m_iTextAlignment.left, m_iSnakeOne.color, "Score One: " + m_iScore.one);
@@ -46,11 +48,11 @@ function drawMapMultiTeleportic()
     writeMessage(m_iTextAlignment.middle + 15, m_iSnakeTwo.color, "Total Score Two: " + m_iScore.highestTwo);
 }
 
-// Handles where the snake should be.
+// Sets up snake 1
 function setUpSnakeOneMultiTeleportic()
 {
-    setUpSnake(m_iSnakeOne.head, m_iSnakeOne.body, m_iSnakeOne.direction);
-    runTeleporters(m_iSnakeOne.head);
+    setUpSnake(m_iSnakeOne);
+    runTeleporters(m_iSnakeOne);
 
     for (var index = 1; index < m_iSnakeOne.body.length; index++)
         paintTile(m_iSnakeOne.body[index].x, m_iSnakeOne.body[index].y, m_iSnakeOne.color, m_iBorderWidth.snakeBody);
@@ -60,7 +62,7 @@ function setUpSnakeOneMultiTeleportic()
     if (gotFoodMulti() == m_iSnakeOne.id)
     {
         if (m_iTeleporters.teleporters.length / 2 < m_iTeleporters.max)
-            createTeleportingBlocks();
+            createTeleporters();
 
         playFoodMusic();
         var tempData = { x: m_iSnakeOne.body[m_iSnakeOne.body.length - 1].x, y: m_iSnakeOne.body[m_iSnakeOne.body.length - 1].y };
@@ -69,23 +71,26 @@ function setUpSnakeOneMultiTeleportic()
         m_iScore.highestOne++;
         m_iSpeed.gameOne = increaseSpeed(m_iSpeed.gameOne);
         m_iIntervalId.one = changeGameSpeed(m_iIntervalId.one, "setUpSnakeOneMultiTeleportic();", m_iSpeed.gameOne);
-        setFood(m_iSnakeOne.body.concat(m_iSnakeTwo.body, m_iTeleporters.teleporters));
+        setFood(m_iSnakeOne.body.concat(m_iSnakeTwo.body));
     }
 
-    if (checkCollision(m_iSnakeOne.body))
+    if (checkCollision(m_iSnakeOne))
         resetSnakeOneMultiTeleportic();
 
     else
-        resetASnakeMultiTeleportic(hitOtherSnakes(m_iSnakeOne.body, m_iSnakeTwo.body, m_iSnakeOne.id, m_iSnakeTwo.id));
+        resetASnakeMultiTeleportic(hitOtherSnakes(m_iSnakeOne, m_iSnakeTwo));
+
+    if (m_iSpeed.gameOne <= m_iSpeed.gameTwo)
+        gameLoopMultiTeleportic();
 
     m_iSnakeOne.updated = true;
 }
 
+// Sets up snake 2
 function setUpSnakeTwoMultiTeleportic()
 {
-    // Snake 2
-    setUpSnake(m_iSnakeTwo.head, m_iSnakeTwo.body, m_iSnakeTwo.direction);
-    runTeleporters(m_iSnakeTwo.head);
+    setUpSnake(m_iSnakeTwo);
+    runTeleporters(m_iSnakeTwo);
 
     for (var index = 1; index < m_iSnakeTwo.body.length; index++)
         paintTile(m_iSnakeTwo.body[index].x, m_iSnakeTwo.body[index].y, m_iSnakeTwo.color, m_iBorderWidth.snakeBody);
@@ -95,7 +100,7 @@ function setUpSnakeTwoMultiTeleportic()
     if (gotFoodMulti() == m_iSnakeTwo.id)
     {
         if (m_iTeleporters.teleporters.length / 2 < m_iTeleporters.max)
-            createTeleportingBlocks();
+            createTeleporters();
 
         playFoodMusic();
         var tempData = { x: m_iSnakeTwo.body[m_iSnakeTwo.body.length - 1].x, y: m_iSnakeTwo.body[m_iSnakeTwo.body.length - 1].y };
@@ -104,14 +109,17 @@ function setUpSnakeTwoMultiTeleportic()
         m_iScore.highestTwo++;
         m_iSpeed.gameTwo = increaseSpeed(m_iSpeed.gameTwo);
         m_iIntervalId.two = changeGameSpeed(m_iIntervalId.two, "setUpSnakeTwoMultiTeleportic();", m_iSpeed.gameTwo);
-        setFood(m_iSnakeOne.body.concat(m_iSnakeTwo.body, m_iTeleporters.teleporters));
+        setFood(m_iSnakeOne.body.concat(m_iSnakeTwo.body));
     }
 
-    if (checkCollision(m_iSnakeTwo.body))
+    if (checkCollision(m_iSnakeTwo))
         resetSnakeTwoMultiTeleportic();
 
     else
-        resetASnakeMultiTeleportic(hitOtherSnakes(m_iSnakeOne.body, m_iSnakeTwo.body, m_iSnakeOne.id, m_iSnakeTwo.id));
+        resetASnakeMultiTeleportic(hitOtherSnakes(m_iSnakeOne, m_iSnakeTwo));
+
+    if (m_iSpeed.gameTwo <= m_iSpeed.gameOne)
+        gameLoopMultiTeleportic();
 
     m_iSnakeTwo.updated = true;
 }
@@ -135,13 +143,9 @@ function resetSnakeOneMultiTeleportic()
         for (var index = 0; index < m_iSnakeOne.body.length; index++)
             paintTile(m_iSnakeOne.body[index].x, m_iSnakeOne.body[index].y, m_iMap.backgroundColor, m_iBorderWidth.background);
 
-    // Repaint white toolbar
-    if (m_iSnakeOne.head.y == 0)
-        paintTile(m_iSnakeOne.head.x, m_iSnakeOne.head.y, "#FFF", 0);
-
-    m_iSnakeOne.head.x = m_iSnakeData.lengthMulti - 2;
-    m_iSnakeOne.head.y = 1;
-    m_iSnakeOne.direction = "right";
+    m_iSnakeOne.head.x = 0;
+    m_iSnakeOne.head.y = m_iMap.height;
+    m_iSnakeOne.direction = m_sDirection.up;
     m_iSpeed.gameOne = m_iSpeed.gameMain;
     m_iSnakeOne.body = new Array(m_iSnakeData.lengthMulti);
     m_iScore.one = 0;
@@ -153,7 +157,7 @@ function resetSnakeOneMultiTeleportic()
     m_iIntervalId.one = window.setInterval("setUpSnakeOneMultiTeleportic();", m_iSpeed.gameOne);
 
     for (var index = 0; index < m_iSnakeOne.body.length; index++)
-        m_iSnakeOne.body[m_iSnakeData.lengthMulti - index - 1] = { x: index - 1, y: m_iSnakeOne.head.y };
+        m_iSnakeOne.body[index] = { x: m_iSnakeOne.head.x, y: m_iMap.height + index };
 }
 
 // Resets all values related to snake two
@@ -163,13 +167,9 @@ function resetSnakeTwoMultiTeleportic()
         for (var index = 0; index < m_iSnakeTwo.body.length; index++)
             paintTile(m_iSnakeTwo.body[index].x, m_iSnakeTwo.body[index].y, m_iMap.backgroundColor, m_iBorderWidth.background);
 
-    // Repaint white toolbar
-    if (m_iSnakeTwo.head.y == 0)
-        paintTile(m_iSnakeTwo.head.x, m_iSnakeTwo.head.y, "#FFF", 0);
-
-    m_iSnakeTwo.head.x = m_iMap.width - m_iSnakeData.lengthMulti + 1;
-    m_iSnakeTwo.head.y = 1;
-    m_iSnakeTwo.direction = "left";
+    m_iSnakeTwo.head.x = m_iMap.width - 1;
+    m_iSnakeTwo.head.y = 0;
+    m_iSnakeTwo.direction = m_sDirection.down;
     m_iSpeed.gameTwo = m_iSpeed.gameMain;
     m_iSnakeTwo.body = new Array(m_iSnakeData.lengthMulti);
     m_iScore.two = 0;
@@ -181,14 +181,14 @@ function resetSnakeTwoMultiTeleportic()
     m_iIntervalId.two = window.setInterval("setUpSnakeTwoMultiTeleportic();", m_iSpeed.gameTwo);
 
     for (var index = 0; index < m_iSnakeTwo.body.length; index++)
-        m_iSnakeTwo.body[m_iSnakeData.lengthMulti - index - 1] = { x: m_iMap.width - index, y: m_iSnakeTwo.head.y };
+        m_iSnakeTwo.body[index] = { x: m_iSnakeTwo.head.x, y: -index };
 }
 
 // Stops loop
-function pauseGameMultiTeleportic()
+function pauseGameMultiTeleportic(bVisible)
 {
     stopBackgroundMusic();
-    showPausePic(true);
+    showPausePic(bVisible);
     window.clearInterval(m_iIntervalId.main);
     window.clearInterval(m_iIntervalId.one);
     window.clearInterval(m_iIntervalId.two);
@@ -211,7 +211,8 @@ function keyBoardDownMultiplayerTeleportic(event)
 {
     var keyCode = event.keyCode;
 
-    if (keyCode == 87 || keyCode == 83 || keyCode == 65 || keyCode == 68) {
+    if (keyCode == 87 || keyCode == 83 || keyCode == 65 || keyCode == 68)
+    {
         if (!m_iSnakeOne.updated)
             setUpSnakeOneMultiTeleportic();
 
@@ -231,7 +232,8 @@ function keyBoardDownMultiplayerTeleportic(event)
         m_iSnakeOne.updated = false;
     }
 
-    if (keyCode == 38 || keyCode == 40 || keyCode == 37 || keyCode == 39) {
+    if (keyCode == 38 || keyCode == 40 || keyCode == 37 || keyCode == 39)
+    {
         if (!m_iSnakeTwo.updated)
             setUpSnakeTwoMultiTeleportic();
 
@@ -257,19 +259,11 @@ function keyBoardUpMultiplayerTeleportic(event)
     var keyCode = event.keyCode;
 
     if (keyCode == 32)
-        m_bGameStatus.paused ? unPauseGameMultiTeleportic() : pauseGameMultiTeleportic();
+        m_bGameStatus.paused ? unPauseGameMultiTeleportic() : pauseGameMultiTeleportic(true);
 
     else if (keyCode == 27) // Escape was pressed
     {
-        pauseGameMultiTeleportic();
-        showPausePic(false);
+        pauseGameMultiTeleportic(false);
         showStartMenu(true);
-        m_bGameStatus.paused = false;
-        m_bGameStatus.multiTeleportic = false;
-        m_bGameStatus.started = false;
-        m_iScore.one = 0;
-        m_iScore.two = 0;
-        m_iScore.highestOne = 0;
-        m_iScore.highestTwo = 0;
     }
 }

@@ -5,18 +5,17 @@ function initializeMulti()
     showStartMenu(false);
     m_bGameStatus.started = true;
     m_bGameStatus.multi = true;
+
+    // Scores
     m_iScore.highestOne = 1;
     m_iScore.highestTwo = 1;
+
+    // Snakes
     resetSnakeOneMulti();
     resetSnakeTwoMulti();
+
+    // Food
     setFood(m_iSnakeOne.body.concat(m_iSnakeTwo.body));
-    gameLoopMulti();
-
-    // Initialize gameloop.
-    if (m_iIntervalId.main != null)
-        clearInterval(m_iIntervalId.main);
-
-    m_iIntervalId.main = window.setInterval("gameLoopMulti();", m_iSpeed.gameMain);
 }
 
 // Runs all the functions required for the game to work.
@@ -30,7 +29,10 @@ function gameLoopMulti()
 function drawMapMulti()
 {
     // Food
-    paintTile(m_iFood.x, m_iFood.y, getRandomColor(1, 255), m_iBorderWidth.food);
+    paintFood();
+
+    // Repaint toolbar
+    paintToolbar();
 
     // Prints score on top of snake game
     writeMessage(m_iTextAlignment.left, m_iSnakeOne.color, "Score One: " + m_iScore.one);
@@ -39,10 +41,10 @@ function drawMapMulti()
     writeMessage(m_iTextAlignment.middle + 15, m_iSnakeTwo.color, "Total Score Two: " + m_iScore.highestTwo);
 }
 
-// Handles where the snake should be.
+// Sets up snake 1
 function setUpSnakeOneMulti()
 {
-    setUpSnake(m_iSnakeOne.head, m_iSnakeOne.body, m_iSnakeOne.direction);
+    setUpSnake(m_iSnakeOne);
 
     for (var index = 1; index < m_iSnakeOne.body.length; index++)
         paintTile(m_iSnakeOne.body[index].x, m_iSnakeOne.body[index].y, m_iSnakeOne.color, m_iBorderWidth.snakeBody);
@@ -61,19 +63,22 @@ function setUpSnakeOneMulti()
         setFood(m_iSnakeOne.body.concat(m_iSnakeTwo.body));
     }
 
-    if (checkCollision(m_iSnakeOne.body))
+    if (checkCollision(m_iSnakeOne))
         resetSnakeOneMulti();
 
     else
-        resetASnakeMulti(hitOtherSnakes(m_iSnakeOne.body, m_iSnakeTwo.body, m_iSnakeOne.id, m_iSnakeTwo.id));
+        resetASnakeMulti(hitOtherSnakes(m_iSnakeOne, m_iSnakeTwo));
+
+    if (m_iSpeed.gameOne <= m_iSpeed.gameTwo)
+        gameLoopMulti();
 
     m_iSnakeOne.updated = true;
 }
 
+// Sets up snake 2
 function setUpSnakeTwoMulti()
 {
-    // Snake 2
-    setUpSnake(m_iSnakeTwo.head, m_iSnakeTwo.body, m_iSnakeTwo.direction);;
+    setUpSnake(m_iSnakeTwo);
 
     for (var index = 1; index < m_iSnakeTwo.body.length; index++)
         paintTile(m_iSnakeTwo.body[index].x, m_iSnakeTwo.body[index].y, m_iSnakeTwo.color, m_iBorderWidth.snakeBody);
@@ -90,13 +95,22 @@ function setUpSnakeTwoMulti()
         m_iSpeed.gameTwo = increaseSpeed(m_iSpeed.gameTwo);
         m_iIntervalId.two = changeGameSpeed(m_iIntervalId.two, "setUpSnakeTwoMulti();", m_iSpeed.gameTwo);
         setFood(m_iSnakeOne.body.concat(m_iSnakeTwo.body));
+
+        if (m_iSpeed.gameTwo != m_iSpeed.gameMain && m_iSpeed.gameTwo > m_iSpeed.gameOne)
+        {
+            m_iSpeed.gameMain = m_iSpeed.gameTwo;
+            m_iIntervalId.main = changeGameSpeed(m_iIntervalId.main, "drawMapMulti();", m_iSpeed.gameMain);
+        }
     }
 
-    if(checkCollision(m_iSnakeTwo.body))
+    if(checkCollision(m_iSnakeTwo))
         resetSnakeTwoMulti();
 
     else 
-        resetASnakeMulti(hitOtherSnakes(m_iSnakeOne.body, m_iSnakeTwo.body, m_iSnakeOne.id, m_iSnakeTwo.id));
+        resetASnakeMulti(hitOtherSnakes(m_iSnakeOne, m_iSnakeTwo));
+
+    if (m_iSpeed.gameTwo <= m_iSpeed.gameOne)
+        gameLoopMulti();
 
     m_iSnakeTwo.updated = true;
 }
@@ -113,7 +127,8 @@ function gotFoodMulti()
     return false;
 }
 
-function resetASnakeMulti(snakeID) {
+function resetASnakeMulti(snakeID)
+{
 
     if (snakeID != 0)
     {
@@ -132,13 +147,9 @@ function resetSnakeOneMulti()
         for (var index = 0; index < m_iSnakeOne.body.length; index++)
             paintTile(m_iSnakeOne.body[index].x, m_iSnakeOne.body[index].y, m_iMap.backgroundColor, m_iBorderWidth.background);
 
-    // Repaint white toolbar
-    if(m_iSnakeOne.head.y == 0)
-        paintTile(m_iSnakeOne.head.x, m_iSnakeOne.head.y, "#FFF", 0);
-
-    m_iSnakeOne.head.x = m_iSnakeData.lengthMulti - 2;
-    m_iSnakeOne.head.y = 1;
-    m_iSnakeOne.direction = "right";
+    m_iSnakeOne.head.x = 0;
+    m_iSnakeOne.head.y = m_iMap.height;
+    m_iSnakeOne.direction = m_sDirection.up;
     m_iSpeed.gameOne = m_iSpeed.gameMain;
     m_iSnakeOne.body = new Array(m_iSnakeData.lengthMulti);
     m_iScore.one = 0;
@@ -150,7 +161,7 @@ function resetSnakeOneMulti()
     m_iIntervalId.one = window.setInterval("setUpSnakeOneMulti();", m_iSpeed.gameOne);
 
     for (var index = 0; index < m_iSnakeOne.body.length; index++)
-        m_iSnakeOne.body[m_iSnakeData.lengthMulti - index - 1] = { x: index - 1, y: m_iSnakeOne.head.y };
+        m_iSnakeOne.body[index] = { x: m_iSnakeOne.head.x, y: m_iMap.height + index };
 }
 
 // Resets all values related to snake two
@@ -160,13 +171,9 @@ function resetSnakeTwoMulti()
         for (var index = 0; index < m_iSnakeTwo.body.length; index++)
             paintTile(m_iSnakeTwo.body[index].x, m_iSnakeTwo.body[index].y, m_iMap.backgroundColor, m_iBorderWidth.background);
 
-    // Repaint white toolbar
-    if (m_iSnakeTwo.head.y == 0)
-        paintTile(m_iSnakeTwo.head.x, m_iSnakeTwo.head.y, "#FFF", 0);
-
-    m_iSnakeTwo.head.x = m_iMap.width - m_iSnakeData.lengthMulti + 1;
-    m_iSnakeTwo.head.y = 1;
-    m_iSnakeTwo.direction = "left";
+    m_iSnakeTwo.head.x = m_iMap.width - 1;
+    m_iSnakeTwo.head.y = 0;
+    m_iSnakeTwo.direction = m_sDirection.down;
     m_iSpeed.gameTwo = m_iSpeed.gameMain;
     m_iSnakeTwo.body = new Array(m_iSnakeData.lengthMulti);
     m_iScore.two = 0;
@@ -178,14 +185,14 @@ function resetSnakeTwoMulti()
     m_iIntervalId.two = window.setInterval("setUpSnakeTwoMulti();", m_iSpeed.gameTwo);
 
     for (var index = 0; index < m_iSnakeTwo.body.length; index++)
-        m_iSnakeTwo.body[m_iSnakeData.lengthMulti - index - 1] = { x: m_iMap.width - index, y: m_iSnakeTwo.head.y };
+        m_iSnakeTwo.body[index] = { x: m_iSnakeTwo.head.x, y: -index };
 }
 
 // Stops loop
-function pauseGameMulti()
+function pauseGameMulti(bVisible)
 {
     stopBackgroundMusic();
-    showPausePic(true);
+    showPausePic(bVisible);
     window.clearInterval(m_iIntervalId.main);
     window.clearInterval(m_iIntervalId.one);
     window.clearInterval(m_iIntervalId.two);
@@ -204,7 +211,7 @@ function unPauseGameMulti()
 }
 
 // Handle keyboard events for multiplayer
-function keyBoardDownMultiplayer(event)
+function keyBoardDownMulti(event)
 {
     var keyCode = event.keyCode;
 
@@ -229,7 +236,7 @@ function keyBoardDownMultiplayer(event)
         m_iSnakeOne.updated = false;
     }
 
-    if (keyCode == 38 || keyCode == 40 || keyCode == 37 || keyCode == 39) 
+    if (keyCode == 38 || keyCode == 40 || keyCode == 37 || keyCode == 39)
     {
         if (!m_iSnakeTwo.updated)
             setUpSnakeTwoMulti();
@@ -251,24 +258,16 @@ function keyBoardDownMultiplayer(event)
     }
 }
 
-function keyBoardUpMultiplayer(event)
+function keyBoardUpMulti(event)
 {
     var keyCode = event.keyCode;
 
     if (keyCode == 32)
-        m_bGameStatus.paused ? unPauseGameMulti() : pauseGameMulti();
+        m_bGameStatus.paused ? unPauseGameMulti() : pauseGameMulti(true);
 
     else if (keyCode == 27) // Escape was pressed
     {
-        pauseGameMulti();
-        m_bGameStatus.paused = false;
-        showPausePic(false);
+        pauseGameMulti(false);
         showStartMenu(true);
-        m_bGameStatus.multi = false;
-        m_bGameStatus.started = false;
-        m_iScore.one = 0;
-        m_iScore.two = 0;
-        m_iScore.highestOne = 0;
-        m_iScore.highestTwo = 0;
     }
 }
