@@ -80,9 +80,7 @@ function setUpSnakeOneMultiTeleportic()
     else
         resetASnakeMultiTeleportic(hitOtherSnakes(m_iSnakeOne, m_iSnakeTwo));
 
-    if (m_iSpeed.gameOne <= m_iSpeed.gameTwo)
-        gameLoopMultiTeleportic();
-
+    gameLoopMultiTeleportic();
     m_iSnakeOne.updated = true;
 }
 
@@ -118,9 +116,7 @@ function setUpSnakeTwoMultiTeleportic()
     else
         resetASnakeMultiTeleportic(hitOtherSnakes(m_iSnakeOne, m_iSnakeTwo));
 
-    if (m_iSpeed.gameTwo <= m_iSpeed.gameOne)
-        gameLoopMultiTeleportic();
-
+    gameLoopMultiTeleportic();
     m_iSnakeTwo.updated = true;
 }
 
@@ -139,15 +135,11 @@ function resetASnakeMultiTeleportic(snakeID)
 // Resets all values related to snake one
 function resetSnakeOneMultiTeleportic()
 {
-    if (m_iSnakeOne.body[0] != null)
-        for (var index = 0; index < m_iSnakeOne.body.length; index++)
-            paintTile(m_iSnakeOne.body[index].x, m_iSnakeOne.body[index].y, m_iMap.backgroundColor, m_iBorderWidth.background);
+    for (var index = 0; index < m_iSnakeOne.body.length; index++)
+        paintTile(m_iSnakeOne.body[index].x, m_iSnakeOne.body[index].y, m_iMap.backgroundColor, m_iBorderWidth.background);
 
-    m_iSnakeOne.head.x = 0;
-    m_iSnakeOne.head.y = m_iMap.height;
-    m_iSnakeOne.direction = m_sDirection.up;
+    initializeSnake(m_iSnakeOne, m_iSnakeStarting.oneMulti.x, m_iSnakeStarting.oneMulti.y, m_iSnakeStarting.oneDirection, m_iSnakeData.lengthMulti);
     m_iSpeed.gameOne = m_iSpeed.gameMain;
-    m_iSnakeOne.body = new Array(m_iSnakeData.lengthMulti);
     m_iScore.one = 0;
     m_iScore.highestOne--;
 
@@ -155,23 +147,16 @@ function resetSnakeOneMultiTeleportic()
         clearInterval(m_iIntervalId.one);
 
     m_iIntervalId.one = window.setInterval("setUpSnakeOneMultiTeleportic();", m_iSpeed.gameOne);
-
-    for (var index = 0; index < m_iSnakeOne.body.length; index++)
-        m_iSnakeOne.body[index] = { x: m_iSnakeOne.head.x, y: m_iMap.height + index };
 }
 
 // Resets all values related to snake two
 function resetSnakeTwoMultiTeleportic()
 {
-    if (m_iSnakeTwo.body[0] != null)
-        for (var index = 0; index < m_iSnakeTwo.body.length; index++)
-            paintTile(m_iSnakeTwo.body[index].x, m_iSnakeTwo.body[index].y, m_iMap.backgroundColor, m_iBorderWidth.background);
+    for (var index = 0; index < m_iSnakeTwo.body.length; index++)
+        paintTile(m_iSnakeTwo.body[index].x, m_iSnakeTwo.body[index].y, m_iMap.backgroundColor, m_iBorderWidth.background);
 
-    m_iSnakeTwo.head.x = m_iMap.width - 1;
-    m_iSnakeTwo.head.y = 0;
-    m_iSnakeTwo.direction = m_sDirection.down;
+    initializeSnake(m_iSnakeTwo, m_iSnakeStarting.twoMulti.x, m_iSnakeStarting.twoMulti.y, m_iSnakeStarting.twoDirection, m_iSnakeData.lengthMulti);
     m_iSpeed.gameTwo = m_iSpeed.gameMain;
-    m_iSnakeTwo.body = new Array(m_iSnakeData.lengthMulti);
     m_iScore.two = 0;
     m_iScore.highestTwo--;
 
@@ -179,9 +164,6 @@ function resetSnakeTwoMultiTeleportic()
         clearInterval(m_iIntervalId.two);
 
     m_iIntervalId.two = window.setInterval("setUpSnakeTwoMultiTeleportic();", m_iSpeed.gameTwo);
-
-    for (var index = 0; index < m_iSnakeTwo.body.length; index++)
-        m_iSnakeTwo.body[index] = { x: m_iSnakeTwo.head.x, y: -index };
 }
 
 // Stops loop
@@ -211,43 +193,43 @@ function keyBoardDownMultiplayerTeleportic(event)
 {
     var keyCode = event.keyCode;
 
-    if (keyCode == 87 || keyCode == 83 || keyCode == 65 || keyCode == 68)
+    if (keyCode == m_iControls.snakeOneUp || keyCode == m_iControls.snakeOneDown || keyCode == m_iControls.snakeOneLeft || keyCode == m_iControls.snakeOneRight)
     {
         if (!m_iSnakeOne.updated)
             setUpSnakeOneMultiTeleportic();
 
         // Snake 1
-        if (keyCode == 87 && m_iSnakeOne.direction != "down")   // Up arrow key was pressed.
+        if (keyCode == m_iControls.snakeOneUp && m_iSnakeOne.direction != "down")   // Up arrow key was pressed.
             m_iSnakeOne.direction = "up";
 
-        else if (keyCode == 83 && m_iSnakeOne.direction != "up")    // Down arrow key was pressed.
+        else if (keyCode == m_iControls.snakeOneDown && m_iSnakeOne.direction != "up")    // Down arrow key was pressed.
             m_iSnakeOne.direction = "down";
 
-        else if (keyCode == 65 && m_iSnakeOne.direction != "right") // Left arrow key was pressed.
+        else if (keyCode == m_iControls.snakeOneLeft && m_iSnakeOne.direction != "right") // Left arrow key was pressed.
             m_iSnakeOne.direction = "left";
 
-        else if (keyCode == 68 && m_iSnakeOne.direction != "left") // Right arrow key was pressed.
+        else if (keyCode == m_iControls.snakeOneRight && m_iSnakeOne.direction != "left") // Right arrow key was pressed.
             m_iSnakeOne.direction = "right";
 
         m_iSnakeOne.updated = false;
     }
 
-    if (keyCode == 38 || keyCode == 40 || keyCode == 37 || keyCode == 39)
+    if (keyCode == m_iControls.snakeTwoUp || keyCode == m_iControls.snakeTwoDown || keyCode == m_iControls.snakeTwoLeft || keyCode == m_iControls.snakeTwoRight)
     {
         if (!m_iSnakeTwo.updated)
             setUpSnakeTwoMultiTeleportic();
 
         // Snake 2
-        if (keyCode == 38 && m_iSnakeTwo.direction != "down")   // Up arrow key was pressed.
+        if (keyCode == m_iControls.snakeTwoUp && m_iSnakeTwo.direction != "down")   // Up arrow key was pressed.
             m_iSnakeTwo.direction = "up";
 
-        else if (keyCode == 40 && m_iSnakeTwo.direction != "up")    // Down arrow key was pressed.
+        else if (keyCode == m_iControls.snakeTwoDown && m_iSnakeTwo.direction != "up")    // Down arrow key was pressed.
             m_iSnakeTwo.direction = "down";
 
-        else if (keyCode == 37 && m_iSnakeTwo.direction != "right") // Left arrow key was pressed.
+        else if (keyCode == m_iControls.snakeTwoLeft && m_iSnakeTwo.direction != "right") // Left arrow key was pressed.
             m_iSnakeTwo.direction = "left";
 
-        else if (keyCode == 39 && m_iSnakeTwo.direction != "left") // Right arrow key was pressed.
+        else if (keyCode == m_iControls.snakeTwoRight && m_iSnakeTwo.direction != "left") // Right arrow key was pressed.
             m_iSnakeTwo.direction = "right";
 
         m_iSnakeTwo.updated = false;
@@ -258,10 +240,10 @@ function keyBoardUpMultiplayerTeleportic(event)
 {
     var keyCode = event.keyCode;
 
-    if (keyCode == 32)
+    if (keyCode == m_iControls.pause)
         m_bGameStatus.paused ? unPauseGameMultiTeleportic() : pauseGameMultiTeleportic(true);
 
-    else if (keyCode == 27) // Escape was pressed
+    else if (keyCode == m_iControls.toMenu) // Escape was pressed
     {
         pauseGameMultiTeleportic(false);
         showStartMenu(true);

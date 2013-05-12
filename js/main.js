@@ -12,11 +12,17 @@ var m_iBorderWidth = { background: 0, snakeBody: 4, snakeHead: 2, food: 0 };
 // Snake Related
 var m_iSnakeData = { lengthSingle: 7, lengthMulti: 12, headColor: "white" };
 
+// Contains snake starting position
+var m_iSnakeStarting = { single: { x: Math.floor(m_iMap.width / 2) - 1, y: 0 }, directionSingle: m_sDirection.down, oneMulti: { x: m_iMap.width - 1, y: 0 }, oneDirection: m_sDirection.down, twoMulti: { x: 0, y: m_iMap.height }, twoDirection: m_sDirection.up };
+
 // Snake One 
-var m_iSnakeOne = { id: 1, color: "red", head: { x: m_iSnakeData.lengthSingle - 2, y: 1 }, body: new Array(), direction: m_sDirection.right, updated: false };
+var m_iSnakeOne = { id: 1, color: "blue", head: { x: 0, y: 0 }, body: new Array(), direction: "", updated: false };
 
 // Snake Two 
-var m_iSnakeTwo = { id: 2, color: "blue", head: { x: m_iMap.width - m_iSnakeData.lengthMulti + 1, y: 1 }, body: new Array(), direction: m_sDirection.left, updated: false };
+var m_iSnakeTwo = { id: 2, color: "red", head: { x: 0, y: 0 }, body: new Array(), direction: "", updated: false };
+
+// Controls
+var m_iControls = { toMenu: 27, pause: 32, mute: 77, snakeOneLeft: 37, snakeOneRight: 39, snakeOneUp: 38, snakeOneDown: 40, snakeTwoLeft: 65, snakeTwoRight: 68, snakeTwoUp: 87, snakeTwoDown: 83 };
 
 // Game speed
 var m_iSpeed = { menu: 60, gameOriginal: 80, gameMain: 80, gameOne: 80, gameTwo: 80 };
@@ -46,7 +52,7 @@ var m_CanvasContext;
 var m_iIntervalId = { menu: null, main: null, one: null, two: null };
 
 // Game version related.
-var m_bGameStatus = { started: false, single: false, multi: false, singleTeleportic: false, multiTeleportic: false, paused: false };
+var m_bGameStatus = { started: false, single: false, multi: false, singleTeleportic: false, multiTeleportic: false, paused: false, instructions: false };
 
 window.addEventListener('keydown', doKeyDown, true);
 window.addEventListener('keyup', doKeyUp, true);
@@ -144,7 +150,8 @@ function showStartMenu(bVisible)
 
     if (bVisible)
     {
-		resetGame();
+        showInstructions(false);
+        resetGame();
         document.getElementById("startMenu").style.zIndex = 1;
         m_iIntervalId.menu = window.setInterval("paintStartMenu();", m_iSpeed.menu);
     }
@@ -154,6 +161,20 @@ function showStartMenu(bVisible)
         document.getElementById("startMenu").style.zIndex = -1;
         window.clearInterval(m_iIntervalId.menu);
     }
+}
+
+function showInstructions(bVisible)
+{
+    m_bGameStatus.instructions = bVisible;
+
+    if (bVisible)
+    {
+        document.getElementById("instructions").style.zIndex = 1;
+        showStartMenu(false);
+    }
+
+    else
+        document.getElementById("instructions").style.zIndex = -1;
 }
 
 function paintStartMenu()
@@ -231,7 +252,7 @@ function playFoodMusic()
     }
 }
 
-// Checks if the snake it a teleporter, if so teleports it
+// Checks if the snake is on a teleporter, if so teleports it
 function runTeleporters(snake)
 {
     for (var index = 0; index < m_iTeleporters.teleporters.length; index++)
@@ -398,6 +419,39 @@ function resetGame()
     m_iScore.highestTwo = 0;
 }
 
+// Initializes snake
+function initializeSnake(snake, x, y, direction, length)
+{
+    // Set snake head, direction
+    snake.head.x = x;
+    snake.head.y = y;
+    snake.body = new Array(length);
+    snake.direction = direction;
+
+    // Set snake body
+    for (var index = 0; index < snake.body.length; index++)
+    {
+        switch (direction)
+        {
+            case m_sDirection.left:
+                snake.body[index] = { x: snake.head.x + index, y: snake.head.y };
+                continue;
+
+            case m_sDirection.right:
+                snake.body[index] = { x: snake.head.x - index, y: snake.head.y };
+                continue;
+
+            case m_sDirection.up:
+                snake.body[index] = { x: snake.head.x, y: snake.head.y + index };
+                continue;
+
+            case m_sDirection.down:
+                snake.body[index] = { x: snake.head.x, y: snake.head.y - index };
+                continue;
+        }
+    }
+}
+
 // Handles increasing the speed variable
 function increaseSpeed(iGameSpeed)
 {
@@ -444,8 +498,11 @@ function doKeyUp(event)
             keyBoardUpMultiplayerTeleportic(event);
     }
 
-    if (event.keyCode == 77)    // 'm' was pressed.
+    if (event.keyCode == m_iControls.mute)    // 'm' was pressed.
         setSoundPicVisible(m_Music.soundOn = !m_Music.soundOn);
+
+    if (m_bGameStatus.instructions)
+        showStartMenu(true);
     
     event.preventDefault();
     return false;
@@ -511,12 +568,12 @@ function setUpLetters()
     m_iTitle.push({ x: 30, y: 3 });
     m_iTitle.push({ x: 29, y: 3 });
     m_iTitle.push({ x: 28, y: 3 });
-    m_iTitle.push({ x: 27, y: 4 });
-    m_iTitle.push({ x: 27, y: 5 });    // 5
-    m_iTitle.push({ x: 27, y: 6 });
-    m_iTitle.push({ x: 27, y: 7 });
-    m_iTitle.push({ x: 27, y: 8 });
-    m_iTitle.push({ x: 27, y: 9 }); 
+    m_iTitle.push({ x: m_iControls.toMenu, y: 4 });
+    m_iTitle.push({ x: m_iControls.toMenu, y: 5 });    // 5
+    m_iTitle.push({ x: m_iControls.toMenu, y: 6 });
+    m_iTitle.push({ x: m_iControls.toMenu, y: 7 });
+    m_iTitle.push({ x: m_iControls.toMenu, y: 8 });
+    m_iTitle.push({ x: m_iControls.toMenu, y: 9 }); 
     m_iTitle.push({ x: 31, y: 4 });    // 10
     m_iTitle.push({ x: 31, y: 5 });
     m_iTitle.push({ x: 31, y: 6 });
@@ -535,32 +592,32 @@ function setUpLetters()
     m_iTitle.push({ x: 33, y: 7 });    // 5
     m_iTitle.push({ x: 33, y: 8 });
     m_iTitle.push({ x: 33, y: 9 });
-    m_iTitle.push({ x: 27, y: 8 });
-    m_iTitle.push({ x: 27, y: 9 });
+    m_iTitle.push({ x: m_iControls.toMenu, y: 8 });
+    m_iTitle.push({ x: m_iControls.toMenu, y: 9 });
     m_iTitle.push({ x: 34, y: 6 });    // 10
     m_iTitle.push({ x: 35, y: 5 });
     m_iTitle.push({ x: 35, y: 7 });
     m_iTitle.push({ x: 36, y: 4 });
     m_iTitle.push({ x: 36, y: 8 });
-    m_iTitle.push({ x: 37, y: 3 });
-    m_iTitle.push({ x: 37, y: 9 });    // 15
+    m_iTitle.push({ x: m_iControls.snakeOneLeft, y: 3 });
+    m_iTitle.push({ x: m_iControls.snakeOneLeft, y: 9 });    // 15
 
     // E
-    m_iTitle.push({ x: 39, y: 3 });
-    m_iTitle.push({ x: 40, y: 3 });
+    m_iTitle.push({ x: m_iControls.snakeOneRight, y: 3 });
+    m_iTitle.push({ x: m_iControls.snakeOneDown, y: 3 });
     m_iTitle.push({ x: 41, y: 3 });
     m_iTitle.push({ x: 42, y: 3 });
     m_iTitle.push({ x: 43, y: 3 });    // 5
-    m_iTitle.push({ x: 39, y: 4 });
-    m_iTitle.push({ x: 39, y: 5 });
-    m_iTitle.push({ x: 39, y: 6 });
-    m_iTitle.push({ x: 39, y: 7 });
-    m_iTitle.push({ x: 39, y: 8 });    // 10
-    m_iTitle.push({ x: 39, y: 9 });
-    m_iTitle.push({ x: 40, y: 6 });
+    m_iTitle.push({ x: m_iControls.snakeOneRight, y: 4 });
+    m_iTitle.push({ x: m_iControls.snakeOneRight, y: 5 });
+    m_iTitle.push({ x: m_iControls.snakeOneRight, y: 6 });
+    m_iTitle.push({ x: m_iControls.snakeOneRight, y: 7 });
+    m_iTitle.push({ x: m_iControls.snakeOneRight, y: 8 });    // 10
+    m_iTitle.push({ x: m_iControls.snakeOneRight, y: 9 });
+    m_iTitle.push({ x: m_iControls.snakeOneDown, y: 6 });
     m_iTitle.push({ x: 41, y: 6 });
     m_iTitle.push({ x: 42, y: 6 });
-    m_iTitle.push({ x: 40, y: 9 });
+    m_iTitle.push({ x: m_iControls.snakeOneDown, y: 9 });
     m_iTitle.push({ x: 41, y: 9 });    // 15
     m_iTitle.push({ x: 42, y: 9 });
     m_iTitle.push({ x: 43, y: 9 });    

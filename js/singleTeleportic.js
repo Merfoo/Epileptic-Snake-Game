@@ -10,14 +10,7 @@ function initializeTeleportic() {
     m_iSpeed.gameMain = m_iSpeed.gameOriginal;
 
     // Snake 
-    m_iSnakeOne.head.x = Math.floor(m_iMap.width / 2) - 1;
-    m_iSnakeOne.head.y = 0;
-    m_iSnakeOne.body = new Array(m_iSnakeData.lengthSingle);
-    m_iSnakeOne.direction = m_sDirection.down;
-
-    // Initialize snake
-    for (var index = 0; index < m_iSnakeOne.body.length; index++)
-        m_iSnakeOne.body[index] = { x: m_iSnakeOne.head.x, y: -index };
+    initializeSnake(m_iSnakeOne, m_iSnakeStarting.single.x, m_iSnakeStarting.single.y, m_iSnakeStarting.directionSingle, m_iSnakeData.lengthSingle);
 
     // Score
     if (m_iScore.one > m_iScore.highestOne)
@@ -124,16 +117,16 @@ function keyBoardDownTeleportic(event)
         if (!m_iSnakeOne.updated)
             gameLoopTeleportic();
 
-        if (keyCode == 38 && m_iSnakeOne.direction != m_sDirection.down)   // Up arrow key was pressed.
+        if (keyCode == m_iControls.snakeOneUp && m_iSnakeOne.direction != m_sDirection.down)   // Up arrow key was pressed.
             m_iSnakeOne.direction = m_sDirection.up;
 
-        else if (keyCode == 40 && m_iSnakeOne.direction != m_sDirection.up)    // Down arrow key was pressed.
+        else if (keyCode == m_iControls.snakeOneDown && m_iSnakeOne.direction != m_sDirection.up)    // Down arrow key was pressed.
             m_iSnakeOne.direction = m_sDirection.down;
 
-        else if (keyCode == 37 && m_iSnakeOne.direction != m_sDirection.right) // Left arrow key was pressed.
+        else if (keyCode == m_iControls.snakeOneLeft && m_iSnakeOne.direction != m_sDirection.right) // Left arrow key was pressed.
             m_iSnakeOne.direction = m_sDirection.left;
 
-        else if (keyCode == 39 && m_iSnakeOne.direction != m_sDirection.left) // Right arrow key was pressed.
+        else if (keyCode == m_iControls.snakeOneRight && m_iSnakeOne.direction != m_sDirection.left) // Right arrow key was pressed.
             m_iSnakeOne.direction = m_sDirection.right;
 
         m_iSnakeOne.updated = false;
@@ -144,10 +137,10 @@ function keyBoardUpTeleportic(event)
 {
     var keyCode = event.keyCode;
 
-    if (keyCode == 32)    // Space bar was pressed.
+    if (keyCode == m_iControls.pause)    // Space bar was pressed.
         m_bGameStatus.paused ? unPauseGameTeleportic() : pauseGameTeleportic(true);
 
-    else if (keyCode == 27)    // Escape was pressed
+    else if (keyCode == m_iControls.toMenu)    // Escape was pressed
     {
         pauseGameTeleportic(false);
         showStartMenu(true);

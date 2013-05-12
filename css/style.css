@@ -2,9 +2,9 @@
 {
     z-index: 1; 
     position: absolute;
-    border: 2px solid gray;
-    margin-left: 1%;
-    margin-top: -8px;
+    border:1px solid gray;
+    margin-top: -.5%;
+    margin-left: 0.85%;
 }
 
 #pause 
@@ -23,7 +23,7 @@
     height: 2.5%; 
     width: 2.75%;
     position:absolute; 
-    top: 1.25%; 
+    top: .75%; 
     left: 93%;
 }
 
@@ -33,7 +33,7 @@
     height: 2.5%; 
     width: 2.75%;
     position:absolute; 
-    top: 1.25%; 
+    top: .75%; 
     left: 93%;
 }
 
@@ -44,7 +44,7 @@
     width: 100%;
     position: absolute; 
     top: 0%; 
-    left: 0%;
+    left: -2%;
 }
 
 #title
@@ -92,12 +92,43 @@
     left: 78%;
 }
 
-#credits
+#howToPlay
 {
     z-index: 3;
-    height: 15%; 
-    width: 10%;
+    height: 5%; 
+    width: 15%;
     position: absolute; 
-    top: 75%; 
+    top: 85%; 
     left: 45%;
+}
+
+#instructions 
+{
+    z-index: -1;
+    height: 100%; 
+    width: 100%;
+    position: absolute; 
+    top: 0%; 
+    left: 0%;
+}
+
+#goBack
+{
+    position: absolute; 
+    top: 3%; 
+    left: 82%;
+}
+
+#listOfControls
+{
+    height: 50%; 
+    width: 75%;
+    position: absolute; 
+    top: 10%; 
+    left: 5%;
+}
+
+*
+{
+    color: white;
 }

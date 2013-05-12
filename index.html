@@ -19,11 +19,34 @@
     <img id="soundOn" src="images/ON.png" onclick="setSoundPicVisible(false);"/>
     <img id="soundOff" src="images/OFF.png" onclick="setSoundPicVisible(true);"/>
     <div id="startMenu">
-        <img id="title" src="images/title.png" />
         <img id="singlePlayer" src ="images/1player.png" onclick="startGame(0);" />
         <img id="multiPlayer" src ="images/2player.png" onclick="startGame(1);" />
         <img id="teleportic" src ="images/teleportic.png" onclick="startGame(2);" />
         <img id="multiTeleportic" src ="images/multiTeleportic.png" onclick="startGame(3);"/>
+        <img id="howToPlay" src ="images/howToPlay.png" onclick="showInstructions(true);"/>
+    </div>
+    <div id="instructions">
+        <p id="goBack">To go back press any button</p>
+        <div id="listOfControls">
+            <h3>How to Play</h3>
+            <h5>The Objective</h5>
+            <p>
+               The objective of classic snake is to try to get the highest score as you possibly can by eating the food that is randomly spawned on the screen. Aside from classic mode, we have multiplayer which adds a tron-like competition when you can grab a friend. We also have 'Teleportic' versions for both multiplayer and single player, adding several telepoters that can make or break the game in a pinch. All we ask is that you have fun playing.
+            </p><br />
+            <h4>Singleplayer & Singleplayer Teleportic</h4>
+            <ul> 
+                <li>Arrow keys control the snake.</li>
+            </ul>
+            <h4>Multiplayer & Multiplayer Teleportic</h4>
+            <ul> 
+                <li>Arrow keys control Blue Snake</li>
+                <li>WASD keys control Red Snake</li>
+            </ul>
+            <h4>Game</h4>
+            <ul> 
+                <li>M Key: Mute game sounds</li>
+            </ul>
+        </div>
     </div>
 </body>
 </html>
