@@ -40,7 +40,7 @@ var m_iTextAlignment = { left: 0, middle: 0, right: 0 };
 var m_iTeleporters = { color: new Array("white", "red", "blue", "yellow", "green"), teleporters: new Array(), max: 5 };
 
 // Sound Related
-var m_Music = { backgroundSrcMp3: "music/Ephixia - Zelda Remix.mp3", backgroundSrcOgg: "music/Ephixia - Zelda Remix.ogg", foodSrcMp3: "music/Food.mp3", foodSrcOgg: "music/Food.ogg", food: null, background: null, soundOn: true };
+var m_Music = { backgroundSrcMp3: "music/background.mp3", backgroundSrcOgg: "music/background.ogg", foodSrcMp3: "music/Food.mp3", foodSrcOgg: "music/Food.ogg", food: null, background: null, soundOn: true };
 
 // Title
 var m_iTitle = new Array();
@@ -59,7 +59,7 @@ window.addEventListener('keyup', doKeyUp, true);
 document.addEventListener("DOMContentLoaded", initializeGame, false);
 document.documentElement.style.overflowX = 'hidden';	 // Horizontal scrollbar will be hidden
 document.documentElement.style.overflowY = 'hidden';     // Vertical scrollbar will be hidden
-
+//
 // Initialize canvas
 function initializeGame()
 {
@@ -180,6 +180,7 @@ function showInstructions(bVisible)
 function paintStartMenu()
 {
     paintGameScreen();
+    writeMessage(1, "black", "Background Music: Cluster Block by FoxSynergy");
 
     for (var index = 0; index < m_iTitle.length; index++)
         paintTile(m_iTitle[index].x, m_iTitle[index].y, getRandomColor(1, 255), 1);
