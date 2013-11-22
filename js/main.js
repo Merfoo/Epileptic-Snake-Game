@@ -261,19 +261,13 @@ function runTeleporters(snake)
         if (snake.head.x == m_iTeleporters.teleporters[index].x && snake.head.y == m_iTeleporters.teleporters[index].y)
         {
             if (index % 2 == 0)
-            {
                 index++;
-                snake.head.x = m_iTeleporters.teleporters[index].x;
-                snake.head.y = m_iTeleporters.teleporters[index].y;
-            }
 
             else
-            {
                 index--;
-                snake.head.x = m_iTeleporters.teleporters[index].x;
-                snake.head.y = m_iTeleporters.teleporters[index].y;
-            }
-
+            
+            snake.head.x = m_iTeleporters.teleporters[index].x;
+            snake.head.y = m_iTeleporters.teleporters[index].y;
             break;
         }
     }
@@ -289,7 +283,6 @@ function paintTeleporters()
 // Creates a pair of teleporters
 function createTeleporters()
 {
-    m_iTeleporters.teleporters.length;
     var teleporterColor = m_iTeleporters.color[m_iTeleporters.teleporters.length / 2];
     var newTeleporterA = { x: getRandomNumber(1, m_iMap.width - 1), y: getRandomNumber(1, m_iMap.height - 1), color: teleporterColor };
     m_iTeleporters.teleporters.push(newTeleporterA);
@@ -569,12 +562,12 @@ function setUpLetters()
     m_iTitle.push({ x: 30, y: 3 });
     m_iTitle.push({ x: 29, y: 3 });
     m_iTitle.push({ x: 28, y: 3 });
-    m_iTitle.push({ x: m_iControls.toMenu, y: 4 });
-    m_iTitle.push({ x: m_iControls.toMenu, y: 5 });    // 5
-    m_iTitle.push({ x: m_iControls.toMenu, y: 6 });
-    m_iTitle.push({ x: m_iControls.toMenu, y: 7 });
-    m_iTitle.push({ x: m_iControls.toMenu, y: 8 });
-    m_iTitle.push({ x: m_iControls.toMenu, y: 9 }); 
+    m_iTitle.push({ x: 27, y: 4 });
+    m_iTitle.push({ x: 27, y: 5 });    // 5
+    m_iTitle.push({ x: 27, y: 6 });
+    m_iTitle.push({ x: 27, y: 7 });
+    m_iTitle.push({ x: 27, y: 8 });
+    m_iTitle.push({ x: 27, y: 9 }); 
     m_iTitle.push({ x: 31, y: 4 });    // 10
     m_iTitle.push({ x: 31, y: 5 });
     m_iTitle.push({ x: 31, y: 6 });
@@ -593,32 +586,32 @@ function setUpLetters()
     m_iTitle.push({ x: 33, y: 7 });    // 5
     m_iTitle.push({ x: 33, y: 8 });
     m_iTitle.push({ x: 33, y: 9 });
-    m_iTitle.push({ x: m_iControls.toMenu, y: 8 });
-    m_iTitle.push({ x: m_iControls.toMenu, y: 9 });
+    m_iTitle.push({ x: 27, y: 8 });
+    m_iTitle.push({ x: 27, y: 9 });
     m_iTitle.push({ x: 34, y: 6 });    // 10
     m_iTitle.push({ x: 35, y: 5 });
     m_iTitle.push({ x: 35, y: 7 });
     m_iTitle.push({ x: 36, y: 4 });
     m_iTitle.push({ x: 36, y: 8 });
-    m_iTitle.push({ x: m_iControls.snakeOneLeft, y: 3 });
-    m_iTitle.push({ x: m_iControls.snakeOneLeft, y: 9 });    // 15
+    m_iTitle.push({ x: 37, y: 3 });
+    m_iTitle.push({ x: 37, y: 9 });    // 15
 
     // E
-    m_iTitle.push({ x: m_iControls.snakeOneRight, y: 3 });
-    m_iTitle.push({ x: m_iControls.snakeOneDown, y: 3 });
+    m_iTitle.push({ x: 39, y: 3 });
+    m_iTitle.push({ x: 40, y: 3 });
     m_iTitle.push({ x: 41, y: 3 });
     m_iTitle.push({ x: 42, y: 3 });
     m_iTitle.push({ x: 43, y: 3 });    // 5
-    m_iTitle.push({ x: m_iControls.snakeOneRight, y: 4 });
-    m_iTitle.push({ x: m_iControls.snakeOneRight, y: 5 });
-    m_iTitle.push({ x: m_iControls.snakeOneRight, y: 6 });
-    m_iTitle.push({ x: m_iControls.snakeOneRight, y: 7 });
-    m_iTitle.push({ x: m_iControls.snakeOneRight, y: 8 });    // 10
-    m_iTitle.push({ x: m_iControls.snakeOneRight, y: 9 });
-    m_iTitle.push({ x: m_iControls.snakeOneDown, y: 6 });
+    m_iTitle.push({ x: 39, y: 4 });
+    m_iTitle.push({ x: 39, y: 5 });
+    m_iTitle.push({ x: 39, y: 6 });
+    m_iTitle.push({ x: 39, y: 7 });
+    m_iTitle.push({ x: 39, y: 8 });    // 10
+    m_iTitle.push({ x: 39, y: 9 });
+    m_iTitle.push({ x: 40, y: 6 });
     m_iTitle.push({ x: 41, y: 6 });
     m_iTitle.push({ x: 42, y: 6 });
-    m_iTitle.push({ x: m_iControls.snakeOneDown, y: 9 });
+    m_iTitle.push({ x: 40, y: 9 });
     m_iTitle.push({ x: 41, y: 9 });    // 15
     m_iTitle.push({ x: 42, y: 9 });
     m_iTitle.push({ x: 43, y: 9 });    
