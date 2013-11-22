@@ -3,8 +3,8 @@
 function initializeSingle()
 {
     showStartMenu(false);
-    m_bGameStatus.started = true;
     m_bGameStatus.single = true;
+    m_bGameStatus.modeClassic = true;
 
     // Game speed
     m_iSpeed.gameMain = m_iSpeed.gameOriginal;

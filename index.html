@@ -19,11 +19,23 @@
     <img id="soundOn" src="images/ON.png" onclick="setSoundPicVisible(false);"/>
     <img id="soundOff" src="images/OFF.png" onclick="setSoundPicVisible(true);"/>
     <div id="startMenu">
-        <img id="singlePlayer" src ="images/1player.png" onclick="startGame(0);" />
-        <img id="multiPlayer" src ="images/2player.png" onclick="startGame(1);" />
-        <img id="teleportic" src ="images/teleportic.png" onclick="startGame(2);" />
-        <img id="multiTeleportic" src ="images/multiTeleportic.png" onclick="startGame(3);"/>
+        <img id="singlePlayer" src ="images/1player.png" onclick="startGame(1);" />
+        <img id="multiPlayer" src ="images/2player.png" onclick="startGame(2);" />
         <img id="howToPlay" src ="images/howToPlay.png" onclick="showInstructions(true);"/>
+        <form id="modesForm">
+            <fieldset id="modesBorder">
+                <legend>Modes</legend>
+                    <input id = "chkClassic" type = "checkbox" />
+                    <label for = "chkClassic">Classic</label>
+                    <br/><br/>
+                    <input id = "chkTron" type = "checkbox" />
+                    <label for = "chkTron">Tron</label>
+                    <br/><br/>
+                    <input id = "chkTeleportic" type = "checkbox" />
+                    <label for = "chkTeleportic">Teleportic</label>
+                    <br/><br/>
+            </fieldset>
+        </form>
     </div>
     <div id="instructions">
         <p id="goBack">To go back press any button</p>

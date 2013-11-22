@@ -13,7 +13,7 @@ var m_iBorderWidth = { background: 0, snakeBody: 4, snakeHead: 2, food: 0 };
 var m_iSnakeData = { lengthSingle: 7, lengthMulti: 12, headColor: "white" };
 
 // Contains snake starting position
-var m_iSnakeStarting = { single: { x: Math.floor(m_iMap.width / 2) - 1, y: 0 }, directionSingle: m_sDirection.down, oneMulti: { x: m_iMap.width - 1, y: 0 }, oneDirection: m_sDirection.down, twoMulti: { x: 0, y: m_iMap.height }, twoDirection: m_sDirection.up };
+var m_iSnakeStartingCl = { single: { x: Math.floor(m_iMap.width / 2) - 1, y: 0 }, directionSingle: m_sDirection.down, oneMulti: { x: m_iMap.width - 1, y: 0 }, oneDirection: m_sDirection.down, twoMulti: { x: 0, y: m_iMap.height }, twoDirection: m_sDirection.up };
 
 // Snake One 
 var m_iSnakeOne = { id: 1, color: "blue", head: { x: 0, y: 0 }, body: new Array(), direction: "", updated: false };
@@ -52,14 +52,14 @@ var m_CanvasContext;
 var m_iIntervalId = { menu: null, main: null, one: null, two: null };
 
 // Game version related.
-var m_bGameStatus = { started: false, single: false, multi: false, singleTeleportic: false, multiTeleportic: false, paused: false, instructions: false };
+var m_bGameStatus = { started: false, single: false, multi: false, modeClassic: false, modeTron: false, modeTeleportic: false, paused: false, instructions: false };
 
 window.addEventListener('keydown', doKeyDown, true);
 window.addEventListener('keyup', doKeyUp, true);
 document.addEventListener("DOMContentLoaded", initializeGame, false);
-document.documentElement.style.overflowX = 'hidden';	 // Horizontal scrollbar will be hidden
-document.documentElement.style.overflowY = 'hidden';     // Vertical scrollbar will be hidden
-//
+document.documentElement.style.overflowX = 'hidden';                    // Horizontal scrollbar will be hidden
+document.documentElement.style.overflowY = 'hidden';                    // Vertical scrollbar will be hidden
+
 // Initialize canvas
 function initializeGame()
 {
@@ -71,11 +71,14 @@ function initializeGame()
 }
 
 // Starts game
-function startGame(iGameVersion)
+function startGame(iVersion)
 {
     if(!m_bGameStatus.started)
     {
-        switch(iGameVersion)
+        m_bGameStatus.started = true;
+        iGameVersion = getGameMode();
+        
+        if(iVersion == 1)
         {
             case 0:
                 initializeSingle();
@@ -134,6 +137,13 @@ function setUpMusic()
         m_Music.food = new Audio(m_Music.foodSrcOgg); 
         m_Music.background = new Audio(m_Music.backgroundSrcOgg);
     }
+}
+
+function getGameMode()
+{
+    m_bGameStatus.modeClassic = document.getElementById("chkClassic").checked;
+    m_bGameStatus.modeTron = document.getElementById("chkTron").checked;
+    m_bGameStatus.modeTeleportic = document.getElementById("chkTeleportic").checked;
 }
 
 // Paints a tile on the screen, handles converting pixel to tile.
